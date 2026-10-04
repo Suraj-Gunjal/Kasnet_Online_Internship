@@ -1,7 +1,6 @@
 package com.kasnet.controller;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import java.io.IOException;
  * Both GET and POST requests fully invalidate the current session,
  * clear the JSESSIONID cookie, and redirect the user to /login.
  */
-@WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

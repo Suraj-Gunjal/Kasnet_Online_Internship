@@ -1,0 +1,5 @@
+com\kasnet\controller\LectureServlet.class
+com\kasnet\controller\HackathonServlet.class
+com\kasnet\controller\DashboardServlet.class
+com\kasnet\controller\LoginServlet.class
+com\kasnet\controller\AssignmentServlet.class

@@ -38,7 +38,7 @@ public class DBConnection {
      * ⚠️  IMPORTANT: Change this to a strong password before deploying to production.
      *     Consider externalising credentials via environment variables or a properties file.
      */
-    private static final String DB_PASSWORD = "root"; // TODO: change before production
+    private static final String DB_PASSWORD = "Sur4j@23sg8"; // TODO: change before production
 
     /** Fully-qualified MySQL JDBC driver class name. */
     private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
