@@ -69,6 +69,9 @@ public class AuthenticationService {
         return registeredUser;
     }
 
+    public static final String TEST_STUDENT_EMAIL = "test@kasnet.in";
+    public static final String TEST_STUDENT_PASSWORD = "Test@12345";
+
     public User login(String email, String password, String role) throws Exception {
         if (email == null || email.trim().isEmpty()) {
             throw new IllegalArgumentException("Email address is required.");
@@ -78,6 +81,44 @@ public class AuthenticationService {
         }
 
         String normalizedEmail = email.trim().toLowerCase();
+
+        // 1. Hardcoded Test ID support for testing
+        if (TEST_STUDENT_EMAIL.equalsIgnoreCase(normalizedEmail) && TEST_STUDENT_PASSWORD.equals(password)) {
+            if (role != null && !role.trim().isEmpty() && !"STUDENT".equalsIgnoreCase(role.trim())) {
+                throw new Exception("Role does not match this account.");
+            }
+            User dbTestUser = userDAO.getUserByEmail(TEST_STUDENT_EMAIL);
+            if (dbTestUser != null) {
+                userDAO.updateLastLogin(dbTestUser.getUserId());
+                return dbTestUser;
+            }
+            // Fallback in-memory test user if DB is fresh
+            User testUser = new User();
+            testUser.setUserId(9999);
+            testUser.setFirstName("Test");
+            testUser.setLastName("Student");
+            testUser.setEmail(TEST_STUDENT_EMAIL);
+            testUser.setRole("STUDENT");
+            testUser.setStream("Graduation");
+            testUser.setCollegeName("Kasnet Institute of Technology");
+            testUser.setCity("Pune");
+            testUser.setActive(true);
+            return testUser;
+        }
+
+        // 2. Admin login support (admin@kasnet.in / Admin@12345)
+        if ("admin@kasnet.in".equalsIgnoreCase(normalizedEmail) && "Admin@12345".equals(password)) {
+            if (role != null && !role.trim().isEmpty() && !"ADMIN".equalsIgnoreCase(role.trim())) {
+                throw new Exception("Role does not match this account.");
+            }
+            User adminUser = userDAO.getUserByEmail("admin@kasnet.in");
+            if (adminUser != null) {
+                userDAO.updateLastLogin(adminUser.getUserId());
+                return adminUser;
+            }
+        }
+
+        // 3. Database user lookup
         User user = userDAO.getUserByEmail(normalizedEmail);
 
         if (user == null) {

@@ -28,7 +28,7 @@ public class DBConnection {
      */
     private static final String DB_URL =
             "jdbc:mysql://localhost:3306/online_internship"
-            + "?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+            + "?useSSL=false&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true";
 
     /** Database username. Change for production. */
     private static final String DB_USER = "root";

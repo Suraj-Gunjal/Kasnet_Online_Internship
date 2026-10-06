@@ -1,248 +1,239 @@
-# Kasnet Online Internship Portal — Project Progress & Engineering Guide
+# Kasnet Online Internship Portal — Comprehensive Project Progress & Handover Guide
 
 > **Document Purpose:**  
-> This document stores all the project tasks completed, architecture decisions, database structure, and integration instructions so that any AI model, senior developer, or team member can immediately understand the current state of the application and continue work seamlessly without any missing context.
+> This document records all architectural decisions, components implemented, validations, database structures, and testing results for the **Kasnet Online Internship Portal**. Any AI model, senior engineer, or team member can consult this document to immediately understand the project state and seamlessly resume work where it was left off.
 
 ---
 
-## 1. Project Overview & Context
+## 1. Project Overview & Architecture
 
-- **Application Name:** Kasnet Online Internship Portal
-- **Nature of Project:** A modular, production-ready Student Internship Portal module developed from scratch to be integrated into an already-hosted internship website.
-- **Key Flow:**
-  1. Student / Admin lands on `login.jsp`.
-  2. New user registers on `register.jsp`.
-  3. Credentials securely stored in MySQL with **BCrypt (12 rounds)** password hashing.
-  4. Authentication establishes a secure HTTP session (`userId`, `userName`, `userEmail`, `userRole`).
-  5. Authenticated student is guided to **Dashboard** (`/dashboard`) and **Student Profile** (`/profile`).
-  6. Multi-tab profile management:
-     - **Personal Details** (First Name, Last Name, Gender, DOB, Mobile, Email [readonly], Address, City, State)
-     - **Education Details** (SSC, HSC, Graduation, Master, Diploma)
-     - **Achievements** (Certifications, Projects, Extra-Curricular Activities)
-     - **Skills** (Technical Skills, Soft Skills, Domain Skills)
-     - **Certifications** (Dedicated CRUD section)
-     - **Projects** (Dedicated CRUD section: Academic, Personal, Professional, Open Source)
-     - **Additional Activities** (A. Hackathons, B. Inter-College Project Competitions)
-  7. **Dynamic Profile Completion Calculation** stored in database and displayed in sidebar progress bar.
-  8. **Assignments Module** (`/assignments`): View due dates, marks, statuses (Pending, Submitted, Late, Evaluated), and file submission upload.
-  9. **Lecture Videos Module** (`/lectures`): Curated lectures, video player modal, progress tracking, and mark-as-completed action.
-  10. **Special Client Requirement:** Profile photo and resume upload buttons were explicitly removed from the student profile UI per user instruction, while maintaining database and backend compatibility.
+- **Project Name:** Kasnet Online Internship Portal
+- **Nature of Application:** Production-grade Java EE MVC Web Application module designed for seamless integration into an existing hosted student internship portal (`https://www.onlineinternship.in/`).
+- **Architecture Pattern:** Strict **Model-View-Controller (MVC)**
+  - **Model:** POJOs / JavaBeans (`com.kasnet.model.*`)
+  - **View:** JSP 2.3 with JSTL (`src/main/webapp/views/*`, `index.jsp`, `login.jsp`, `register.jsp`)
+  - **Controller:** Java Servlets (`com.kasnet.controller.*`)
+  - **Service Layer:** Business operations (`com.kasnet.service.*`)
+  - **DAO Layer:** JDBC with `PreparedStatement` and connection cleanup (`com.kasnet.dao.*`)
+  - **Utility Layer:** Validation, Session, Password (BCrypt), DB connection (`com.kasnet.util.*`)
 
 ---
 
-## 2. Mandatory Technology Stack
+## 2. Technology Stack & Environment
 
-| Layer | Component | Specification |
+| Layer | Component | Details |
 |---|---|---|
-| **Frontend** | JSP 2.3, HTML5, JavaScript (Vanilla ES6) | **Inline `<style>` per page strictly maintained** (no external framework dependency) |
-| **Backend** | Java 11, Java Servlets 3.1 (`javax.servlet`) | Strict MVC architecture; business logic isolated in DAO/Service layers |
-| **Database** | MySQL 5.7+ / 8.0 | Compatible with **MySQL Workbench 6.3**; standard InnoDB tables with utf8mb4 |
-| **Connectivity** | JDBC with `PreparedStatement` | Centralized `DBConnection.java`; zero raw string concatenations (SQL-injection immune) |
-| **Security** | BCrypt (`jbcrypt 0.4`) | Salt rounds = 12; session fixation prevention; server-side validation |
-| **Build Tool** | Apache Maven | Clean `pom.xml` configuration with WAR packaging |
-| **Web Server** | Apache Tomcat 8.5 / 9.x | Deployment descriptor `web.xml` configured with all routes and error handlers |
+| **Language** | Java 11 / Java 21 | Compatible with Java 11+ runtime |
+| **Frameworks** | Java Servlets 3.1 (`javax.servlet`) | Java EE standard (Tomcat 8.5 / 9.0 compatible) |
+| **Presentation** | JSP 2.3, JSTL 1.2, HTML5, Vanilla JavaScript | **Inline `<style>` per page strictly maintained** (no shared monolithic CSS or external CSS framework lock-in) |
+| **Database** | MySQL 5.7+ / 8.0 | Compatible with **MySQL Workbench 6.3**; utf8mb4 InnoDB tables |
+| **Security** | BCrypt (`org.mindrot:jbcrypt:0.4`) | Salt rounds = 12; salted hashes; timing-attack safe |
+| **Build Tool** | Apache Maven 3.x | Build wrapper script `mvn.bat` included; WAR artifact packaged at `target/kasnet-internship-portal.war` |
+| **Server** | Apache Tomcat 7.0.47+ / 8.5 / 9.x | Context deployment descriptor configured via `web.xml`; bundled TLDs in `WEB-INF/tld` |
+| **Dependencies** | Modern LTS / Clean Dependencies | Pruned unused multi-release jars (`gson`, `commons-fileupload`); SLF4J pinned to stable LTS `1.7.36` |
 
 ---
 
-## 3. Database Schema & Architecture (`database.sql`)
+## 3. End-to-End User Flow & Implemented Features
 
-The database script is located at:  
-`d:\My Workspace\Kasnet_Online_Internship\database.sql`
+### A. Public Landing Page (`index.jsp`)
+- Accessible before logging in at root URL `/` (configured as primary welcome file).
+- Clean, professional design derived from `https://www.onlineinternship.in/`.
+- Clear navigation bar with **Login** and **Register** buttons (or **My Dashboard** if already logged in).
+- Hero section explaining practical online internship tracks with call-to-action buttons.
+- Statistics Bar: 15,000+ Students Mentored, 100+ Live Projects, 50+ Industry Mentors, 100% Self-Paced.
+- Industry Internship Tracks: Java Full Stack, Python & Machine Learning, Web Technologies, Cloud & DevOps.
+- How It Works 4-step workflow: Profile Setup &rarr; Lectures &amp; Question Bank &rarr; Practical Assignments &rarr; Verified Certification.
+- **Registration Success Modal Popup:** Triggered automatically when redirected from registration (`?registered=success`), showing:  
+  *"Congratulations! Account created successfully."* with *"Proceed to Login"* and *"Close"* actions.
 
-Compatible with MySQL Workbench 6.3. All tables use `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`.
+### B. Registration Module (`register.jsp` & `RegisterServlet.java`)
+- Self-registration restricted to **Student** role (Admin option removed from public registration).
+- Enforces strict client-side and server-side validation:
+  - **Phone:** Exactly 10 numeric digits (`/^[0-9]{10}$/`).
+  - **Email:** RFC 5322 regex validation and duplicate email check in MySQL.
+  - **Required fields:** First Name, Last Name, Mobile, Email, Password, Confirm Password, Stream, College Name, City.
+  - **Password Strength & Match:** Minimum 8 characters with strength indicator and matching confirmation.
+  - **CAPTCHA:** Server/client CAPTCHA verification to prevent automated bot signups.
+- **Enterprise-Grade UI Styling:** All emojis removed in favor of professional inline vector SVG icons (User, Phone, Email, Lock, Eye Toggle, College, Location, Shield, Refresh) and clean typography.
+- After successful registration, user is redirected to the landing page (`/?registered=success`) displaying the congratulatory popup **without automatically logging them in**.
 
-### Tables Summary:
+### C. Login Module (`login.jsp`, `LoginServlet.java` & `AuthenticationService.java`)
+- Clean split-panel login form with CAPTCHA and role selection.
+- **Official Brand Logo Integration:** Integrated official logo image (`assets/images/logo.png`, imported from `docs/screenshots/logo_final.png`) in the branding panel across Login, Register, Landing page, Dashboard, and internal views.
+- **Enterprise-Grade UI Styling:** All emojis removed in favor of clean inline vector SVGs for features and alert indicators.
+- Server-side credentials validation against MySQL with BCrypt comparison.
+- **Hardcoded Test Student Account:**
+  - **Email:** `test@kasnet.in`
+  - **Password:** `Test@12345`
+  - **Role:** `STUDENT`
+  - Guaranteed to authenticate whether database is freshly initialized or populated.
+- **Admin Account:**
+  - **Email:** `admin@kasnet.in`
+  - **Password:** `Admin@12345`
+  - **Role:** `ADMIN`
+- **Login Successful Popup:** On successful credential check, displays a clean *"Login successful"* popup modal before guiding the user to the homepage/dashboard.
+- Prevents session fixation by regenerating session IDs on login.
 
-1. **`users`**
-   - Columns: `user_id` (PK, AI), `first_name`, `last_name`, `email` (UNIQUE), `password_hash`, `mobile`, `country_code`, `role` (ENUM: 'STUDENT','ADMIN'), `stream` (ENUM: 'Graduation','Post Graduation','Diploma'), `college_name`, `city`, `referral_code`, `is_active`, `created_at`, `updated_at`.
-   - Indexes on `email` and `mobile`.
+### D. Admin Monitoring Module (`admin.jsp` & `AdminServlet.java`)
+- Accessible at `/admin` only for authenticated users with role `ADMIN`.
+- Simple, non-bloated monitoring console:
+  - Metric Summary: Total Registered Users, Total Students, System Administrators.
+  - Data Table: User ID, Full Name, Email, Mobile, Role Badge, Stream, College Name, City, Registration Timestamp, Status.
+  - Instant client-side search/filter by name, email, college, or stream.
 
-2. **`student_profiles`**
-   - Columns: `profile_id` (PK, AI), `user_id` (FK -> users.user_id ON DELETE CASCADE, UNIQUE), `gender` (ENUM), `date_of_birth`, `address`, `state`, `profile_photo_path`, `resume_path`, `resume_filename`, `resume_uploaded_at`, `profile_completion` (INT, 0-100), `last_login`, `previous_login`, `created_at`, `updated_at`.
+### E. Logged-in Homepage / Dashboard (`views/dashboard.jsp` & `DashboardServlet.java`)
+- Centralized student workspace providing access to the **5 Core Sections**:
+  1. **Profile** (`/profile`): Direct link with real-time profile completion score.
+  2. **Assignments** (`/assignments`): Assignment submission counts (submitted vs. pending) and upload portal.
+  3. **Lectures** (`/lectures`): Video completion metrics and curated module access.
+  4. **Question Bank** (`/question-bank`): Has an embedded **Subject Dropdown** (`Java`, `Python`, `Web`, `DBMS`, `Cloud`) with a "Go" action to jump straight into subject-specific question banks.
+  5. **Resume Analysis** (`/resume-analysis`): Direct link to the resume ATS review section.
+- Student Account Details summary grid.
+- Dynamic recalculation of completion score upon every page visit.
 
-3. **`education_details`**
-   - Columns: `edu_id` (PK, AI), `user_id` (FK -> users), `level` (ENUM: 'SSC','HSC','Graduation','Master','Diploma'), `school_college_name`, `board_university`, `stream`, `passing_year`, `percentage`, `created_at`, `updated_at`.
-   - Unique key on `(user_id, level)`.
+### F. Subject Question Bank Module (`views/question-bank.jsp` & `QuestionBankServlet.java`)
+- Accessible at `/question-bank`.
+- Features a **Subject Dropdown Selector**:
+  - `java`: Java Full Stack Development (Core Java, Collections, Multithreading, Servlets, JSP, JDBC, Design Patterns).
+  - `python`: Python & Machine Learning (Data Structures, OOP, NumPy, Pandas, Scikit-Learn).
+  - `web`: Web Development & Frontend (HTML5, Responsive CSS3, JavaScript ES6+, DOM, REST APIs).
+  - `db`: Database Management Systems (Relational Modeling, Normalization, Queries, Joins, Transactions).
+  - `cloud`: Cloud Computing & DevOps (Virtualization, Cloud Storage, Docker Containers, CI/CD).
+- Selecting any subject instantly redirects/renders the dedicated basic question bank view for that subject.
+- Overview catalog mode displays all available subject tracks when no subject is selected.
 
-4. **`achievements`**
-   - Columns: `achievement_id` (PK, AI), `user_id` (FK -> users), `achievement_type` (ENUM: 'Certification','Project','ExtraCurricular','Other'), `title`, `description`, `technology`, `extra_activities`, `created_at`, `updated_at`.
+### G. Resume Analysis Module (`views/resume-analysis.jsp` & `ResumeAnalysisServlet.java`)
+- Accessible at `/resume-analysis`.
+- Clean UI layout with dropzone placeholder for resume upload (PDF/DOCX max 5MB).
+- Backend functionality intentionally kept blank for future AI model integration as requested.
+- Informational cards on planned ATS score evaluation, keyword gap analysis, and formatting review.
 
-5. **`skills`**
-   - Columns: `skill_id` (PK, AI), `user_id` (FK -> users), `skill_name`, `skill_type` (ENUM: 'Technical','Soft','Domain'), `proficiency` (ENUM: 'Beginner','Intermediate','Advanced','Expert'), `created_at`.
-   - Unique key on `(user_id, skill_name, skill_type)`.
-
-6. **`certifications`**
-   - Columns: `cert_id` (PK, AI), `user_id` (FK -> users), `cert_name`, `provider`, `technology`, `cert_id_number`, `issue_date`, `expiry_date`, `credential_url`, `created_at`, `updated_at`.
-
-7. **`projects`**
-   - Columns: `project_id` (PK, AI), `user_id` (FK -> users), `project_name`, `description`, `technologies_used`, `role`, `project_type` (ENUM: 'Academic','Personal','Professional','Open Source'), `team_size`, `start_date`, `end_date`, `project_url`, `github_url`, `created_at`, `updated_at`.
-
-8. **`hackathons`**
-   - Columns: `hackathon_id` (PK, AI), `user_id` (FK -> users), `hackathon_name`, `organizer`, `event_date`, `position_result`, `description`, `team_name`, `certificate_path`, `created_at`, `updated_at`.
-
-9. **`intercollege_competitions`**
-   - Columns: `competition_id` (PK, AI), `user_id` (FK -> users), `competition_name`, `college_organizer`, `event_date`, `project_name`, `position_result`, `description`, `team_name`, `certificate_path`, `created_at`, `updated_at`.
-
-10. **`assignments`**
-    - Columns: `assignment_id` (PK, AI), `title`, `subject`, `description`, `assignment_number`, `due_date`, `total_marks`, `is_active`, `created_at`.
-
-11. **`assignment_submissions`**
-    - Columns: `submission_id` (PK, AI), `assignment_id` (FK -> assignments), `user_id` (FK -> users), `submission_date`, `file_path`, `status` (ENUM: 'Pending','Submitted','Late','Evaluated'), `marks_obtained`, `remarks`, `resubmitted`, `updated_at`.
-
-12. **`lectures`**
-    - Columns: `lecture_id` (PK, AI), `title`, `subject`, `description`, `instructor`, `duration_minutes`, `video_url`, `lecture_number`, `lecture_date`, `is_active`, `created_at`.
-
-13. **`lecture_progress`**
-    - Columns: `progress_id` (PK, AI), `lecture_id` (FK -> lectures), `user_id` (FK -> users), `is_completed`, `watch_progress_percent`, `last_watched`. Unique on `(lecture_id, user_id)`.
-
-14. **`login_activity`**
-    - Columns: `activity_id` (PK, AI), `user_id` (FK -> users), `login_time`, `ip_address`, `user_agent`.
-
----
-
-## 4. Complete File Inventory
-
-### Configuration & Docs
-- `pom.xml`: Complete dependencies (Servlet API, JSP API, JSTL, MySQL Connector, jbcrypt, commons-fileupload, commons-io, gson, slf4j).
-- `database.sql`: 499-line schema with constraints, safe drop/create, indexes, and sample seed data.
-- `README.md`: Developer guide, build instructions, troubleshooting, integration walkthrough.
-- `docs/PROJECT_PROGRESS.md`: This tracking document.
-- `docs/screenshots/`: Reference images (image1.png to image8.png) extracted directly from the requirement docx.
-
-### Backend - Controller Layer (`src/main/java/com/kasnet/controller/`)
-- `LoginServlet.java`: Handles user authentication, CAPTCHA validation, and session initiation.
-- `RegisterServlet.java`: Handles account creation with duplicate checks, password strength rules, and BCrypt hashing.
-- `LogoutServlet.java`: Invalidates session and redirects to login.
-- `DashboardServlet.java`: Aggregates real-time statistics (assignments, lectures, portfolio) and renders dashboard.
-- `ProfileServlet.java`: Central profile controller loading all 7 sections dynamically for the student.
-- `PersonalDetailsServlet.java`: Processes updates to `users` and `student_profiles` tables.
-- `EducationServlet.java`: Processes batch updates for SSC, HSC, Graduation, Master, and Diploma.
-- `AchievementServlet.java`: Handles add/delete for certifications, projects, and extra-curricular achievements.
-- `SkillsServlet.java`: Parses and saves comma-separated technical, soft, and domain skills.
-- `CertificationServlet.java`: Full CRUD operations for student certifications.
-- `ProjectServlet.java`: Full CRUD operations for student projects.
-- `HackathonServlet.java`: Full CRUD operations for hackathon participations.
-- `CompetitionServlet.java`: Full CRUD operations for inter-college competitions.
-- `AssignmentServlet.java`: Manages student assignment retrieval and multipart submission uploads.
-- `LectureServlet.java`: Manages lecture listings, video modal view, and completion tracking.
-- `ResumeUploadServlet.java`: Provided for backward-compatibility and integration completeness.
-
-### Backend - Model Layer (`src/main/java/com/kasnet/model/`)
-- `User.java`: User entity POJO with all registration and contact attributes.
-- `StudentProfile.java`: Profile entity with completion score, timestamps, and login tracking.
-- `Education.java`: Multi-level education record POJO.
-- `Achievement.java`: Student achievement POJO.
-- `Skill.java`: Skill POJO (Technical, Soft, Domain).
-- `Certification.java`: Certification POJO.
-- `Project.java`: Project POJO with repository URLs and team details.
-- `Hackathon.java`: Hackathon activity POJO.
-- `Competition.java`: Inter-college project competition POJO.
-- `Assignment.java`: Assignment and submission joined POJO.
-- `Lecture.java`: Lecture and watch progress joined POJO.
-- `DashboardStats.java`: DTO aggregating student dashboard metrics.
-
-### Backend - DAO Layer (`src/main/java/com/kasnet/dao/`)
-- `UserDAO.java`: Registration, login lookup, email/mobile duplicate checks, last login updates.
-- `ProfileDAO.java`: Profile retrieval, personal details update, dynamic completion score computation.
-- `EducationDAO.java`: Multi-level education retrieval, upsert (`ON DUPLICATE KEY UPDATE`), delete.
-- `AchievementDAO.java`: Achievement add, list, delete with user ownership checks.
-- `SkillDAO.java`: Type-specific skill querying and batch replacement.
-- `CertificationDAO.java`: Certification CRUD operations.
-- `ProjectDAO.java`: Project CRUD operations.
-- `HackathonDAO.java`: Hackathon CRUD operations.
-- `CompetitionDAO.java`: Competition CRUD operations.
-- `AssignmentDAO.java`: Active assignment querying with left-joined student submission status.
-- `LectureDAO.java`: Lecture querying with left-joined progress and mark-completed upsert.
-- `DashboardDAO.java`: Multi-table aggregate query builder for dashboard statistics.
-
-### Backend - Service Layer (`src/main/java/com/kasnet/service/`)
-- `AuthenticationService.java`: Business logic for BCrypt hashing, duplicate checks, login verification.
-- `ProfileService.java`: Full profile aggregation and validation logic.
-- `FileUploadService.java`: File validation and safe disk storage.
-
-### Backend - Utility Layer (`src/main/java/com/kasnet/util/`)
-- `DBConnection.java`: Centralized JDBC connection factory with safe resource closing helpers.
-- `PasswordUtil.java`: BCrypt hashing and verification utility.
-- `ValidationUtil.java`: Email, mobile, password strength, and input sanitization helpers.
-- `FileUtil.java`: Safe UUID filename generation, extension checking, size verification.
-- `SessionUtil.java`: Centralized session authentication and route protection helper.
-
-### Frontend - JSP Views (`src/main/webapp/`)
-- `login.jsp`: Split-panel layout matching `image1.png`, CAPTCHA box, password show/hide eye toggle, inline `<style>`.
-- `register.jsp`: 2-column card layout matching `image2.png` and `image3.png`, real-time strength meter, stream dropdown, CAPTCHA, inline `<style>`.
-- `index.jsp`: Entry redirect to `/dashboard` or `/login`.
-- `views/dashboard.jsp`: Visual dashboard with welcome banner, completion bar, 8 metric cards, shortcuts, inline `<style>`.
-- `views/profile.jsp`: Comprehensive profile view matching `image4.png` to `image8.png`:
-  * Teal sidebar with silhouette avatar, Profile Completion box, Details box (created date, previous login, spend time).
-  * Tab 1: Personal Details (First name, Last name, Gender, DOB, Mobile, Email [readonly], Address, City, State, SAVE, EDIT, NEXT).
-  * Tab 2: Education Details (SSC, HSC, Graduation, Master, Diploma with School/College, Board/Univ, Stream, Year, Percentage, SAVE, EDIT, NEXT).
-  * Tab 3: Achievements (Certification, Project, Extra-Curricular Activities, SAVE, EDIT, NEXT).
-  * Tab 4: Skills (Technical Skills, Soft Skills, Domain, SAVE, EDIT, NEXT).
-  * Tab 5: Certifications (Add form, table with external links, delete).
-  * Tab 6: Projects (Add form, table with GitHub links, delete).
-  * Tab 7: Additional Activities (A. Hackathons, B. Inter-College Competitions with forms and tables).
-  * *Note: Photo upload and resume upload buttons were omitted from the UI per explicit instruction.*
-- `views/assignments.jsp`: Grid of assignment cards with due dates, marks, statuses, and file submission upload, inline `<style>`.
-- `views/lectures.jsp`: Video learning grid with lecture cards, duration tags, video player modal, and mark-done actions, inline `<style>`.
-- `views/error-404.jsp`: Clean 404 error page with navigation buttons.
-- `views/error-500.jsp`: Graceful 500 error page concealing stack traces.
-- `views/unauthorized.jsp`: Session expiration and access denied page.
-- `views/resume-upload.jsp`: Redirect fallback.
+### H. Reorganized 5-Section Student Profile (`views/profile.jsp` & `ProfileServlet.java`)
+All original fields are preserved and organized into **exactly 5 sections**:
+1. **Personal Information** (`/profile?tab=personal`):
+   - **Part A - Personal Details:** First Name, Last Name, Gender, DOB (`type="date"`), Mobile (validated to 10 digits), Email (readonly), Address, City, State.
+   - **Part B - Skills (Optional):** Technical Skills, Soft Skills, Domain Proficiencies.
+   - **Part C - Achievements (Optional):** Certifications, Projects, Extra-Curricular Activities, and saved achievements table with delete action.
+2. **Education** (`/profile?tab=education`):
+   - Form sections for SSC/10th, HSC/12th, Diploma, Graduation, and Master.
+   - Strict range validation on percentage inputs (`min="0" max="100" step="0.01"`).
+   - Sanity validation on passing year inputs (`min="1950" max="2035"`).
+3. **Certification** (`/profile?tab=certifications`):
+   - Add Certification form (Name, Provider, Technology, Credential ID, Dates, Credential URL) and table of saved certifications. (Optional)
+4. **Projects** (`/profile?tab=projects`):
+   - Add Project form (Name, Tech Stack, Role, Type, Team Size, Dates, GitHub URL, Description) and table of saved projects. (Optional)
+5. **Additional Activities** (`/profile?tab=activities`):
+   - **A. Hackathons (Optional):** Hackathon Name, Organizer, Date, Position/Result, Team Name, Description.
+   - **B. Inter-College Project Competitions (Optional):** Competition Name, Host College, Date, Project Name, Result, Team Name, Description.
+- **Silhouette Avatar Placeholder:** Photo upload and resume upload buttons are removed as requested; clean silhouette avatar is displayed.
+- **Profile Completeness Bar:** Fully functional and dynamically calculated in `ProfileDAO.calculateProfileCompletion()`:
+  - Basic Account: 20%
+  - Personal Details: 20%
+  - Education Records: 25%
+  - Skills: 15%
+  - Projects: 10%
+  - Certifications or Activities: 10%
+  - Total = 100%. Optional sections do not block saving or penalize completion unnecessarily.
 
 ---
 
-## 5. Key Design Decisions & Requirement Adherence
+## 4. Database Schema Structure (`database.sql`)
 
-1. **Inline CSS Constraint:**
-   Every single JSP page contains its own independent `<style>` section. No monolithic shared CSS file was used. Each page is completely self-styled and responsive across desktop, tablet, and mobile.
+The database name is `online_internship` (compatible with MySQL 5.7+ / 8.0 and MySQL Workbench 6.3).
 
-2. **Removal of Photo and Resume Upload Buttons:**
-   As instructed by the user ("*Also I don't need the profile photo or the resume upload button, so remove them*"), the UI elements for uploading profile photos in the sidebar and uploading resumes at the bottom of the tabs were completely omitted from `profile.jsp`, while maintaining database columns and backend classes so that future integration into the main website won't face schema or class missing issues.
-
-3. **User ID Authentication Source:**
-   In all controller servlets (`PersonalDetailsServlet`, `EducationServlet`, `SkillsServlet`, `CertificationServlet`, `ProjectServlet`, `HackathonServlet`, `CompetitionServlet`, `AssignmentServlet`, `LectureServlet`), the `userId` is obtained **strictly from `SessionUtil.getUserId(req)`** and **never from hidden form fields or query parameters**, preventing IDOR (Insecure Direct Object Reference) vulnerabilities.
-
-4. **Dynamic Profile Completion:**
-   `ProfileDAO.calculateProfileCompletion(userId)` calculates profile completion mathematically (Personal: 20%, Education: 20%, Achievements: 15%, Skills: 15%, Certifications: 15%, Projects: 15%) and updates `student_profiles.profile_completion`. The resulting value dynamically feeds the sidebar and dashboard.
+### Key Tables:
+1. `users`: Stores user identity, BCrypt password hash, role (`STUDENT`, `ADMIN`), stream, college, city, mobile, timestamps.
+2. `student_profiles`: 1-to-1 profile record linked to `users.user_id` storing gender, date_of_birth, address, state, `profile_completion`, previous_login, last_login.
+3. `education_details`: Stores educational records by level (`SSC`, `HSC`, `Graduation`, `Master`, `Diploma`) with percentage and passing year.
+4. `skills`: Stores technical, soft, and domain skills.
+5. `certifications`: Stores verified certifications, providers, and verification URLs.
+6. `projects`: Stores portfolio projects, technologies, and GitHub links.
+7. `hackathons`: Stores hackathon participation and awards.
+8. `intercollege_competitions`: Stores project exhibition entries and prizes.
+9. `achievements`: Stores legacy achievements and extra-curricular highlights.
+10. `assignments` & `assignment_submissions`: Stores internship assignment briefs and student submissions.
+11. `lectures` & `lecture_progress`: Stores video lectures and student completion progress.
+12. `login_activity`: Audit log of user login sessions and timestamps.
 
 ---
 
-## 6. How to Run & Verify
+## 5. Test Credentials
 
-1. **MySQL Setup:**
-   ```bash
+| Role | Email | Password | Intended Page |
+|---|---|---|---|
+| **Hardcoded Student Test ID** | `test@kasnet.in` | `Test@12345` | `/dashboard` (Student Portal) |
+| **Admin Account** | `admin@kasnet.in` | `Admin@12345` | `/admin` (Monitoring Console) |
+| **Registered Student** | `surajgunjaldev@gmail.com` | Registered Password | `/dashboard` |
+
+---
+
+## 6. How to Run Locally
+
+### Prerequisites:
+- Java JDK 11 or higher (JDK 21 installed)
+- MySQL 8.0 running locally on port 3306 (user `root`, password configured in `DBConnection.java`)
+- Apache Tomcat 8.5 / 9.0 (or Tomcat embedded / WAR deploy)
+
+### Steps to Build & Run:
+1. **Database Setup:**
+   ```powershell
    mysql -u root -p < database.sql
    ```
-2. **Configure Credentials:**
-   Open `src/main/java/com/kasnet/util/DBConnection.java` and update `DB_PASSWORD` if your local MySQL root password is not `root`.
-3. **Build the WAR with Maven:**
-   ```bash
-   mvn clean package
+2. **Build the WAR File:**
+   ```powershell
+   .\mvn.bat clean package
    ```
-4. **Deploy to Apache Tomcat:**
-   Copy `target/kasnet-internship-portal.war` to Tomcat's `webapps/` folder, or run:
-   ```bash
-   mvn tomcat7:run
+   The build produces: `target/kasnet-internship-portal.war`.
+3. **Run via Embedded Maven Tomcat Plugin (Recommended & Quickest):**
+   ```powershell
+   .\mvn.bat tomcat7:run
    ```
-5. **Access in Browser:**
-   - Login: `http://localhost:8080/kasnet-internship-portal/login`
-   - Register: `http://localhost:8080/kasnet-internship-portal/register`
-   - Dashboard: `http://localhost:8080/kasnet-internship-portal/dashboard`
-   - Profile: `http://localhost:8080/kasnet-internship-portal/profile`
+   Access the application in your browser at:
+   ```
+   http://localhost:8080/internship/
+   ```
+
+4. **Run via Standalone Tomcat (8.5 / 9.0):**
+   - Copy `target/kasnet-internship-portal.war` into Tomcat's `webapps/` directory.
+   - Start Tomcat: `bin/startup.bat`.
+   - Access the application in browser:
+     ```
+     http://localhost:8080/kasnet-internship-portal/
+     ```
+
+5. **Run System Verifier Test Suite:**
+   ```powershell
+   .\mvn.bat exec:java '-Dexec.mainClass=com.kasnet.util.SystemVerifier'
+   ```
 
 ---
 
-## 7. Instructions for Any Future AI Model Resuming Work
+## 7. Verification Test Results
 
-If you are an AI model tasked with continuing, extending, or integrating this project:
-- **Do not alter the MVC separation:** keep SQL queries inside the DAOs (`com.kasnet.dao.*`) and presentation strictly in JSP.
-- **Do not introduce a single global CSS file:** maintain the inline `<style>` requirement inside each JSP.
-- **When adding new sections:**
-  1. Add corresponding table or columns to `database.sql`.
-  2. Create/update Model class in `com.kasnet.model`.
-  3. Create/update DAO class in `com.kasnet.dao` using `PreparedStatement`.
-  4. Create/update Controller Servlet in `com.kasnet.controller` and verify `SessionUtil.requireLogin(req, resp)`.
-  5. Add tab or view to `profile.jsp` or new view in `src/main/webapp/views/`.
-  6. Register servlet in `web.xml`.
-- **Integration with Hosted Website:**
-  Copy the `com.kasnet` package into the target web application's Java source directory, copy `views/*.jsp` and `login.jsp`/`register.jsp` to the target web directory, and merge the `<servlet>` and `<servlet-mapping>` blocks from `web.xml`.
+```
+==================================================
+ KASNET INTERNSHIP PORTAL - SYSTEM VERIFICATION
+==================================================
+[TEST 1] Verifying MySQL connection... PASSED (Connected to online_internship)
+[TEST 2] Verifying Input Validations... PASSED (Phone 10-digits, Percentage 0-100, Email, Date verified)
+[TEST 3] Verifying Hardcoded Student Test ID (test@kasnet.in)... PASSED (Authenticated as Student)
+[TEST 4] Verifying Admin Account (admin@kasnet.in)... PASSED (Authenticated as Admin)
+[TEST 5] Verifying Admin User Monitoring Query... PASSED (Retrieved 2 registered accounts)
+[TEST 6] Verifying Profile Completeness Calculation... PASSED (Dynamic Score calculated)
+[TEST 7] Verifying Education Percentage & Record Persistence... PASSED (Education record saved with 88.5%)
+==================================================
+ ALL VERIFICATION TESTS PASSED SUCCESSFULLY!
+==================================================
+```
+
+---
+
+## 8. Summary for Future Work & Integration
+
+- All JSPs use **inline `<style>` tags**, adhering strictly to the architectural rule to avoid giant monolithic CSS files.
+- Servlets, DAOs, and Models are cleanly separated following standard MVC.
+- When integrating with the live host website:
+  1. Set the database URL, username, and password in `com.kasnet.util.DBConnection.java` (or extract to environment variables / JNDI DataSource).
+  2. The WAR is ready for zero-downtime deployment into Apache Tomcat.
+  3. Resume Analysis parsing engine can be wired directly into `ResumeAnalysisServlet.java`.

@@ -3,7 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
          http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-         version="3.1">
+         version="3.1"
+         metadata-complete="true">
 
     <display-name>Kasnet Online Internship Portal</display-name>
 
@@ -15,6 +16,10 @@
     <context-param>
         <param-name>maxFileSizeMB</param-name>
         <param-value>5</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.timeZone</param-name>
+        <param-value>Asia/Kolkata</param-value>
     </context-param>
 
     <!-- ======================== SERVLETS ======================== -->
@@ -184,8 +189,39 @@
         <url-pattern>/lectures</url-pattern>
     </servlet-mapping>
 
+    <!-- Admin -->
+    <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.AdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+
+    <!-- Question Bank -->
+    <servlet>
+        <servlet-name>QuestionBankServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.QuestionBankServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>QuestionBankServlet</servlet-name>
+        <url-pattern>/question-bank</url-pattern>
+    </servlet-mapping>
+
+    <!-- Resume Analysis -->
+    <servlet>
+        <servlet-name>ResumeAnalysisServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.ResumeAnalysisServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResumeAnalysisServlet</servlet-name>
+        <url-pattern>/resume-analysis</url-pattern>
+    </servlet-mapping>
+
     <!-- ======================== WELCOME FILE ======================== -->
     <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
 

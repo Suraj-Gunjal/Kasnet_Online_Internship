@@ -80,6 +80,18 @@
             z-index: 1;
         }
 
+        .brand-logo .brand-logo-img {
+            max-width: 52px;
+            max-height: 52px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #ffffff;
+            padding: 4px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            flex-shrink: 0;
+        }
+
         .brand-logo .logo-icon {
             width: 52px;
             height: 52px;
@@ -89,6 +101,8 @@
             align-items: center;
             justify-content: center;
             font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
             box-shadow: 0 6px 20px rgba(66,165,245,0.4);
         }
 
@@ -190,7 +204,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            color: #64b5f6;
             flex-shrink: 0;
             border: 1px solid rgba(100,181,246,0.25);
         }
@@ -300,9 +314,11 @@
         }
 
         .alert-icon {
-            font-size: 1rem;
             flex-shrink: 0;
             margin-top: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* ===== CARD ===== */
@@ -360,7 +376,11 @@
         .input-icon {
             position: absolute;
             left: 12px;
-            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
             color: #9ca3af;
             pointer-events: none;
             z-index: 1;
@@ -443,9 +463,11 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 15px;
             color: #9ca3af;
             padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: color 0.2s;
             z-index: 1;
         }
@@ -548,20 +570,24 @@
 
         .captcha-refresh {
             position: absolute;
-            top: 6px;
+            top: 50%;
+            transform: translateY(-50%);
             right: 8px;
-            background: none;
-            border: none;
+            background: rgba(255,255,255,0.7);
+            border: 1px solid #c5cae9;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
             color: #5c6bc0;
             z-index: 2;
-            padding: 2px;
-            transition: transform 0.3s;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, background 0.2s;
         }
 
         .captcha-refresh:hover {
-            transform: rotate(180deg);
+            background: #ffffff;
             color: #3949ab;
         }
 
@@ -761,7 +787,7 @@
     <aside class="left-panel">
         <!-- Logo -->
         <div class="brand-logo">
-            <div class="logo-icon">🚀</div>
+            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" class="brand-logo-img" />
             <div class="logo-text">
                 <span class="logo-name">Kasnet</span>
                 <span class="logo-tagline">Internship Portal</span>
@@ -796,19 +822,27 @@
         <!-- Benefits -->
         <ul class="benefits-list">
             <li>
-                <div class="benefit-icon">🎓</div>
+                <div class="benefit-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                </div>
                 <div>Access curated internships across 25+ domains &amp; streams</div>
             </li>
             <li>
-                <div class="benefit-icon">🏆</div>
+                <div class="benefit-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                </div>
                 <div>Industry-recognized digital certificates upon completion</div>
             </li>
             <li>
-                <div class="benefit-icon">👨‍💼</div>
+                <div class="benefit-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
                 <div>One-on-one mentorship from seasoned professionals</div>
             </li>
             <li>
-                <div class="benefit-icon">💼</div>
+                <div class="benefit-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                </div>
                 <div>Pre-placement offers &amp; direct recruiter connections</div>
             </li>
         </ul>
@@ -825,7 +859,7 @@
 
             <!-- Header -->
             <div class="form-header">
-                <div class="step-badge">&#128640; Free Registration</div>
+                <div class="step-badge">Free Student Registration</div>
                 <h1>Create Your Account</h1>
                 <p>Start your internship journey today &mdash; it only takes 2 minutes</p>
             </div>
@@ -833,20 +867,26 @@
             <!-- Server-side messages -->
             <c:if test="${not empty requestScope.error}">
                 <div class="alert alert-error" id="serverAlert">
-                    <span class="alert-icon">&#10060;</span>
+                    <span class="alert-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                    </span>
                     <div>${requestScope.error}</div>
                 </div>
             </c:if>
             <c:if test="${not empty requestScope.success}">
                 <div class="alert alert-success" id="serverSuccess">
-                    <span class="alert-icon">&#10003;</span>
+                    <span class="alert-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
                     <div>${requestScope.success}</div>
                 </div>
             </c:if>
 
             <!-- Client-side validation alert -->
             <div class="alert alert-error" id="clientAlert" style="display:none;">
-                <span class="alert-icon">&#10060;</span>
+                <span class="alert-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                </span>
                 <div id="clientAlertMsg"></div>
             </div>
 
@@ -867,7 +907,9 @@
                         <div class="form-group">
                             <label for="firstName">First Name <span class="required-star">*</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#128100;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </span>
                                 <input type="text"
                                        id="firstName"
                                        name="firstName"
@@ -883,7 +925,9 @@
                         <div class="form-group">
                             <label for="lastName">Last Name <span class="required-star">*</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#128100;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </span>
                                 <input type="text"
                                        id="lastName"
                                        name="lastName"
@@ -899,12 +943,14 @@
                         <div class="form-group">
                             <label for="countryCode">Country Code <span class="required-star">*</span></label>
                             <div class="input-wrapper select-wrapper">
-                                <span class="input-icon">&#127758;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                </span>
                                 <select id="countryCode" name="countryCode" required>
-                                    <option value="+91" ${requestScope.countryCode == '+91' || empty requestScope.countryCode ? 'selected' : ''}>&#127470;&#127475; +91 &mdash; India</option>
-                                    <option value="+1"  ${requestScope.countryCode == '+1'  ? 'selected' : ''}>&#127482;&#127480; +1 &mdash; USA</option>
-                                    <option value="+44" ${requestScope.countryCode == '+44' ? 'selected' : ''}>&#127468;&#127463; +44 &mdash; UK</option>
-                                    <option value="+61" ${requestScope.countryCode == '+61' ? 'selected' : ''}>&#127462;&#127482; +61 &mdash; Australia</option>
+                                    <option value="+91" ${requestScope.countryCode == '+91' || empty requestScope.countryCode ? 'selected' : ''}>India (+91)</option>
+                                    <option value="+1"  ${requestScope.countryCode == '+1'  ? 'selected' : ''}>USA (+1)</option>
+                                    <option value="+44" ${requestScope.countryCode == '+44' ? 'selected' : ''}>UK (+44)</option>
+                                    <option value="+61" ${requestScope.countryCode == '+61' ? 'selected' : ''}>Australia (+61)</option>
                                 </select>
                             </div>
                         </div>
@@ -913,7 +959,9 @@
                         <div class="form-group">
                             <label for="mobile">Mobile Number <span class="required-star">*</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#128222;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                </span>
                                 <input type="tel"
                                        id="mobile"
                                        name="mobile"
@@ -930,7 +978,9 @@
                         <div class="form-group full-width">
                             <label for="email">Email Address <span class="required-star">*</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#9993;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                </span>
                                 <input type="email"
                                        id="email"
                                        name="email"
@@ -949,7 +999,9 @@
                         <div class="form-group">
                             <label for="password">Password <span class="required-star">*</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#128274;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </span>
                                 <input type="password"
                                        id="password"
                                        name="password"
@@ -957,8 +1009,10 @@
                                        maxlength="64"
                                        autocomplete="new-password"
                                        required>
-                                <button type="button" class="toggle-pass" onclick="togglePass('password','eyePass')" title="Show/hide password">
-                                    <span id="eyePass">&#128065;</span>
+                                <button type="button" class="toggle-pass" onclick="togglePass('password','eyePass')" title="Show/hide password" aria-label="Toggle password visibility">
+                                    <span id="eyePass">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </span>
                                 </button>
                             </div>
                             <div class="password-strength">
@@ -974,7 +1028,9 @@
                         <div class="form-group">
                             <label for="confirmPassword">Confirm Password <span class="required-star">*</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#128275;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </span>
                                 <input type="password"
                                        id="confirmPassword"
                                        name="confirmPassword"
@@ -982,8 +1038,10 @@
                                        maxlength="64"
                                        autocomplete="new-password"
                                        required>
-                                <button type="button" class="toggle-pass" onclick="togglePass('confirmPassword','eyeConfirm')" title="Show/hide password">
-                                    <span id="eyeConfirm">&#128065;</span>
+                                <button type="button" class="toggle-pass" onclick="togglePass('confirmPassword','eyeConfirm')" title="Show/hide password" aria-label="Toggle password visibility">
+                                    <span id="eyeConfirm">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </span>
                                 </button>
                             </div>
                             <div class="match-msg" id="matchMsg"></div>
@@ -995,13 +1053,10 @@
 
                         <!-- Role -->
                         <div class="form-group">
-                            <label for="role">Select Role <span class="required-star">*</span></label>
+                            <label for="role">Registering As <span class="required-star">*</span></label>
                             <div class="input-wrapper select-wrapper">
-                                <span class="input-icon">&#127891;</span>
                                 <select id="role" name="role" required>
-                                    <option value="" disabled ${empty requestScope.role ? 'selected' : ''}>-- Select Role --</option>
-                                    <option value="STUDENT" ${requestScope.role == 'STUDENT' ? 'selected' : ''}>&#128100; Student</option>
-                                    <option value="ADMIN"   ${requestScope.role == 'ADMIN'   ? 'selected' : ''}>&#128737; Admin</option>
+                                    <option value="STUDENT" selected>Student</option>
                                 </select>
                             </div>
                             <span class="field-error" id="roleError">Please select a role.</span>
@@ -1011,12 +1066,11 @@
                         <div class="form-group">
                             <label for="stream">Stream <span class="required-star">*</span></label>
                             <div class="input-wrapper select-wrapper">
-                                <span class="input-icon">&#128218;</span>
                                 <select id="stream" name="stream" required>
                                     <option value="" disabled ${empty requestScope.stream ? 'selected' : ''}>-- Select Stream --</option>
-                                    <option value="Graduation"      ${requestScope.stream == 'Graduation'      ? 'selected' : ''}>&#127979; Graduation</option>
-                                    <option value="Post Graduation" ${requestScope.stream == 'Post Graduation' ? 'selected' : ''}>&#127981; Post Graduation</option>
-                                    <option value="Diploma"         ${requestScope.stream == 'Diploma'         ? 'selected' : ''}>&#128196; Diploma</option>
+                                    <option value="Graduation"      ${requestScope.stream == 'Graduation'      ? 'selected' : ''}>Graduation</option>
+                                    <option value="Post Graduation" ${requestScope.stream == 'Post Graduation' ? 'selected' : ''}>Post Graduation</option>
+                                    <option value="Diploma"         ${requestScope.stream == 'Diploma'         ? 'selected' : ''}>Diploma</option>
                                 </select>
                             </div>
                             <span class="field-error" id="streamError">Please select your stream.</span>
@@ -1026,7 +1080,9 @@
                         <div class="form-group">
                             <label for="collegeName">College Name <span class="required-star">*</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#127963;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                                </span>
                                 <input type="text"
                                        id="collegeName"
                                        name="collegeName"
@@ -1042,7 +1098,9 @@
                         <div class="form-group">
                             <label for="city">City <span class="required-star">*</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#127961;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                </span>
                                 <input type="text"
                                        id="city"
                                        name="city"
@@ -1061,7 +1119,9 @@
                         <div class="form-group full-width">
                             <label for="referralCode">Referral Code <span class="optional-tag">(optional)</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#127381;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                </span>
                                 <input type="text"
                                        id="referralCode"
                                        name="referralCode"
@@ -1087,7 +1147,9 @@
                                         <span class="captcha-text" id="captchaText"></span>
                                     </c:otherwise>
                                 </c:choose>
-                                <button type="button" class="captcha-refresh" onclick="refreshCaptcha()" title="Refresh CAPTCHA">&#128260;</button>
+                                <button type="button" class="captcha-refresh" onclick="refreshCaptcha()" title="Refresh CAPTCHA" aria-label="Refresh CAPTCHA">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                                </button>
                             </div>
                         </div>
 
@@ -1095,7 +1157,9 @@
                         <div class="form-group">
                             <label for="captchaInput">Enter CAPTCHA <span class="required-star">*</span></label>
                             <div class="input-wrapper">
-                                <span class="input-icon">&#128737;</span>
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                </span>
                                 <input type="text"
                                        id="captchaInput"
                                        name="captchaInput"
@@ -1117,7 +1181,7 @@
                         <!-- ====== SUBMIT ====== -->
                         <button type="submit" class="btn-submit" id="submitBtn">
                             <span class="btn-spinner" id="btnSpinner"></span>
-                            <span id="btnText">&#128640;&nbsp; Create Account</span>
+                            <span id="btnText">Create Account</span>
                         </button>
 
                         <!-- Sign In Link -->
@@ -1190,15 +1254,18 @@
     /* =============================================
        PASSWORD VISIBILITY TOGGLE
        ============================================= */
+    var eyeSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    var eyeOffSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
     function togglePass(inputId, iconId) {
         var inp = document.getElementById(inputId);
         var icon = document.getElementById(iconId);
         if (inp.type === 'password') {
             inp.type = 'text';
-            icon.textContent = '\uD83D\uDE48'; // 🙈
+            icon.innerHTML = eyeOffSvg;
         } else {
             inp.type = 'password';
-            icon.textContent = '\uD83D\uDC41'; // 👁
+            icon.innerHTML = eyeSvg;
         }
     }
 
@@ -1263,13 +1330,13 @@
             return;
         }
         if (pwd === conf) {
-            matchMsg.textContent = '✓ Passwords match';
+            matchMsg.textContent = 'Passwords match';
             matchMsg.className = 'match-msg match-ok';
             confInput.classList.remove('input-error');
             confInput.classList.add('input-success');
             hideFieldError('confirmPasswordError');
         } else {
-            matchMsg.textContent = '✗ Passwords do not match';
+            matchMsg.textContent = 'Passwords do not match';
             matchMsg.className = 'match-msg match-fail';
             confInput.classList.remove('input-success');
         }

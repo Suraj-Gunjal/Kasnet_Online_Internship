@@ -327,7 +327,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <a href="${pageContext.request.contextPath}/dashboard" class="navbar-brand">
-            <div class="logo-icon">K</div>
+            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
             <span>Kasnet Internship Portal</span>
         </a>
         <div class="navbar-menu">
@@ -335,6 +335,8 @@
             <a href="${pageContext.request.contextPath}/profile" class="nav-link">Profile</a>
             <a href="${pageContext.request.contextPath}/assignments" class="nav-link">Assignments</a>
             <a href="${pageContext.request.contextPath}/lectures" class="nav-link active">Lectures</a>
+            <a href="${pageContext.request.contextPath}/question-bank" class="nav-link">Question Bank</a>
+            <a href="${pageContext.request.contextPath}/resume-analysis" class="nav-link">Resume Analysis</a>
             <a href="${pageContext.request.contextPath}/logout" class="btn-logout">Logout</a>
         </div>
     </nav>
@@ -364,12 +366,12 @@
                         <div>
                             <div class="lecture-num">Lecture #${lec.lectureNumber}</div>
                             <h2 class="lecture-title">${lec.title}</h2>
-                            <div class="lecture-subject">📌 ${lec.subject}</div>
+                            <div class="lecture-subject">${lec.subject}</div>
                             <p class="lecture-desc">${lec.description}</p>
                         </div>
 
                         <div class="lecture-footer">
-                            <span class="instructor-info">👨‍🏫 ${lec.instructor}</span>
+                            <span class="instructor-info">Instructor: ${lec.instructor}</span>
                             <c:choose>
                                 <c:when test="${lec.completed}">
                                     <span class="completed-badge">✓ Completed</span>

@@ -17,7 +17,7 @@ public class AchievementServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect(req.getContextPath() + "/profile?tab=achievements");
+        resp.sendRedirect(req.getContextPath() + "/profile?tab=personal");
     }
 
     @Override
@@ -83,6 +83,6 @@ public class AchievementServlet extends HttpServlet {
         int completion = profileDAO.calculateProfileCompletion(userId);
         profileDAO.updateProfileCompletion(userId, completion);
 
-        resp.sendRedirect(req.getContextPath() + "/profile?tab=achievements&success=1");
+        resp.sendRedirect(req.getContextPath() + "/profile?tab=personal&success=1");
     }
 }

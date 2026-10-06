@@ -19,7 +19,7 @@ public class SkillsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect(req.getContextPath() + "/profile?tab=skills");
+        resp.sendRedirect(req.getContextPath() + "/profile?tab=personal");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class SkillsServlet extends HttpServlet {
         int completion = profileDAO.calculateProfileCompletion(userId);
         profileDAO.updateProfileCompletion(userId, completion);
 
-        resp.sendRedirect(req.getContextPath() + "/profile?tab=skills&success=1");
+        resp.sendRedirect(req.getContextPath() + "/profile?tab=personal&success=1");
     }
 
     private List<String> parseSkills(String input) {

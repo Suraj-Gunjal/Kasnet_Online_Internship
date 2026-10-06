@@ -214,6 +214,27 @@ public class UserDAO {
         }
     }
 
+    public java.util.List<User> getAllUsers() {
+        java.util.List<User> users = new java.util.ArrayList<>();
+        final String sql = "SELECT * FROM users ORDER BY user_id DESC";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBConnection.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                users.add(mapRowToUser(rs));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "getAllUsers: failed", e);
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return users;
+    }
+
     private User mapRowToUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("user_id"));

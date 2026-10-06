@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 public class DashboardServlet extends HttpServlet {
 
@@ -29,6 +30,10 @@ public class DashboardServlet extends HttpServlet {
             return;
         }
 
+        // Dynamic completion recalculation
+        int completion = profileDAO.calculateProfileCompletion(userId);
+        profileDAO.updateProfileCompletion(userId, completion);
+
         DashboardStats stats = dashboardDAO.getDashboardStats(userId);
         User user = userDAO.getUserById(userId);
         StudentProfile profile = profileDAO.getProfileByUserId(userId);
@@ -37,8 +42,27 @@ public class DashboardServlet extends HttpServlet {
             profileDAO.createProfile(userId);
             profile = profileDAO.getProfileByUserId(userId);
         }
+        if (profile != null) {
+            profile.setProfileCompletion(completion);
+            if (stats != null) {
+                stats.setProfileCompletion(completion);
+            }
+        }
 
-        req.setAttribute("stats", stats);
+        if (user == null) {
+            HttpSession session = req.getSession(false);
+            user = new User();
+            user.setUserId(userId);
+            user.setFirstName(session != null && session.getAttribute("userName") != null ? (String) session.getAttribute("userName") : "Test Student");
+            user.setLastName("");
+            user.setEmail(session != null && session.getAttribute("userEmail") != null ? (String) session.getAttribute("userEmail") : "test@kasnet.in");
+            user.setRole("STUDENT");
+            user.setStream("Graduation");
+            user.setCollegeName("Kasnet Institute of Technology");
+            user.setCity("Pune");
+        }
+
+        req.setAttribute("stats", stats != null ? stats : new DashboardStats());
         req.setAttribute("user", user);
         req.setAttribute("profile", profile);
 

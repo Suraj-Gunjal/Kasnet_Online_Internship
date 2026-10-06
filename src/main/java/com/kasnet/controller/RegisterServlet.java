@@ -54,8 +54,15 @@ public class RegisterServlet extends HttpServlet {
 
         // Required field validation
         if (isNullOrBlank(firstName) || isNullOrBlank(lastName) || isNullOrBlank(email) ||
-            isNullOrBlank(mobile) || isNullOrBlank(password) || isNullOrBlank(confirmPass)) {
+            isNullOrBlank(mobile) || isNullOrBlank(password) || isNullOrBlank(confirmPass) ||
+            isNullOrBlank(stream) || isNullOrBlank(collegeName) || isNullOrBlank(city)) {
             forwardWithError(req, resp, "All required fields must be filled.");
+            return;
+        }
+
+        // Mobile validation (exactly 10 digits)
+        if (!ValidationUtil.isValidMobile(mobile)) {
+            forwardWithError(req, resp, "Phone number must be exactly 10 digits.");
             return;
         }
 
@@ -65,20 +72,24 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        // Password matching
+        // Password length & matching
+        if (password.length() < 8) {
+            forwardWithError(req, resp, "Password must be at least 8 characters long.");
+            return;
+        }
         if (!password.equals(confirmPass)) {
             forwardWithError(req, resp, "Password and confirm password do not match.");
             return;
         }
 
-        // Build User object
+        // Build User object (Strictly STUDENT for public registration)
         User user = new User();
         user.setFirstName(firstName.trim());
         user.setLastName(lastName.trim());
         user.setEmail(email.trim().toLowerCase());
         user.setCountryCode(countryCode != null ? countryCode.trim() : "+91");
         user.setMobile(mobile.trim());
-        user.setRole(role != null ? role.trim().toUpperCase() : "STUDENT");
+        user.setRole("STUDENT");
         user.setStream(stream != null ? stream.trim() : "Graduation");
         user.setCollegeName(collegeName != null ? collegeName.trim() : "");
         user.setCity(city != null ? city.trim() : "");
@@ -87,8 +98,8 @@ public class RegisterServlet extends HttpServlet {
         try {
             authService.register(user, password);
             HttpSession newSession = req.getSession(true);
-            newSession.setAttribute("successMessage", "Account created successfully! Please sign in to continue.");
-            resp.sendRedirect(req.getContextPath() + "/login");
+            newSession.setAttribute("registrationSuccess", true);
+            resp.sendRedirect(req.getContextPath() + "/?registered=success");
         } catch (Exception e) {
             forwardWithError(req, resp, e.getMessage());
         }

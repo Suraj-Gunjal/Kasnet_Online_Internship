@@ -94,12 +94,12 @@ public class ProfileDAO {
     /**
      * Calculates dynamic profile completion (0-100%).
      * Weights:
-     * - Personal Details: 20%
-     * - Education: 20%
-     * - Achievements: 15%
-     * - Skills: 15%
-     * - Certifications: 15%
-     * - Projects: 15%
+     * - Basic User Account: 20%
+     * - Personal Details (Gender, DOB, Address): 20%
+     * - Education Records: 25%
+     * - Skills (Technical/Soft): 15%
+     * - Projects: 10%
+     * - Certifications or Additional Activities: 10%
      */
     public int calculateProfileCompletion(int userId) {
         int score = 0;
@@ -107,6 +107,9 @@ public class ProfileDAO {
 
         try {
             conn = DBConnection.getConnection();
+
+            // Basic registration account exists: 20%
+            score += 20;
 
             // Personal details (20%)
             final String personalSql = "SELECT gender, date_of_birth, address FROM student_profiles WHERE user_id = ?";
@@ -121,20 +124,24 @@ public class ProfileDAO {
                 }
             }
 
-            // Education details (20%)
-            score += sectionScore(conn, userId, "SELECT COUNT(*) FROM education_details WHERE user_id = ?", 20);
-
-            // Achievements (15%)
-            score += sectionScore(conn, userId, "SELECT COUNT(*) FROM achievements WHERE user_id = ?", 15);
+            // Education details (25%)
+            score += sectionScore(conn, userId, "SELECT COUNT(*) FROM education_details WHERE user_id = ?", 25);
 
             // Skills (15%)
             score += sectionScore(conn, userId, "SELECT COUNT(*) FROM skills WHERE user_id = ?", 15);
 
-            // Certifications (15%)
-            score += sectionScore(conn, userId, "SELECT COUNT(*) FROM certifications WHERE user_id = ?", 15);
+            // Projects (10%)
+            score += sectionScore(conn, userId, "SELECT COUNT(*) FROM projects WHERE user_id = ?", 10);
 
-            // Projects (15%)
-            score += sectionScore(conn, userId, "SELECT COUNT(*) FROM projects WHERE user_id = ?", 15);
+            // Certifications or Additional Activities (10%)
+            int actScore = sectionScore(conn, userId, "SELECT COUNT(*) FROM certifications WHERE user_id = ?", 10);
+            if (actScore == 0) {
+                actScore = sectionScore(conn, userId, "SELECT COUNT(*) FROM hackathons WHERE user_id = ?", 10);
+            }
+            if (actScore == 0) {
+                actScore = sectionScore(conn, userId, "SELECT COUNT(*) FROM intercollege_competitions WHERE user_id = ?", 10);
+            }
+            score += actScore;
 
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "calculateProfileCompletion: failed for userId=" + userId, e);

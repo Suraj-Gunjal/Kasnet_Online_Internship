@@ -56,7 +56,10 @@ public class EducationServlet extends HttpServlet {
 
                 if (pctStr != null && !pctStr.trim().isEmpty()) {
                     try {
-                        edu.setPercentage(Double.parseDouble(pctStr.trim()));
+                        double pct = Double.parseDouble(pctStr.trim());
+                        if (pct >= 0.0 && pct <= 100.0) {
+                            edu.setPercentage(pct);
+                        }
                     } catch (NumberFormatException ignored) {}
                 }
 

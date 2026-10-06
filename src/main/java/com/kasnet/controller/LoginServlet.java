@@ -121,12 +121,17 @@ public class LoginServlet extends HttpServlet {
             newSession.setAttribute("userName",  user.getFirstName() + " " + user.getLastName());
             newSession.setAttribute("userEmail", user.getEmail());
             newSession.setAttribute("userRole",  user.getRole());
+            newSession.setAttribute("loginSuccessAlert", true);
 
             // Optional: set a reasonable session timeout (30 minutes)
             newSession.setMaxInactiveInterval(30 * 60);
 
-            // Redirect to dashboard after successful login
-            response.sendRedirect(request.getContextPath() + "/dashboard");
+            // Role-based redirect with login success flag
+            if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+                response.sendRedirect(request.getContextPath() + "/admin?loginSuccess=1");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/dashboard?loginSuccess=1");
+            }
 
         } catch (Exception e) {
             // Re-generate CAPTCHA for the retry attempt

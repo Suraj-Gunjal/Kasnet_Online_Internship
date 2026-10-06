@@ -76,9 +76,22 @@ public class ProfileServlet extends HttpServlet {
         List<Hackathon> hackathonList = hackathonDAO.getHackathonsByUserId(userId);
         List<Competition> competitionList = competitionDAO.getCompetitionsByUserId(userId);
 
-        // Active tab parameter
+        if (user == null) {
+            javax.servlet.http.HttpSession session = req.getSession(false);
+            user = new User();
+            user.setUserId(userId);
+            user.setFirstName(session != null && session.getAttribute("userName") != null ? (String) session.getAttribute("userName") : "Test Student");
+            user.setLastName("");
+            user.setEmail(session != null && session.getAttribute("userEmail") != null ? (String) session.getAttribute("userEmail") : "test@kasnet.in");
+            user.setRole("STUDENT");
+            user.setStream("Graduation");
+            user.setCollegeName("Kasnet Institute of Technology");
+            user.setCity("Pune");
+        }
+
+        // Active tab parameter - exactly 5 sections
         String activeTab = req.getParameter("tab");
-        if (activeTab == null || activeTab.trim().isEmpty()) {
+        if (activeTab == null || activeTab.trim().isEmpty() || "skills".equalsIgnoreCase(activeTab) || "achievements".equalsIgnoreCase(activeTab)) {
             activeTab = "personal";
         }
 

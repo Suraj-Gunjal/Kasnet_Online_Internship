@@ -137,6 +137,17 @@
             gap: 14px;
             margin-bottom: 36px;
         }
+        .brand-logo-img {
+            max-width: 58px;
+            max-height: 58px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #ffffff;
+            padding: 4px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            flex-shrink: 0;
+        }
         .logo-icon {
             width: 58px;
             height: 58px;
@@ -209,7 +220,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 13px;
+            color: #ffffff;
             margin-top: 1px;
         }
 
@@ -276,7 +287,13 @@
             border: 1px solid var(--success-bdr);
             color: var(--success-txt);
         }
-        .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+        .alert-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
 
         /* form groups */
         .form-group {
@@ -518,7 +535,7 @@
         ══════════════════════════════════════ -->
         <aside class="brand-panel">
             <div class="logo-wrap">
-                <div class="logo-icon">K</div>
+                <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" class="brand-logo-img" />
                 <div class="logo-text-wrap">
                     <span class="logo-name">Kasnet</span>
                     <span class="logo-sub">Online Internship Portal</span>
@@ -533,19 +550,27 @@
 
             <ul class="feature-list">
                 <li>
-                    <span class="feature-icon">🎓</span>
+                    <span class="feature-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    </span>
                     <span>Browse and apply to curated internship programs across industries.</span>
                 </li>
                 <li>
-                    <span class="feature-icon">📋</span>
+                    <span class="feature-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 12l2 2 4-4"/></svg>
+                    </span>
                     <span>Track your applications and receive real-time status updates.</span>
                 </li>
                 <li>
-                    <span class="feature-icon">🛡️</span>
+                    <span class="feature-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </span>
                     <span>Secure, role-based access for Students and Administrators.</span>
                 </li>
                 <li>
-                    <span class="feature-icon">📊</span>
+                    <span class="feature-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    </span>
                     <span>Admin dashboard for managing listings, applicants &amp; reports.</span>
                 </li>
             </ul>
@@ -563,7 +588,9 @@
             <%-- ── Error alert ── --%>
             <c:if test="${not empty requestScope.error}">
                 <div class="alert alert-error" id="errorAlert">
-                    <span class="alert-icon">⚠️</span>
+                    <span class="alert-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </span>
                     <span>${requestScope.error}</span>
                 </div>
             </c:if>
@@ -573,7 +600,9 @@
                 if (successMsg != null && !successMsg.isEmpty()) {
             %>
                 <div class="alert alert-success" id="successAlert">
-                    <span class="alert-icon">✅</span>
+                    <span class="alert-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </span>
                     <span><%= successMsg %></span>
                 </div>
             <%
