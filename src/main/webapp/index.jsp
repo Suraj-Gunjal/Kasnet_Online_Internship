@@ -577,16 +577,8 @@
             </ul>
 
             <div class="nav-auth">
-                <c:choose>
-                    <c:when test="${not empty sessionScope.userId}">
-                        <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-outline">My Dashboard</a>
-                        <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Login</a>
-                        <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Register</a>
-                    </c:otherwise>
-                </c:choose>
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Sign In</a>
+                <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Sign Up</a>
             </div>
         </div>
     </header>
@@ -751,7 +743,7 @@
                     <div class="feature-icon-box">A</div>
                     <div class="feature-content">
                         <h4>Assignment Tracking</h4>
-                        <p>View upcoming tasks, deadline notifications, and review mentor feedback directly in your portal dashboard.</p>
+                        <p>View upcoming tasks, deadline notifications, and review mentor feedback directly in your portal Home.</p>
                     </div>
                 </div>
 
@@ -816,7 +808,7 @@
     <div class="modal-overlay" id="registrationSuccessModal">
         <div class="modal-card">
             <h3 class="modal-title">Congratulations! Account created successfully.</h3>
-            <p class="modal-body">Your student registration has been completed. You can now sign in using your registered email and password to access your internship dashboard.</p>
+            <p class="modal-body">Your student registration has been completed. You can now sign in using your registered email and password to access your internship Home.</p>
             <div class="modal-actions">
                 <a href="${pageContext.request.contextPath}/login" class="btn btn-primary">Proceed to Login</a>
                 <button type="button" class="btn btn-outline" onclick="closeSuccessModal()">Close</button>

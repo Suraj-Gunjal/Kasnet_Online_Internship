@@ -1,593 +1,406 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
-    if (session.getAttribute("userId") == null) {
-        response.sendRedirect(request.getContextPath() + "/login");
+    if (request.getAttribute("activeSection") == null) {
+        response.sendRedirect(request.getContextPath() + "/dashboard");
         return;
     }
-
-    String loginSuccessParam = request.getParameter("loginSuccess");
-    boolean isLoginSuccess = "1".equals(loginSuccessParam) || session.getAttribute("loginSuccessAlert") != null;
-    if (session.getAttribute("loginSuccessAlert") != null) {
-        session.removeAttribute("loginSuccessAlert");
-    }
 %>
+<c:set var="selectedSection" value="${requestScope.activeSection}" />
+<c:if test="${empty selectedSection}">
+    <c:set var="selectedSection" value="student-profile" />
+</c:if>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard - Kasnet Internship Portal</title>
+    <title>Dashboard - Kasnet Internship Portal</title>
     <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        body { font-family: var(--font); background-color: #f8fafc; color: #1e293b; line-height: 1.5; }
+        .navbar { position: fixed; z-index: 1000; top: 0; left: 0; right: 0; background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: #ffffff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+        .navbar-branding { display: flex; align-items: center; flex: 0 0 auto; }
+        .menu-toggle { width: 34px; height: 34px; display: grid; align-content: center; justify-items: center; gap: 5px; flex: 0 0 auto; margin-right: 10px; border: 0; border-radius: 6px; color: #fff; background: rgba(255,255,255,0.2); cursor: pointer; }
+        .menu-toggle:focus-visible { outline: 3px solid #bfdbfe; outline-offset: 2px; }
+        .menu-toggle span { width: 19px; height: 2px; border-radius: 2px; background: currentColor; }
+        .navbar-brand { display: flex; align-items: center; gap: 12px; font-size: 1.15rem; font-weight: 700; text-decoration: none; color: #ffffff; }
+        .navbar-menu { display: flex; align-items: center; gap: 14px; }
+        .nav-link { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.88rem; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+        .nav-link:hover, .nav-link.active { color: #ffffff; background: rgba(255,255,255,0.15); }
+        .btn-logout { background: #dc2626; color: #ffffff; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600; }
+        .btn-logout:hover { background: #b91c1c; }
+        .layout { width: 100%; min-height: calc(100vh - 58px); display: grid; grid-template-columns: 270px minmax(0, 1fr); align-items: stretch; gap: 0; margin: 58px 0 0; padding: 0; transition: grid-template-columns .25s ease; }
+        .sidebar { position: fixed; z-index: 900; top: 58px; bottom: 0; left: 0; width: 270px; overflow-y: auto; padding: 24px 18px; border: 0; border-right: 1px solid #dce4f1; border-radius: 0; background: #f9fbff; box-shadow: 4px 0 18px rgba(30, 41, 86, .045); transition: transform .25s ease; }
+        .sidebar-title { margin: 0 8px 18px; padding: 0 4px 14px; border-bottom: 1px solid #e1e8f3; color: #64748b; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+        .menu-group { margin: 8px 0; overflow: hidden; border: 1px solid #dfe6f1; border-radius: 10px; background: #fff; box-shadow: 0 2px 5px rgba(30, 41, 86, .035); transition: border-color .18s, box-shadow .18s; }
+        .menu-group[open] { border-color: #b8c9f2; box-shadow: 0 4px 12px rgba(37, 99, 235, .08); }
+        .menu-group summary { position: relative; padding: 13px 38px 13px 14px; color: #25345f; cursor: pointer; font-weight: 700; list-style: none; transition: color .18s, background .18s; }
+        .menu-group summary::-webkit-details-marker { display: none; }
+        .menu-group summary::after { position: absolute; top: 50%; right: 16px; width: 8px; height: 8px; border-right: 2px solid #71809e; border-bottom: 2px solid #71809e; content: ""; transform: translateY(-70%) rotate(45deg); transition: transform .18s, border-color .18s; }
+        .menu-group[open] summary::after { border-color: #2563eb; transform: translateY(-30%) rotate(225deg); }
+        .menu-group summary:hover, .menu-group[open] summary { color: #1d4ed8; background: #f1f5ff; }
+        .submenu { display: grid; gap: 4px; padding: 5px 9px 10px 13px; border-top: 1px solid #edf1f7; }
+        .submenu a { padding: 10px 11px; border-left: 2px solid #dbeafe; border-radius: 0 7px 7px 0; color: #475569; font-size: 14px; line-height: 1.4; text-decoration: none; transition: color .18s, background .18s, border-color .18s; }
+        .submenu a:hover, .submenu a:focus { border-left-color: #2563eb; color: #1d4ed8; background: #f5f8ff; }
+        .submenu a.active { border-left: 4px solid #1d4ed8; color: #1e40af; background: #eaf1ff; font-weight: 700; }
+        .content { grid-column: 2; display: grid; align-content: start; gap: 20px; min-width: 0; padding: 28px; transition: padding .25s ease; }
+        .panel { min-height: 230px; padding: 30px; animation: panel-in .24s ease both; }
+        .panel { border: 1px solid #e1e8f3; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgba(30, 41, 86, .07); }
+        @keyframes panel-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .sidebar-hidden .layout { grid-template-columns: minmax(0, 1fr); }
+        .sidebar-hidden .sidebar { transform: translateX(-100%); pointer-events: none; }
+        .sidebar-hidden .content { grid-column: 1; width: 100%; max-width: 1180px; justify-self: center; }
+        h1 { margin: 0 0 8px; color: #172554; font-size: 28px; }
+        h2 { margin: 0 0 18px; font-size: 21px; }
+        h3 { margin: 26px 0 12px; padding-bottom: 9px; border-bottom: 1px solid #e8edf5; color: #253b7a; font-size: 17px; }
+        .intro, .muted { color: #64748b; line-height: 1.6; }
+        .completion { margin-top: 20px; }
+        .completion-line { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
+        .progress { height: 10px; overflow: hidden; border-radius: 20px; background: #e5e7eb; }
+        .progress-fill { height: 100%; border-radius: inherit; background: #2563eb; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 420px)); gap: 10px; }
+        .summary-item { min-width: 0; padding: 12px; border: 1px solid #e1e8f3; border-radius: 10px; background: linear-gradient(145deg, #fff, #f8faff); }
+        .summary-label { display: block; margin-bottom: 5px; color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .summary-value { overflow-wrap: anywhere; color: #172554; line-height: 1.5; }
+        .record-list { display: grid; gap: 10px; }
+        .record { padding: 13px; border: 1px solid #e1e8f3; border-radius: 10px; background: #fcfdff; }
+        .record strong { display: block; margin-bottom: 5px; }
+        .record p { margin: 4px 0; color: #64748b; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+        .button { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 16px; border: 0; border-radius: 7px; color: #fff; background: #1d4ed8; font-weight: 700; text-decoration: none; cursor: pointer; }
+        .button:hover { background: #1e40af; }
+        .button-secondary { margin-left: 8px; border: 1px solid #cbd5e1; color: #1e3a8a; background: #fff; }
+        .empty { padding: 13px; border-radius: 8px; color: #64748b; background: #f8fafc; }
+        .report-links { display: flex; flex-wrap: wrap; gap: 10px; }
+        @media (max-width: 760px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { top: 58px; width: min(300px, 86vw); }
+            .content, .sidebar-hidden .content { grid-column: 1; padding: 18px 14px; }
         }
-
-        :root {
-            --primary: #1a237e;
-            --primary-dark: #121858;
-            --accent: #2b6cb0;
-            --accent-light: #ebf8ff;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --border: #e2e8f0;
-            --radius: 8px;
-            --success: #16a34a;
-            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        body {
-            font-family: var(--font);
-            background-color: var(--bg);
-            color: var(--text-dark);
-            line-height: 1.5;
-        }
-
-        /* Top Navbar */
-        .navbar {
-            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
-            color: #ffffff;
-            padding: 12px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.15rem;
-            font-weight: 700;
-            text-decoration: none;
-            color: #ffffff;
-        }
-
-        .logo-icon {
-            width: 34px;
-            height: 34px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .nav-link {
-            color: rgba(255,255,255,0.85);
-            text-decoration: none;
-            font-size: 0.88rem;
-            padding: 6px 12px;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: #ffffff;
-            background: rgba(255,255,255,0.15);
-        }
-
-        .btn-logout {
-            background: #dc2626;
-            color: #ffffff;
-            padding: 6px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .btn-logout:hover {
-            background: #b91c1c;
-        }
-
-        /* Layout Container */
-        .container {
-            max-width: 1250px;
-            margin: 28px auto;
-            padding: 0 20px;
-        }
-
-        /* Welcome Banner */
-        .welcome-banner {
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-            border-radius: var(--radius);
-            padding: 28px 32px;
-            color: #ffffff;
-            margin-bottom: 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-        }
-
-        .welcome-text h1 {
-            font-size: 1.65rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .welcome-text p {
-            font-size: 0.95rem;
-            color: #dbeafe;
-        }
-
-        .completion-badge {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.25);
-            padding: 14px 22px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .completion-badge .percent {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #ffffff;
-            line-height: 1;
-        }
-
-        .completion-badge .label {
-            font-size: 0.78rem;
-            color: #e0e7ff;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 4px;
-        }
-
-        /* Section Headings */
-        .section-header {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 16px;
-        }
-
-        /* Core 5 Modules Grid */
-        .portal-modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 22px;
-            margin-bottom: 32px;
-        }
-
-        .module-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.2s ease;
-        }
-
-        .module-card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .module-card-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .module-badge {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--accent);
-            background: var(--accent-light);
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        .module-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1e3a8a;
-            margin-bottom: 8px;
-        }
-
-        .module-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin-bottom: 18px;
-        }
-
-        .module-stats {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 10px 14px;
-            font-size: 0.85rem;
-            color: #334155;
-            margin-bottom: 18px;
-            font-weight: 500;
-        }
-
-        .btn-module {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--accent);
-            color: #ffffff;
-            padding: 9px 18px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: background 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-module:hover {
-            background: #1d4ed8;
-        }
-
-        .subject-dropdown-form {
-            display: flex;
-            gap: 8px;
-            margin-top: 4px;
-        }
-
-        .subject-dropdown-select {
-            flex: 1;
-            padding: 8px 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 0.88rem;
-            background: #ffffff;
-            outline: none;
-        }
-
-        /* Overview Stats Row */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-card .stat-val {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 4px;
-        }
-
-        .stat-card .stat-lbl {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        /* Account Details Card */
-        .info-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-        }
-
-        .info-item {
-            padding: 12px 14px;
-            background: #f8fafc;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-        }
-
-        .info-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #94a3b8;
-            letter-spacing: 0.5px;
-        }
-
-        .info-value {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #1e293b;
-            margin-top: 4px;
-        }
-
-        /* Modal Popup */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 16px;
-        }
-
-        .modal-card {
-            background: #ffffff;
-            border-radius: 10px;
-            max-width: 440px;
-            width: 100%;
-            padding: 28px 24px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            border-top: 4px solid var(--success);
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 10px;
-        }
-
-        .modal-body {
-            font-size: 0.92rem;
-            color: var(--text-muted);
-            margin-bottom: 22px;
-        }
-
-        .btn-confirm {
-            background-color: var(--accent);
-            color: #ffffff;
-            border: none;
-            padding: 9px 24px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
+        @media (max-width: 480px) {
+            .summary-grid { grid-template-columns: 1fr; }
+            .panel { min-height: 190px; padding: 20px; }
+            .layout { padding: 12px; }
         }
     </style>
 </head>
 <body>
-
-    <!-- Top Navbar -->
-    <nav class="navbar">
-        <a href="${pageContext.request.contextPath}/dashboard" class="navbar-brand">
+    <header class="navbar">
+        <div class="navbar-branding">
+            <button class="menu-toggle" id="sidebarToggle" type="button" aria-label="Hide dashboard sidebar" aria-controls="dashboardSidebar" aria-expanded="true">
+                <span></span><span></span><span></span>
+            </button>
+            <a href="${pageContext.request.contextPath}/home" class="navbar-brand">
             <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
             <span>Kasnet Internship Portal</span>
-        </a>
-        <div class="navbar-menu">
-            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link active">Dashboard</a>
+            </a>
+        </div>
+        <nav class="navbar-menu" aria-label="Main navigation">
+            <a href="${pageContext.request.contextPath}/home" class="nav-link">Home</a>
+            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link active" aria-current="page">Dashboard</a>
             <a href="${pageContext.request.contextPath}/profile" class="nav-link">Profile</a>
             <a href="${pageContext.request.contextPath}/assignments" class="nav-link">Assignments</a>
             <a href="${pageContext.request.contextPath}/lectures" class="nav-link">Lectures</a>
             <a href="${pageContext.request.contextPath}/question-bank" class="nav-link">Question Bank</a>
             <a href="${pageContext.request.contextPath}/resume-analysis" class="nav-link">Resume Analysis</a>
-            <span style="font-size: 0.88rem; color: #cbd5e0; margin-left: 6px;">Hi, ${user.firstName}</span>
+            <span style="font-size: 0.88rem; color: #cbd5e0; margin-left: 6px;">Hi, <c:out value="${user.firstName}"/></span>
             <a href="${pageContext.request.contextPath}/logout" class="btn-logout">Logout</a>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <!-- Main Container -->
-    <div class="container">
-
-        <!-- Welcome Banner -->
-        <div class="welcome-banner">
-            <div class="welcome-text">
-                <h1>Welcome back, ${user.firstName} ${user.lastName}!</h1>
-                <p>Track your internship tasks, learning progress, certifications, and portfolio details all in one place.</p>
-            </div>
-            <div class="completion-badge">
-                <div class="percent">${stats.profileCompletion}%</div>
-                <div class="label">Profile Completion</div>
-            </div>
-        </div>
-
-        <!-- 5 Core Portal Sections -->
-        <div class="section-header">Internship Modules</div>
-        <div class="portal-modules-grid">
-
-            <!-- Section 1: Profile -->
-            <div class="module-card">
-                <div>
-                    <div class="module-card-header">
-                        <span class="module-badge">Section 1</span>
-                    </div>
-                    <h3 class="module-title">Student Profile</h3>
-                    <p class="module-desc">Maintain your Personal Information, Education records, Certifications, Projects, and Additional Activities.</p>
-                    <div class="module-stats">Completion Status: <strong>${stats.profileCompletion}%</strong></div>
+    <div class="layout">
+        <aside class="sidebar" id="dashboardSidebar" aria-label="Dashboard sections">
+            <h2 class="sidebar-title">Dashboard</h2>
+            <details class="menu-group" data-menu-key="student-profile">
+                <summary>Student Profile</summary>
+                <div class="submenu"><a href="${pageContext.request.contextPath}/dashboard?section=student-profile" class="${selectedSection eq 'student-profile' ? 'active' : ''}" aria-current="${selectedSection eq 'student-profile' ? 'page' : 'false'}">Student Profile</a></div>
+            </details>
+            <details class="menu-group" data-menu-key="assignment">
+                <summary>Assignment</summary>
+                <div class="submenu"><a href="${pageContext.request.contextPath}/dashboard?section=assignment" class="${selectedSection eq 'assignment' ? 'active' : ''}" aria-current="${selectedSection eq 'assignment' ? 'page' : 'false'}">Assignment Details</a></div>
+            </details>
+            <details class="menu-group" data-menu-key="test">
+                <summary>Test</summary>
+                <div class="submenu">
+                    <a href="${pageContext.request.contextPath}/dashboard?section=test-report" class="${selectedSection eq 'test-report' ? 'active' : ''}" aria-current="${selectedSection eq 'test-report' ? 'page' : 'false'}">Test Report</a>
+                    <a href="${pageContext.request.contextPath}/dashboard?section=test-summary-report" class="${selectedSection eq 'test-summary-report' ? 'active' : ''}" aria-current="${selectedSection eq 'test-summary-report' ? 'page' : 'false'}">Test Summary Report</a>
                 </div>
-                <a href="${pageContext.request.contextPath}/profile" class="btn-module">Manage Profile &rarr;</a>
-            </div>
-
-            <!-- Section 2: Assignments -->
-            <div class="module-card">
-                <div>
-                    <div class="module-card-header">
-                        <span class="module-badge">Section 2</span>
-                    </div>
-                    <h3 class="module-title">Assignments</h3>
-                    <p class="module-desc">Access practical internship assignments, view due dates, and upload your project submissions.</p>
-                    <div class="module-stats">Submitted: <strong>${stats.submittedAssignments}</strong> &bull; Pending: <strong>${stats.pendingAssignments}</strong></div>
+            </details>
+            <details class="menu-group" data-menu-key="projects">
+                <summary>Projects</summary>
+                <div class="submenu"><a href="${pageContext.request.contextPath}/dashboard?section=projects" class="${selectedSection eq 'projects' ? 'active' : ''}" aria-current="${selectedSection eq 'projects' ? 'page' : 'false'}">Project Report</a></div>
+            </details>
+            <details class="menu-group" data-menu-key="certificate">
+                <summary>Certificate</summary>
+                <div class="submenu"><a href="${pageContext.request.contextPath}/dashboard?section=certificates" class="${selectedSection eq 'certificates' ? 'active' : ''}" aria-current="${selectedSection eq 'certificates' ? 'page' : 'false'}">Certificate</a></div>
+            </details>
+            <details class="menu-group" data-menu-key="report">
+                <summary>Report</summary>
+                <div class="submenu">
+                    <a href="${pageContext.request.contextPath}/dashboard?section=report-details" class="${selectedSection eq 'report-details' ? 'active' : ''}" aria-current="${selectedSection eq 'report-details' ? 'page' : 'false'}">Report Details</a>
+                    <a href="${pageContext.request.contextPath}/dashboard?section=internship-conclusion-report" class="${selectedSection eq 'internship-conclusion-report' ? 'active' : ''}" aria-current="${selectedSection eq 'internship-conclusion-report' ? 'page' : 'false'}">Internship Conclusion Report</a>
                 </div>
-                <a href="${pageContext.request.contextPath}/assignments" class="btn-module">View Assignments &rarr;</a>
-            </div>
+            </details>
+        </aside>
 
-            <!-- Section 3: Lectures -->
-            <div class="module-card">
-                <div>
-                    <div class="module-card-header">
-                        <span class="module-badge">Section 3</span>
-                    </div>
-                    <h3 class="module-title">Lectures</h3>
-                    <p class="module-desc">Watch recorded technical tutorials, architecture walkthroughs, and mentor code sessions.</p>
-                    <div class="module-stats">Completed: <strong>${stats.completedLectures} / ${stats.totalLectures}</strong></div>
-                </div>
-                <a href="${pageContext.request.contextPath}/lectures" class="btn-module">Access Lectures &rarr;</a>
-            </div>
-
-            <!-- Section 4: Question Bank -->
-            <div class="module-card">
-                <div>
-                    <div class="module-card-header">
-                        <span class="module-badge">Section 4</span>
-                    </div>
-                    <h3 class="module-title">Question Bank</h3>
-                    <p class="module-desc">Review technical and interview questions categorized by curriculum subject.</p>
-                    <div class="subject-dropdown-form" style="margin-bottom: 14px;">
-                        <select id="quickSubjectSelect" class="subject-dropdown-select" onchange="navigateToSubject(this.value)">
-                            <option value="">-- Select Subject --</option>
-                            <option value="java">Java Full Stack</option>
-                            <option value="python">Python &amp; ML</option>
-                            <option value="web">Web Development</option>
-                            <option value="db">DBMS (MySQL)</option>
-                            <option value="cloud">Cloud &amp; DevOps</option>
-                        </select>
-                        <button type="button" class="btn-module" style="padding: 7px 14px;" onclick="goToSelectedSubject()">Go</button>
+        <main class="content">
+            <c:if test="${selectedSection eq 'student-profile'}">
+            <section class="panel">
+                <h1>Student Profile Summary</h1>
+                <p class="intro">A summary of the information saved in your student profile.</p>
+                <div class="completion">
+                    <div class="completion-line"><span>Profile completion</span><span><c:out value="${profileCompletion}"/>%</span></div>
+                    <div class="progress" role="progressbar" aria-label="Profile completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${profileCompletion}">
+                        <div class="progress-fill" data-completion="${profileCompletion}"></div>
                     </div>
                 </div>
-                <a href="${pageContext.request.contextPath}/question-bank" class="btn-module" style="background:#2563eb;">Open Question Bank &rarr;</a>
-            </div>
+                <h3>Personal Information</h3>
+                <div class="summary-grid">
+                    <div class="summary-item"><span class="summary-label">Name</span><div class="summary-value"><c:out value="${user.fullName}" default="Not provided"/></div></div>
+                    <div class="summary-item"><span class="summary-label">Email</span><div class="summary-value"><c:out value="${user.email}" default="Not provided"/></div></div>
+                    <div class="summary-item"><span class="summary-label">Mobile</span><div class="summary-value"><c:out value="${user.mobile}" default="Not provided"/></div></div>
+                    <div class="summary-item"><span class="summary-label">College</span><div class="summary-value"><c:out value="${user.collegeName}" default="Not provided"/></div></div>
+                    <div class="summary-item"><span class="summary-label">Stream</span><div class="summary-value"><c:out value="${user.stream}" default="Not provided"/></div></div>
+                    <div class="summary-item"><span class="summary-label">City</span><div class="summary-value"><c:out value="${user.city}" default="Not provided"/></div></div>
+                    <div class="summary-item"><span class="summary-label">Gender</span><div class="summary-value"><c:out value="${profile.gender}" default="Not provided"/></div></div>
+                    <div class="summary-item"><span class="summary-label">Date of Birth</span><div class="summary-value"><c:out value="${profile.dateOfBirth}" default="Not provided"/></div></div>
+                    <div class="summary-item"><span class="summary-label">Address</span><div class="summary-value"><c:out value="${profile.address}" default="Not provided"/></div></div>
+                    <div class="summary-item"><span class="summary-label">State</span><div class="summary-value"><c:out value="${profile.state}" default="Not provided"/></div></div>
+                </div>
+                <h3>Education</h3>
+                <c:choose>
+                    <c:when test="${not empty educationList}">
+                        <div class="record-list">
+                            <c:forEach var="education" items="${educationList}">
+                                <article class="record">
+                                    <strong><c:out value="${education.level}"/></strong>
+                                    <p><c:out value="${education.schoolCollegeName}"/> <c:if test="${not empty education.boardUniversity}">— <c:out value="${education.boardUniversity}"/></c:if></p>
+                                    <p><c:if test="${not empty education.stream}"><c:out value="${education.stream}"/> · </c:if><c:if test="${education.passingYear > 0}">Year <c:out value="${education.passingYear}"/> · </c:if><c:out value="${education.percentage}"/>%</p>
+                                </article>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise><p class="empty">No education records have been saved yet.</p></c:otherwise>
+                </c:choose>
+                <h3>Skills</h3>
+                <c:choose>
+                    <c:when test="${not empty skillList}">
+                        <div class="record-list">
+                            <c:forEach var="skill" items="${skillList}">
+                                <article class="record"><strong><c:out value="${skill.skillName}"/></strong><p><c:out value="${skill.skillType}"/> <c:if test="${not empty skill.proficiency}">· <c:out value="${skill.proficiency}"/></c:if></p></article>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise><p class="empty">No skills have been saved yet.</p></c:otherwise>
+                </c:choose>
+                <h3>Additional Activities and Achievements</h3>
+                <c:choose>
+                    <c:when test="${not empty achievementList or not empty hackathonList or not empty competitionList}">
+                        <div class="record-list">
+                            <c:forEach var="achievement" items="${achievementList}">
+                                <article class="record">
+                                    <strong><c:out value="${achievement.title}"/></strong>
+                                    <p><c:out value="${achievement.achievementType}"/> <c:if test="${not empty achievement.technology}">· <c:out value="${achievement.technology}"/></c:if></p>
+                                    <p><c:out value="${achievement.description}"/> <c:if test="${not empty achievement.extraActivities}"><c:out value="${achievement.extraActivities}"/></c:if></p>
+                                </article>
+                            </c:forEach>
+                            <c:forEach var="hackathon" items="${hackathonList}">
+                                <article class="record">
+                                    <strong><c:out value="${hackathon.hackathonName}"/></strong>
+                                    <p><c:out value="${hackathon.organizer}"/> <c:if test="${not empty hackathon.eventDate}">· <c:out value="${hackathon.eventDate}"/></c:if></p>
+                                    <p><c:out value="${hackathon.positionResult}"/> <c:if test="${not empty hackathon.description}">· <c:out value="${hackathon.description}"/></c:if></p>
+                                </article>
+                            </c:forEach>
+                            <c:forEach var="competition" items="${competitionList}">
+                                <article class="record">
+                                    <strong><c:out value="${competition.competitionName}"/></strong>
+                                    <p><c:out value="${competition.collegeOrganizer}"/> <c:if test="${not empty competition.eventDate}">· <c:out value="${competition.eventDate}"/></c:if></p>
+                                    <p><c:if test="${not empty competition.projectName}">Project: <c:out value="${competition.projectName}"/> · </c:if><c:out value="${competition.positionResult}"/></p>
+                                    <p><c:out value="${competition.description}"/></p>
+                                </article>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise><p class="empty">No additional activities or achievements have been saved yet.</p></c:otherwise>
+                </c:choose>
+            </section>
+            </c:if>
 
-            <!-- Section 5: Resume Analysis -->
-            <div class="module-card">
-                <div>
-                    <div class="module-card-header">
-                        <span class="module-badge">Section 5</span>
-                    </div>
-                    <h3 class="module-title">Resume Analysis</h3>
-                    <p class="module-desc">Submit your resume for formatting feedback, keyword density evaluation, and ATS score readiness.</p>
-                    <div class="module-stats">Status: <strong>Under Active Setup</strong></div>
-                </div>
-                <a href="${pageContext.request.contextPath}/resume-analysis" class="btn-module">Open Resume Analysis &rarr;</a>
-            </div>
+            <c:if test="${selectedSection eq 'assignment'}">
+            <section class="panel">
+                <h2>Assignment Details</h2>
+                <p class="intro">Summary of your active internship assignments and submission status.</p>
+                <c:choose>
+                    <c:when test="${not empty assignmentList}">
+                        <div class="record-list">
+                            <c:forEach var="assignment" items="${assignmentList}">
+                                <article class="record">
+                                    <strong><c:out value="${assignment.title}"/></strong>
+                                    <p><c:if test="${not empty assignment.subject}"><c:out value="${assignment.subject}"/> · </c:if>Status: <c:out value="${assignment.status}" default="Pending"/></p>
+                                    <p><c:if test="${not empty assignment.dueDate}">Due: <c:out value="${assignment.dueDate}"/> · </c:if><c:if test="${assignment.totalMarks > 0}">Total marks: <c:out value="${assignment.totalMarks}"/></c:if></p>
+                                    <c:if test="${not empty assignment.remarks}"><p>Feedback: <c:out value="${assignment.remarks}"/></p></c:if>
+                                </article>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise><p class="empty">No active assignments are available.</p></c:otherwise>
+                </c:choose>
+            </section>
+            </c:if>
 
-        </div>
+            <c:if test="${selectedSection eq 'test-report'}">
+            <section class="panel">
+                <h2>Test Report</h2>
+                <p class="empty">No test report data is available yet.</p>
+            </section>
+            </c:if>
+            <c:if test="${selectedSection eq 'test-summary-report'}">
+            <section class="panel">
+                <h2>Test Summary Report</h2>
+                <p class="empty">No test summary data is available yet.</p>
+            </section>
+            </c:if>
 
-        <!-- Student Account Information Summary -->
-        <div class="section-header">Student Account Details</div>
-        <div class="info-card">
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Full Name</div>
-                    <div class="info-value">${user.firstName} ${user.lastName}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Email Address</div>
-                    <div class="info-value">${user.email}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Mobile Number</div>
-                    <div class="info-value">${user.mobile != null ? user.mobile : '-'}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Stream</div>
-                    <div class="info-value">${user.stream != null ? user.stream : '-'}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">College Name</div>
-                    <div class="info-value">${user.collegeName != null && not empty user.collegeName ? user.collegeName : '-'}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">City</div>
-                    <div class="info-value">${user.city != null && not empty user.city ? user.city : '-'}</div>
-                </div>
-            </div>
-        </div>
+            <c:if test="${selectedSection eq 'projects'}">
+            <section class="panel">
+                <h2>Project Report</h2>
+                <c:choose>
+                    <c:when test="${not empty projectList}">
+                        <div class="record-list">
+                            <c:forEach var="project" items="${projectList}">
+                                <article class="record">
+                                    <strong><c:out value="${project.projectName}"/></strong>
+                                    <p><c:out value="${project.description}"/></p>
+                                    <p><c:if test="${not empty project.role}">Role: <c:out value="${project.role}"/> · </c:if><c:if test="${not empty project.technologiesUsed}">Technologies: </c:if><c:out value="${project.technologiesUsed}"/></p>
+                                </article>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise><p class="empty">No projects have been saved yet.</p></c:otherwise>
+                </c:choose>
+            </section>
+            </c:if>
 
+            <c:if test="${selectedSection eq 'certificates'}">
+            <section class="panel">
+                <h2>Certificate</h2>
+                <c:choose>
+                    <c:when test="${not empty certificationList}">
+                        <div class="record-list">
+                            <c:forEach var="certificate" items="${certificationList}">
+                                <article class="record">
+                                    <strong><c:out value="${certificate.certName}"/></strong>
+                                    <p><c:out value="${certificate.provider}"/> <c:if test="${not empty certificate.technology}">· <c:out value="${certificate.technology}"/></c:if></p>
+                                    <c:if test="${not empty certificate.credentialUrl}"><p><a href="<c:out value='${certificate.credentialUrl}'/>" target="_blank" rel="noopener noreferrer">View credential</a></p></c:if>
+                                </article>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise><p class="empty">No certificates have been saved yet.</p></c:otherwise>
+                </c:choose>
+            </section>
+            </c:if>
+
+            <c:if test="${selectedSection eq 'report-details'}">
+            <section class="panel">
+                <h2>Report Details</h2>
+                <p class="intro">Download a report containing your saved profile, education, skills, projects, and certificates.</p>
+                <div class="report-links">
+                    <a class="button" href="${pageContext.request.contextPath}/dashboard?download=report&amp;format=pdf">Download PDF</a>
+                    <a class="button" href="${pageContext.request.contextPath}/dashboard?download=report&amp;format=word">Download Word</a>
+                    <a class="button" href="${pageContext.request.contextPath}/dashboard?download=report&amp;format=csv">Download CSV</a>
+                </div>
+            </section>
+            </c:if>
+
+            <c:if test="${selectedSection eq 'internship-conclusion-report'}">
+            <section class="panel">
+                <h2>Internship Conclusion Report</h2>
+                <p class="empty">An internship conclusion report is not available yet.</p>
+            </section>
+            </c:if>
+        </main>
     </div>
+<script>
+    (function () {
+        var toggle = document.getElementById("sidebarToggle");
+        var menuGroups = document.querySelectorAll(".menu-group[data-menu-key]");
+        var menuStateKey = "kasnet-dashboard-open-menus";
+        var openMenus = {};
 
-    <!-- Login Success Popup Modal -->
-    <% if (isLoginSuccess) { %>
-    <div class="modal-overlay" id="loginSuccessModal">
-        <div class="modal-card">
-            <h3 class="modal-title">Login successful</h3>
-            <p class="modal-body">Welcome back, ${user.firstName}! You have logged in successfully to your student portal.</p>
-            <button type="button" class="btn-confirm" onclick="closeLoginModal()">Continue</button>
-        </div>
-    </div>
-    <script>
-        function closeLoginModal() {
-            var m = document.getElementById('loginSuccessModal');
-            if (m) m.style.display = 'none';
-            if (window.history && window.history.replaceState) {
-                var cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                window.history.replaceState({}, document.title, cleanUrl);
-            }
-        }
-    </script>
-    <% } %>
-
-    <script>
-        function navigateToSubject(subjectVal) {
-            if (subjectVal && subjectVal.trim().length > 0) {
-                window.location.href = "${pageContext.request.contextPath}/question-bank?subject=" + encodeURIComponent(subjectVal);
+        function readStoredValue(key) {
+            try {
+                return window.localStorage.getItem(key);
+            } catch (error) {
+                return null;
             }
         }
 
-        function goToSelectedSubject() {
-            var val = document.getElementById("quickSubjectSelect").value;
-            if (val) {
-                navigateToSubject(val);
-            } else {
-                window.location.href = "${pageContext.request.contextPath}/question-bank";
+        function storeValue(key, value) {
+            try {
+                window.localStorage.setItem(key, value);
+            } catch (error) {
+                // Navigation remains usable if browser storage is unavailable.
             }
         }
-    </script>
 
+        var navigationEntries = window.performance && window.performance.getEntriesByType
+            ? window.performance.getEntriesByType("navigation")
+            : [];
+        var navigationType = navigationEntries.length > 0
+            ? navigationEntries[0].type
+            : window.performance && window.performance.navigation
+                ? window.performance.navigation.type === 1 ? "reload" : "navigate"
+                : "navigate";
+        var cameFromDashboardSection = false;
+        try {
+            var previousPage = new URL(document.referrer);
+            cameFromDashboardSection = navigationType === "navigate"
+                && previousPage.origin === window.location.origin
+                && previousPage.pathname === window.location.pathname;
+        } catch (error) {
+            cameFromDashboardSection = false;
+        }
+
+        if (!cameFromDashboardSection) {
+            storeValue(menuStateKey, "{}");
+        } else {
+            try {
+                openMenus = JSON.parse(readStoredValue(menuStateKey) || "{}");
+            } catch (error) {
+                openMenus = {};
+            }
+        }
+
+        menuGroups.forEach(function (group) {
+            var key = group.dataset.menuKey;
+            group.open = openMenus[key] === true;
+            group.addEventListener("toggle", function () {
+                openMenus[key] = group.open;
+                storeValue(menuStateKey, JSON.stringify(openMenus));
+            });
+        });
+
+        function updateToggleState() {
+            var expanded = !document.body.classList.contains("sidebar-hidden");
+            toggle.setAttribute("aria-expanded", String(expanded));
+            toggle.setAttribute("aria-label", expanded ? "Hide dashboard sidebar" : "Show dashboard sidebar");
+        }
+
+        updateToggleState();
+        toggle.addEventListener("click", function () {
+            document.body.classList.toggle("sidebar-hidden");
+            updateToggleState();
+        });
+    }());
+
+    document.querySelectorAll(".progress-fill[data-completion]").forEach(function (bar) {
+        var completion = Number(bar.dataset.completion);
+        if (Number.isFinite(completion)) {
+            bar.style.width = Math.max(0, Math.min(100, completion)) + "%";
+        }
+    });
+</script>
 </body>
 </html>

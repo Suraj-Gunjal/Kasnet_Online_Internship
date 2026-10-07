@@ -1,21 +1,22 @@
 package com.kasnet.controller;
 
-import com.kasnet.model.User;
-import com.kasnet.service.AuthenticationService;
-import com.kasnet.util.SessionUtil;
+import java.io.IOException;
+import java.security.SecureRandom;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.security.SecureRandom;
+
+import com.kasnet.model.User;
+import com.kasnet.service.AuthenticationService;
+import com.kasnet.util.SessionUtil;
 
 /**
  * Servlet handling user login (GET + POST) at /login.
  *
- * GET  – Redirects authenticated users to /dashboard; otherwise generates
+ * GET  – Redirects authenticated users to /home; otherwise generates
  *         a session-level CAPTCHA and forwards to login.jsp.
  * POST – Validates CAPTCHA, authenticates credentials via AuthenticationService,
  *         establishes session on success, or returns to login.jsp with an error.
@@ -42,9 +43,9 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // If user is already logged in, redirect to dashboard
+        // If user is already logged in, redirect to home
         if (SessionUtil.isLoggedIn(request)) {
-            response.sendRedirect(request.getContextPath() + "/dashboard");
+            response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
@@ -130,7 +131,7 @@ public class LoginServlet extends HttpServlet {
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/admin?loginSuccess=1");
             } else {
-                response.sendRedirect(request.getContextPath() + "/dashboard?loginSuccess=1");
+                response.sendRedirect(request.getContextPath() + "/home?loginSuccess=1");
             }
 
         } catch (Exception e) {

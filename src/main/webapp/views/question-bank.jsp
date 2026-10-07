@@ -288,11 +288,12 @@
 
     <!-- Top Navbar -->
     <nav class="navbar">
-        <a href="${pageContext.request.contextPath}/dashboard" class="navbar-brand">
+        <a href="${pageContext.request.contextPath}/home" class="navbar-brand">
             <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
             <span>Kasnet Internship Portal</span>
         </a>
         <div class="navbar-menu">
+            <a href="${pageContext.request.contextPath}/home" class="nav-link">Home</a>
             <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">Dashboard</a>
             <a href="${pageContext.request.contextPath}/profile" class="nav-link">Profile</a>
             <a href="${pageContext.request.contextPath}/assignments" class="nav-link">Assignments</a>
@@ -306,7 +307,7 @@
     <!-- Main Container -->
     <main class="container">
         <div class="breadcrumb">
-            <a href="${pageContext.request.contextPath}/dashboard">Dashboard</a> &rsaquo;
+            <a href="${pageContext.request.contextPath}/home">Home</a> &rsaquo;
             <span>Question Bank</span>
             <c:if test="${not empty selectedSubject}">
                 &rsaquo; <span>${subjectTitle}</span>
@@ -359,7 +360,7 @@
 
                     <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
                         <a href="${pageContext.request.contextPath}/question-bank" style="font-size: 0.88rem; color: var(--accent); font-weight: 600;">&larr; Back to All Subjects</a>
-                        <a href="${pageContext.request.contextPath}/dashboard" style="font-size: 0.88rem; color: var(--text-muted); font-weight: 500;">Go to Dashboard</a>
+                        <a href="${pageContext.request.contextPath}/home" style="font-size: 0.88rem; color: var(--text-muted); font-weight: 500;">Go to Home</a>
                     </div>
                 </div>
             </c:when>

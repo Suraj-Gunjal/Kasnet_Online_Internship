@@ -1,11 +1,11 @@
 package com.kasnet.model;
 
 /**
- * Aggregated statistics object used to populate the student dashboard.
+ * Aggregated statistics object used to populate the student home.
  * This is a flat DTO assembled via multiple DAO queries; it has no
  * direct database table mapping of its own.
  */
-public class DashboardStats {
+public class HomeStats {
 
     // -------------------------------------------------------------------------
     // Fields
@@ -26,12 +26,12 @@ public class DashboardStats {
     // -------------------------------------------------------------------------
     // No-arg Constructor
     // -------------------------------------------------------------------------
-    public DashboardStats() {}
+    public HomeStats() {}
 
     // -------------------------------------------------------------------------
     // All-args Constructor
     // -------------------------------------------------------------------------
-    public DashboardStats(String studentName, int profileCompletion,
+    public HomeStats(String studentName, int profileCompletion,
                           int totalAssignments, int pendingAssignments,
                           int submittedAssignments, int evaluatedAssignments,
                           int totalLectures, int completedLectures,
@@ -120,7 +120,7 @@ public class DashboardStats {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return "DashboardStats{" +
+        return "homeStats{" +
                 "studentName='" + studentName + '\'' +
                 ", profileCompletion=" + profileCompletion +
                 ", totalAssignments=" + totalAssignments +

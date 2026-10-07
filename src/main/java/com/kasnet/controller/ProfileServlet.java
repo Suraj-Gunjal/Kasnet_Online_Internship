@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,11 @@ public class ProfileServlet extends HttpServlet {
 
         // 1. Fetch User and Profile
         User user = userDAO.getUserById(userId);
+        if (user == null) {
+            SessionUtil.invalidateSession(req);
+            resp.sendRedirect(req.getContextPath() + "/login?error=invalid-session");
+            return;
+        }
         StudentProfile profile = profileDAO.getProfileByUserId(userId);
         if (profile == null) {
             profileDAO.createProfile(userId);
@@ -76,19 +83,6 @@ public class ProfileServlet extends HttpServlet {
         List<Hackathon> hackathonList = hackathonDAO.getHackathonsByUserId(userId);
         List<Competition> competitionList = competitionDAO.getCompetitionsByUserId(userId);
 
-        if (user == null) {
-            javax.servlet.http.HttpSession session = req.getSession(false);
-            user = new User();
-            user.setUserId(userId);
-            user.setFirstName(session != null && session.getAttribute("userName") != null ? (String) session.getAttribute("userName") : "Test Student");
-            user.setLastName("");
-            user.setEmail(session != null && session.getAttribute("userEmail") != null ? (String) session.getAttribute("userEmail") : "test@kasnet.in");
-            user.setRole("STUDENT");
-            user.setStream("Graduation");
-            user.setCollegeName("Kasnet Institute of Technology");
-            user.setCity("Pune");
-        }
-
         // Active tab parameter - exactly 5 sections
         String activeTab = req.getParameter("tab");
         if (activeTab == null || activeTab.trim().isEmpty() || "skills".equalsIgnoreCase(activeTab) || "achievements".equalsIgnoreCase(activeTab)) {
@@ -108,6 +102,7 @@ public class ProfileServlet extends HttpServlet {
         req.setAttribute("hackathonList", hackathonList);
         req.setAttribute("competitionList", competitionList);
         req.setAttribute("activeTab", activeTab);
+        req.setAttribute("maxDateOfBirth", LocalDate.now(ZoneId.of("Asia/Kolkata")));
 
         req.getRequestDispatcher("/views/profile.jsp").forward(req, resp);
     }

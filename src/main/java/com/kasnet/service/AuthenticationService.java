@@ -92,18 +92,27 @@ public class AuthenticationService {
                 userDAO.updateLastLogin(dbTestUser.getUserId());
                 return dbTestUser;
             }
-            // Fallback in-memory test user if DB is fresh
+
             User testUser = new User();
-            testUser.setUserId(9999);
             testUser.setFirstName("Test");
             testUser.setLastName("Student");
             testUser.setEmail(TEST_STUDENT_EMAIL);
+            testUser.setPasswordHash(PasswordUtil.hashPassword(TEST_STUDENT_PASSWORD));
             testUser.setRole("STUDENT");
             testUser.setStream("Graduation");
             testUser.setCollegeName("Kasnet Institute of Technology");
             testUser.setCity("Pune");
-            testUser.setActive(true);
-            return testUser;
+            testUser.setCountryCode("+91");
+
+            User persistedTestUser = userDAO.registerUser(testUser);
+            if (persistedTestUser == null || persistedTestUser.getUserId() <= 0) {
+                throw new Exception("Unable to create the demo student account. Check the database connection and users table.");
+            }
+            if (!profileDAO.createProfile(persistedTestUser.getUserId())) {
+                throw new Exception("Unable to initialize the demo student profile.");
+            }
+            userDAO.updateLastLogin(persistedTestUser.getUserId());
+            return persistedTestUser;
         }
 
         // 2. Admin login support (admin@kasnet.in / Admin@12345)

@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 public class PersonalDetailsServlet extends HttpServlet {
 
     private UserDAO userDAO = new UserDAO();
@@ -43,6 +46,21 @@ public class PersonalDetailsServlet extends HttpServlet {
         String city = req.getParameter("city");
         String state = req.getParameter("state");
 
+        Date dateOfBirth = null;
+        if (dobStr != null && !dobStr.trim().isEmpty()) {
+            try {
+                LocalDate requestedDate = LocalDate.parse(dobStr.trim());
+                if (requestedDate.isAfter(LocalDate.now(ZoneId.of("Asia/Kolkata")))) {
+                    resp.sendRedirect(req.getContextPath() + "/profile?tab=personal&error=futureDob");
+                    return;
+                }
+                dateOfBirth = Date.valueOf(requestedDate);
+            } catch (DateTimeParseException ex) {
+                resp.sendRedirect(req.getContextPath() + "/profile?tab=personal&error=invalidDob");
+                return;
+            }
+        }
+
         // 1. Update User entity
         User user = userDAO.getUserById(userId);
         if (user != null) {
@@ -68,11 +86,7 @@ public class PersonalDetailsServlet extends HttpServlet {
         if (address != null) profile.setAddress(address.trim());
         if (state != null) profile.setState(state.trim());
 
-        if (dobStr != null && !dobStr.trim().isEmpty()) {
-            try {
-                profile.setDateOfBirth(Date.valueOf(dobStr.trim()));
-            } catch (IllegalArgumentException ignored) {}
-        }
+        if (dateOfBirth != null) profile.setDateOfBirth(dateOfBirth);
 
         profileDAO.updatePersonalDetails(profile);
 

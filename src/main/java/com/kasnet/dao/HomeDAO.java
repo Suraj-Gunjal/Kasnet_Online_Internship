@@ -1,18 +1,17 @@
 package com.kasnet.dao;
 
-import com.kasnet.model.DashboardStats;
-import com.kasnet.model.User;
-import com.kasnet.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DashboardDAO {
+import com.kasnet.model.HomeStats;
+import com.kasnet.util.DBConnection;
 
-    public DashboardStats getDashboardStats(int userId) {
-        DashboardStats stats = new DashboardStats();
+public class HomeDAO {
+
+    public HomeStats gethomeStats(int userId) {
+        HomeStats stats = new HomeStats();
 
         // 1. Get user name & profile completion
         String userSql = "SELECT u.first_name, u.last_name, p.profile_completion " +

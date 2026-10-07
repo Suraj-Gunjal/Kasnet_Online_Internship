@@ -240,8 +240,8 @@
 
             <div class="btn-group">
                 <c:if test="${not empty sessionScope.userId}">
-                    <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-primary">
-                        <span class="btn-icon">&#8962;</span> Go to Dashboard
+                    <a href="${pageContext.request.contextPath}/home" class="btn btn-primary">
+                        <span class="btn-icon">&#8962;</span> Go to Home
                     </a>
                 </c:if>
                 <a href="${pageContext.request.contextPath}/login" class="btn ${not empty sessionScope.userId ? 'btn-outline' : 'btn-primary'}">

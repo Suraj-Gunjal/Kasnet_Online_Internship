@@ -54,11 +54,25 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
+    <!-- home -->
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.HomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
     <!-- Dashboard -->
     <servlet>
         <servlet-name>DashboardServlet</servlet-name>
         <servlet-class>com.kasnet.controller.DashboardServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>DashboardServlet</servlet-name>
         <url-pattern>/dashboard</url-pattern>
