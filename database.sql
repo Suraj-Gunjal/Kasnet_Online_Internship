@@ -31,9 +31,11 @@ DROP TABLE IF EXISTS `assignment_submissions`;
 DROP TABLE IF EXISTS `assignments`;
 DROP TABLE IF EXISTS `intercollege_competitions`;
 DROP TABLE IF EXISTS `hackathons`;
+DROP TABLE IF EXISTS `experience`;
 DROP TABLE IF EXISTS `projects`;
 DROP TABLE IF EXISTS `certifications`;
 DROP TABLE IF EXISTS `skills`;
+DROP TABLE IF EXISTS `career_goals`;
 DROP TABLE IF EXISTS `achievements`;
 DROP TABLE IF EXISTS `education_details`;
 DROP TABLE IF EXISTS `student_profiles`;
@@ -155,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `skills` (
   `skill_id`    INT          NOT NULL AUTO_INCREMENT,
   `user_id`     INT          NOT NULL,
   `skill_name`  VARCHAR(100) NOT NULL,
-  `skill_type`  ENUM('Technical','Soft','Domain') NOT NULL,
+  `skill_type`  VARCHAR(50)  NOT NULL,
   `proficiency` ENUM('Beginner','Intermediate','Advanced','Expert') NOT NULL DEFAULT 'Intermediate',
   `created_at`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`skill_id`),
@@ -223,6 +225,59 @@ CREATE TABLE IF NOT EXISTS `projects` (
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci
   COMMENT='Projects (academic, personal, professional, open-source) per user';
+
+-- =============================================================
+--  TABLE: experience
+--  Professional work experience & internships (distinct from projects).
+-- =============================================================
+CREATE TABLE IF NOT EXISTS `experience` (
+  `experience_id`      INT          NOT NULL AUTO_INCREMENT,
+  `user_id`            INT          NOT NULL,
+  `company_name`       VARCHAR(200) NOT NULL,
+  `role`               VARCHAR(100) NOT NULL,
+  `employment_type`    VARCHAR(50)  NOT NULL DEFAULT 'Full-time',
+  `technologies_used`  VARCHAR(500) DEFAULT NULL,
+  `description`        TEXT         DEFAULT NULL,
+  `start_date`         DATE         DEFAULT NULL,
+  `end_date`           DATE         DEFAULT NULL,
+  `is_current`         TINYINT(1)   NOT NULL DEFAULT 0,
+  `created_at`         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`experience_id`),
+  INDEX `idx_exp_user` (`user_id`),
+  CONSTRAINT `fk_exp_user`
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci
+  COMMENT='Professional work and internship experience per user';
+
+-- =============================================================
+--  TABLE: career_goals
+--  Target career, role preferences, and domain direction per user.
+-- =============================================================
+CREATE TABLE IF NOT EXISTS `career_goals` (
+  `goal_id`                INT          NOT NULL AUTO_INCREMENT,
+  `user_id`                INT          NOT NULL,
+  `target_role`            VARCHAR(100) NOT NULL,
+  `target_role_other`      VARCHAR(100) DEFAULT NULL,
+  `preferredDomain`        VARCHAR(100) DEFAULT NULL,
+  `preferred_domain`       VARCHAR(100) DEFAULT NULL,
+  `preferred_domain_other` VARCHAR(100) DEFAULT NULL,
+  `career_objective`       TEXT         DEFAULT NULL,
+  `created_at`             TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`             TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`goal_id`),
+  UNIQUE KEY `uq_cg_user` (`user_id`),
+  INDEX `idx_cg_user` (`user_id`),
+  CONSTRAINT `fk_cg_user`
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci
+  COMMENT='Target career role and preferred domain for skill gap context';
 
 -- =============================================================
 --  TABLE: hackathons

@@ -178,6 +178,102 @@ public class SkillDAO {
     }
 
     // -------------------------------------------------------------------------
+    // SELECT: Skill by ID (ownership-verified)
+    // -------------------------------------------------------------------------
+
+    public Skill getSkillById(int skillId, int userId) {
+        final String sql =
+                "SELECT skill_id, user_id, skill_name, skill_type, proficiency, created_at "
+                + "FROM skills WHERE skill_id = ? AND user_id = ?";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnection.getConnection();
+            ps   = conn.prepareStatement(sql);
+            ps.setInt(1, skillId);
+            ps.setInt(2, userId);
+            rs   = ps.executeQuery();
+
+            if (rs.next()) {
+                return mapRowToSkill(rs);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "getSkillById: failed for skillId=" + skillId + ", userId=" + userId, e);
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return null;
+    }
+
+    // -------------------------------------------------------------------------
+    // UPDATE: Modify an existing skill (ownership-verified)
+    // -------------------------------------------------------------------------
+
+    public boolean updateSkill(Skill skill) {
+        if (skill == null || skill.getSkillId() <= 0 || skill.getUserId() <= 0) return false;
+
+        final String sql =
+                "UPDATE skills SET skill_name = ?, skill_type = ?, proficiency = ? "
+                + "WHERE skill_id = ? AND user_id = ?";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = DBConnection.getConnection();
+            ps   = conn.prepareStatement(sql);
+            ps.setString(1, skill.getSkillName().trim());
+            ps.setString(2, skill.getSkillType().trim());
+            ps.setString(3, skill.getProficiency().trim());
+            ps.setInt(   4, skill.getSkillId());
+            ps.setInt(   5, skill.getUserId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "updateSkill: failed for skillId=" + skill.getSkillId(), e);
+            return false;
+        } finally {
+            closeResources(null, ps, conn);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // CHECK: Skill uniqueness per user
+    // -------------------------------------------------------------------------
+
+    public boolean skillExists(int userId, String skillName, String skillType, int excludeSkillId) {
+        if (skillName == null || skillName.trim().isEmpty()) return false;
+
+        final String sql =
+                "SELECT COUNT(*) FROM skills WHERE user_id = ? AND LOWER(skill_name) = LOWER(?) AND skill_id <> ?";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnection.getConnection();
+            ps   = conn.prepareStatement(sql);
+            ps.setInt(   1, userId);
+            ps.setString(2, skillName.trim());
+            ps.setInt(   3, excludeSkillId);
+            rs   = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "skillExists check failed for userId=" + userId, e);
+        } finally {
+            closeResources(rs, ps, conn);
+        }
+        return false;
+    }
+
+    // -------------------------------------------------------------------------
     // DELETE: Remove all skills of a given type for a user
     // -------------------------------------------------------------------------
 

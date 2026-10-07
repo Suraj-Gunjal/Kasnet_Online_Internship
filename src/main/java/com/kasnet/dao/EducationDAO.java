@@ -43,6 +43,23 @@ public class EducationDAO {
         return null;
     }
 
+    public Education getEducationById(int eduId, int userId) {
+        String sql = "SELECT * FROM education_details WHERE edu_id = ? AND user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eduId);
+            ps.setInt(2, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean saveOrUpdateEducation(Education edu) {
         String sql = "INSERT INTO education_details (user_id, level, school_college_name, board_university, stream, passing_year, percentage, updated_at) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, NOW()) " +
