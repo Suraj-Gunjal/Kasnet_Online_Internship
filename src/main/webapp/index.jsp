@@ -577,7 +577,8 @@
             </ul>
 
             <div class="nav-auth">
-                <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Sign In</a>
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Student Login</a>
+                <a href="${pageContext.request.contextPath}/admin-login" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444;">Admin Console</a>
                 <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Sign Up</a>
             </div>
         </div>
@@ -791,8 +792,9 @@
                     <div style="margin-top: 4px; font-size: 0.8rem;">Kasnet Technologies Pvt Ltd &bull; Pune, Maharashtra</div>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
-                    <li><a href="${pageContext.request.contextPath}/register">Register</a></li>
+                    <li><a href="${pageContext.request.contextPath}/login">Student Login</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin-login">Admin Console</a></li>
+                    <li><a href="${pageContext.request.contextPath}/register">Student Register</a></li>
                     <li><a href="#overview">Overview</a></li>
                     <li><a href="#domains">Tracks</a></li>
                 </ul>
@@ -827,6 +829,9 @@
                 window.history.replaceState({}, document.title, cleanUrl);
             }
         }
+        document.addEventListener("DOMContentLoaded", function() {
+            window.alert("Congratulations! Account created successfully.\nYour student registration has been completed. Please sign in with your email and password.");
+        });
     </script>
     <% } %>
 

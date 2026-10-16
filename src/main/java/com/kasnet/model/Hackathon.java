@@ -17,8 +17,11 @@ public class Hackathon {
     private String    organizer;
     private Date      eventDate;
     private String    positionResult;
+    private String    positionAchieved;
     private String    description;
     private String    teamName;
+    private int       teamSize;
+    private String    projectBuilt;
     private String    certificatePath;
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -69,11 +72,20 @@ public class Hackathon {
     public String getPositionResult() { return positionResult; }
     public void setPositionResult(String positionResult) { this.positionResult = positionResult; }
 
+    public String getPositionAchieved() { return positionAchieved != null ? positionAchieved : positionResult; }
+    public void setPositionAchieved(String positionAchieved) { this.positionAchieved = positionAchieved; this.positionResult = positionAchieved; }
+
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
     public String getTeamName() { return teamName; }
     public void setTeamName(String teamName) { this.teamName = teamName; }
+
+    public int getTeamSize() { return teamSize; }
+    public void setTeamSize(int teamSize) { this.teamSize = teamSize; }
+
+    public String getProjectBuilt() { return projectBuilt; }
+    public void setProjectBuilt(String projectBuilt) { this.projectBuilt = projectBuilt; }
 
     public String getCertificatePath() { return certificatePath; }
     public void setCertificatePath(String certificatePath) { this.certificatePath = certificatePath; }

@@ -43,10 +43,28 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // If user is already logged in, redirect to home
+        // If user is already logged in, redirect to their proper dashboard
         if (SessionUtil.isLoggedIn(request)) {
-            response.sendRedirect(request.getContextPath() + "/home");
+            HttpSession session = request.getSession(false);
+            String role = session != null ? (String) session.getAttribute("userRole") : null;
+            if ("ADMIN".equalsIgnoreCase(role)) {
+                response.sendRedirect(request.getContextPath() + "/admin");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/home");
+            }
             return;
+        }
+
+        String uri = request.getRequestURI();
+        String roleParam = request.getParameter("role");
+        boolean isAdmin = (roleParam != null && "admin".equalsIgnoreCase(roleParam))
+                || (uri != null && uri.contains("admin"));
+
+        request.setAttribute("selectedRole", isAdmin ? "admin" : "student");
+
+        String msgParam = request.getParameter("msg");
+        if ("admin_required".equalsIgnoreCase(msgParam)) {
+            request.setAttribute("adminNotice", "Administrator login is required to access the Admin Console.");
         }
 
         // Generate CAPTCHA and store in session
@@ -167,6 +185,13 @@ public class LoginServlet extends HttpServlet {
                                            HttpServletResponse response,
                                            String errorMessage)
             throws ServletException, IOException {
+        String role = (String) request.getAttribute("enteredRole");
+        if (role == null) {
+            role = request.getParameter("role");
+        }
+        if (role != null) {
+            request.setAttribute("selectedRole", "admin".equalsIgnoreCase(role) ? "admin" : "student");
+        }
         request.setAttribute("errorMessage", errorMessage);
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
@@ -184,6 +209,7 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("captcha", generateCaptcha());
         request.setAttribute("enteredEmail", email);
         request.setAttribute("enteredRole",  role);
+        request.setAttribute("selectedRole", "admin".equalsIgnoreCase(role) ? "admin" : "student");
         setErrorAndForwardToLogin(request, response, errorMessage);
     }
 

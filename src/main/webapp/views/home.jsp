@@ -419,7 +419,7 @@
             <a href="${pageContext.request.contextPath}/question-bank" class="nav-link">Question Bank</a>
             <a href="${pageContext.request.contextPath}/resume-analysis" class="nav-link">Resume Analysis</a>
             <span style="font-size: 0.88rem; color: #cbd5e0; margin-left: 6px;">Hi, ${user.firstName}</span>
-            <a href="${pageContext.request.contextPath}/logout" class="btn-logout">Logout</a>
+            <a href="${pageContext.request.contextPath}/logout" class="btn-logout" onclick="return confirm('Are you sure you want to log out from your student account?');">Logout</a>
         </div>
     </nav>
 
@@ -552,7 +552,7 @@
 
     </div>
 
-    <!-- Login Success Popup Modal -->
+    <!-- Login Success Popup Modal & Browser Alerts -->
     <% if (isLoginSuccess) { %>
     <div class="modal-overlay" id="loginSuccessModal">
         <div class="modal-card">
@@ -570,8 +570,20 @@
                 window.history.replaceState({}, document.title, cleanUrl);
             }
         }
+        document.addEventListener("DOMContentLoaded", function() {
+            window.alert("Welcome back, ${user.firstName}! You have logged in successfully to your student portal.");
+        });
     </script>
     <% } %>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('error') === 'admin_denied') {
+                window.alert("Access Denied: Student accounts do not have access to the Administrator Console.");
+            }
+        });
+    </script>
 
     <script>
         function navigateToSubject(subjectVal) {

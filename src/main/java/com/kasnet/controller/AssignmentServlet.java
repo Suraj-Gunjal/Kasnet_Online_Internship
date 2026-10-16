@@ -14,8 +14,14 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 @MultipartConfig(maxFileSize = 10485760, maxRequestSize = 10485760) // 10MB
 public class AssignmentServlet extends HttpServlet {
+
+    private static final Pattern SUBMITTED_FILENAME_PATTERN = Pattern.compile(
+            "filename\\s*=\\s*(?:\"((?:\\\\.|[^\"])*)\"|([^;]*))",
+            Pattern.CASE_INSENSITIVE);
 
     private AssignmentDAO assignmentDAO = new AssignmentDAO();
 
@@ -54,7 +60,7 @@ public class AssignmentServlet extends HttpServlet {
 
                 String savedPath = null;
                 if (filePart != null && filePart.getSize() > 0) {
-                    String submittedFileName = filePart.getSubmittedFileName();
+                    String submittedFileName = getSubmittedFileName(filePart);
                     String safeName = FileUtil.generateSafeFileName(submittedFileName);
 
                     String uploadPath = req.getServletContext().getRealPath("/uploads/assignments");
@@ -76,5 +82,21 @@ public class AssignmentServlet extends HttpServlet {
         }
 
         resp.sendRedirect(req.getContextPath() + "/assignments?success=1");
+    }
+
+    private String getSubmittedFileName(Part filePart) {
+        String contentDisposition = filePart.getHeader("content-disposition");
+        if (contentDisposition == null) {
+            return null;
+        }
+
+        Matcher matcher = SUBMITTED_FILENAME_PATTERN.matcher(contentDisposition);
+        if (!matcher.find()) {
+            return null;
+        }
+
+        String fileName = matcher.group(1) != null ? matcher.group(1) : matcher.group(2).trim();
+        int separator = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+        return fileName.substring(separator + 1);
     }
 }

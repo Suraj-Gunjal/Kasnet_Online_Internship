@@ -577,16 +577,9 @@
             </ul>
 
             <div class="nav-auth">
-                <c:choose>
-                    <c:when test="${not empty sessionScope.userId}">
-                        <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-outline">My Dashboard</a>
-                        <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Login</a>
-                        <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Register</a>
-                    </c:otherwise>
-                </c:choose>
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Student Login</a>
+                <a href="${pageContext.request.contextPath}/admin-login" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444;">Admin Console</a>
+                <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Sign Up</a>
             </div>
         </div>
     </header>
@@ -751,7 +744,7 @@
                     <div class="feature-icon-box">A</div>
                     <div class="feature-content">
                         <h4>Assignment Tracking</h4>
-                        <p>View upcoming tasks, deadline notifications, and review mentor feedback directly in your portal dashboard.</p>
+                        <p>View upcoming tasks, deadline notifications, and review mentor feedback directly in your portal Home.</p>
                     </div>
                 </div>
 
@@ -799,8 +792,9 @@
                     <div style="margin-top: 4px; font-size: 0.8rem;">Kasnet Technologies Pvt Ltd &bull; Pune, Maharashtra</div>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
-                    <li><a href="${pageContext.request.contextPath}/register">Register</a></li>
+                    <li><a href="${pageContext.request.contextPath}/login">Student Login</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin-login">Admin Console</a></li>
+                    <li><a href="${pageContext.request.contextPath}/register">Student Register</a></li>
                     <li><a href="#overview">Overview</a></li>
                     <li><a href="#domains">Tracks</a></li>
                 </ul>
@@ -816,7 +810,7 @@
     <div class="modal-overlay" id="registrationSuccessModal">
         <div class="modal-card">
             <h3 class="modal-title">Congratulations! Account created successfully.</h3>
-            <p class="modal-body">Your student registration has been completed. You can now sign in using your registered email and password to access your internship dashboard.</p>
+            <p class="modal-body">Your student registration has been completed. You can now sign in using your registered email and password to access your internship Home.</p>
             <div class="modal-actions">
                 <a href="${pageContext.request.contextPath}/login" class="btn btn-primary">Proceed to Login</a>
                 <button type="button" class="btn btn-outline" onclick="closeSuccessModal()">Close</button>
@@ -835,6 +829,9 @@
                 window.history.replaceState({}, document.title, cleanUrl);
             }
         }
+        document.addEventListener("DOMContentLoaded", function() {
+            window.alert("Congratulations! Account created successfully.\nYour student registration has been completed. Please sign in with your email and password.");
+        });
     </script>
     <% } %>
 

@@ -18,6 +18,10 @@ public class CertificationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (SessionUtil.isAdmin(req)) {
+            resp.sendRedirect(req.getContextPath() + "/admin?tab=certificates");
+            return;
+        }
         resp.sendRedirect(req.getContextPath() + "/profile?tab=certifications");
     }
 

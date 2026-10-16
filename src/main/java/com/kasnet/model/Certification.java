@@ -15,11 +15,16 @@ public class Certification {
     private int       userId;
     private String    certName;
     private String    provider;
+    private String    issuingOrganization;
     private String    technology;
     private String    certIdNumber;
+    private String    credentialId;
     private Date      issueDate;
     private Date      expiryDate;
     private String    credentialUrl;
+    private String    certImagePath;
+    private String    studentName;
+    private String    studentEmail;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -63,11 +68,17 @@ public class Certification {
     public String getProvider() { return provider; }
     public void setProvider(String provider) { this.provider = provider; }
 
+    public String getIssuingOrganization() { return issuingOrganization != null ? issuingOrganization : provider; }
+    public void setIssuingOrganization(String issuingOrganization) { this.issuingOrganization = issuingOrganization; this.provider = issuingOrganization; }
+
     public String getTechnology() { return technology; }
     public void setTechnology(String technology) { this.technology = technology; }
 
     public String getCertIdNumber() { return certIdNumber; }
     public void setCertIdNumber(String certIdNumber) { this.certIdNumber = certIdNumber; }
+
+    public String getCredentialId() { return credentialId != null ? credentialId : certIdNumber; }
+    public void setCredentialId(String credentialId) { this.credentialId = credentialId; this.certIdNumber = credentialId; }
 
     public Date getIssueDate() { return issueDate; }
     public void setIssueDate(Date issueDate) { this.issueDate = issueDate; }
@@ -77,6 +88,15 @@ public class Certification {
 
     public String getCredentialUrl() { return credentialUrl; }
     public void setCredentialUrl(String credentialUrl) { this.credentialUrl = credentialUrl; }
+
+    public String getStudentName() { return studentName != null ? studentName : ""; }
+    public void setStudentName(String studentName) { this.studentName = studentName; }
+
+    public String getStudentEmail() { return studentEmail != null ? studentEmail : ""; }
+    public void setStudentEmail(String studentEmail) { this.studentEmail = studentEmail; }
+
+    public String getCertImagePath() { return certImagePath; }
+    public void setCertImagePath(String certImagePath) { this.certImagePath = certImagePath; }
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }

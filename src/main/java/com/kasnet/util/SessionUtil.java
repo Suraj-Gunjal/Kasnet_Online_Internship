@@ -86,6 +86,31 @@ public class SessionUtil {
         return getUserId(request) != null;
     }
 
+    /**
+     * Returns the role of the logged-in user (e.g., 'STUDENT', 'ADMIN').
+     *
+     * @param request the current HTTP request
+     * @return the user role string, or {@code null} if not authenticated
+     */
+    public static String getUserRole(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
+        Object role = session.getAttribute("userRole");
+        return (role instanceof String) ? (String) role : null;
+    }
+
+    /**
+     * Checks whether the current session belongs to an administrator.
+     *
+     * @param request the current HTTP request
+     * @return {@code true} if user is logged in and has role 'ADMIN'
+     */
+    public static boolean isAdmin(HttpServletRequest request) {
+        return "ADMIN".equalsIgnoreCase(getUserRole(request));
+    }
+
     // -------------------------------------------------------------------------
     // Write methods
     // -------------------------------------------------------------------------

@@ -79,7 +79,10 @@ private static final String DB_USER = "root";
 private static final String DB_PASSWORD = "YOUR_MYSQL_PASSWORD"; // <-- Enter your local MySQL root password
 ```
 
-### Step 4: Run Locally (One Single Command)
+### Step 4: Verify the Seeded Administrator Account
+The local development seed creates the administrator account shown in the credentials table below. This default password is for local testing only; replace it before any non-local deployment.
+
+### Step 5: Run Locally (One Single Command)
 We have included a configured embedded Tomcat runner in Maven. You do **not** need to install standalone Tomcat:
 
 **On Windows (PowerShell / CMD):**
@@ -97,7 +100,7 @@ Wait until you see:
 INFO: Starting ProtocolHandler ["http-bio-8080"]
 ```
 
-### Step 5: Open in Your Browser
+### Step 6: Open in Your Browser
 Open your browser and navigate to:
 👉 **`http://localhost:8080/internship/`**
 
@@ -107,7 +110,7 @@ Open your browser and navigate to:
 
 ## Pre-configured Test Credentials
 
-The application provides pre-configured credentials for quick testing:
+The application seeds local test accounts for both roles. Public registration creates student accounts; administrator accounts are provisioned separately and cannot be created through the public signup form.
 
 | Role | Email | Password | Destination Dashboard |
 |---|---|---|---|

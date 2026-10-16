@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1494,9 +1495,13 @@
         }
 
         if (!valid) {
+            var msg = firstErrorMsg || 'Please fix the highlighted errors above.';
+            // Standard Chrome popup message
+            window.alert(msg);
+
             // Show client alert
             var alertBox = document.getElementById('clientAlert');
-            document.getElementById('clientAlertMsg').textContent = firstErrorMsg || 'Please fix the highlighted errors above.';
+            document.getElementById('clientAlertMsg').textContent = msg;
             alertBox.style.display = 'flex';
             // Scroll to top of form
             alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1513,6 +1518,21 @@
         document.getElementById('clientAlert').style.display = 'none';
 
         this.submit();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        <c:if test="${not empty requestScope.errorMessage || not empty requestScope.error}">
+            var serverErr = "${fn:escapeXml(not empty requestScope.errorMessage ? requestScope.errorMessage : requestScope.error)}";
+            if (serverErr) {
+                window.alert(serverErr);
+            }
+        </c:if>
+        <c:if test="${not empty requestScope.success}">
+            var succ = "${fn:escapeXml(requestScope.success)}";
+            if (succ) {
+                window.alert(succ);
+            }
+        </c:if>
     });
 
     /* =============================================

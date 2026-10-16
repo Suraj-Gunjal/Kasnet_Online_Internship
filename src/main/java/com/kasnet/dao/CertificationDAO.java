@@ -105,6 +105,43 @@ public class CertificationDAO {
         return false;
     }
 
+    public boolean deleteCertificationByAdmin(int certId) {
+        String sql = "DELETE FROM certifications WHERE cert_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, certId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<Certification> getAllCertificationsWithStudent() {
+        List<Certification> list = new ArrayList<>();
+        String sql = "SELECT c.*, CONCAT(COALESCE(u.first_name, ''), ' ', COALESCE(u.last_name, '')) AS student_name, "
+                   + "u.email AS student_email "
+                   + "FROM certifications c "
+                   + "LEFT JOIN users u ON c.user_id = u.user_id "
+                   + "ORDER BY c.created_at DESC, c.cert_id DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Certification c = mapRow(rs);
+                try {
+                    String sName = rs.getString("student_name");
+                    c.setStudentName(sName != null && !sName.trim().isEmpty() ? sName.trim() : "Student #" + c.getUserId());
+                    c.setStudentEmail(rs.getString("student_email"));
+                } catch (SQLException ignore) {}
+                list.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     private Certification mapRow(ResultSet rs) throws SQLException {
         Certification c = new Certification();
         c.setCertId(rs.getInt("cert_id"));

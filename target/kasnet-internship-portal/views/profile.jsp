@@ -431,6 +431,16 @@
             font-size: 0.9rem;
         }
 
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 900px) {
             .container {
                 flex-direction: column;
@@ -448,11 +458,12 @@
 
     <!-- Top Navigation Bar -->
     <nav class="navbar">
-        <a href="${pageContext.request.contextPath}/dashboard" class="navbar-brand">
+        <a href="${pageContext.request.contextPath}/home" class="navbar-brand">
             <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
             <span>Kasnet Internship Portal</span>
         </a>
         <div class="navbar-menu">
+            <a href="${pageContext.request.contextPath}/home" class="nav-link">Home</a>
             <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">Dashboard</a>
             <a href="${pageContext.request.contextPath}/profile" class="nav-link active">Profile</a>
             <a href="${pageContext.request.contextPath}/assignments" class="nav-link">Assignments</a>
@@ -529,6 +540,12 @@
                     ✓ Profile section details updated and saved successfully!
                 </div>
             </c:if>
+            <c:if test="${param.error == 'futureDob'}">
+                <div class="alert-error" role="alert">Date of birth cannot be in the future.</div>
+            </c:if>
+            <c:if test="${param.error == 'invalidDob'}">
+                <div class="alert-error" role="alert">Please enter a valid date of birth.</div>
+            </c:if>
 
             <!-- Tabs Navigation Bar - Exactly 5 Requested Sections -->
             <div class="tabs-header">
@@ -567,7 +584,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Date of Birth</label>
-                            <input type="date" name="dob" class="form-input" value="${profile.dateOfBirth}">
+                            <input type="date" name="dob" class="form-input" value="${profile.dateOfBirth}" max="${maxDateOfBirth}">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Mobile (10 Digits) *</label>
@@ -1170,7 +1187,7 @@
                 </c:if>
 
                 <div class="btn-group" style="margin-top: 32px;">
-                    <a href="${pageContext.request.contextPath}/dashboard" class="btn-save" style="text-decoration:none;">Go to Dashboard &rarr;</a>
+                    <a href="${pageContext.request.contextPath}/home" class="btn-save" style="text-decoration:none;">Go to Home &rarr;</a>
                 </div>
             </c:if>
 

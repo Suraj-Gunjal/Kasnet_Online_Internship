@@ -15,12 +15,16 @@ public class Competition {
     private int       userId;
     private String    competitionName;
     private String    collegeOrganizer;
+    private String    organizer;
     private Date      eventDate;
     private String    projectName;
     private String    positionResult;
+    private String    positionAchieved;
     private String    description;
     private String    teamName;
     private String    certificatePath;
+    private String    participationLevel;
+    private String    prizeWon;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -66,6 +70,9 @@ public class Competition {
     public String getCollegeOrganizer() { return collegeOrganizer; }
     public void setCollegeOrganizer(String collegeOrganizer) { this.collegeOrganizer = collegeOrganizer; }
 
+    public String getOrganizer() { return organizer != null ? organizer : collegeOrganizer; }
+    public void setOrganizer(String organizer) { this.organizer = organizer; this.collegeOrganizer = organizer; }
+
     public Date getEventDate() { return eventDate; }
     public void setEventDate(Date eventDate) { this.eventDate = eventDate; }
 
@@ -74,6 +81,15 @@ public class Competition {
 
     public String getPositionResult() { return positionResult; }
     public void setPositionResult(String positionResult) { this.positionResult = positionResult; }
+
+    public String getPositionAchieved() { return positionAchieved != null ? positionAchieved : positionResult; }
+    public void setPositionAchieved(String positionAchieved) { this.positionAchieved = positionAchieved; this.positionResult = positionAchieved; }
+
+    public String getParticipationLevel() { return participationLevel; }
+    public void setParticipationLevel(String participationLevel) { this.participationLevel = participationLevel; }
+
+    public String getPrizeWon() { return prizeWon; }
+    public void setPrizeWon(String prizeWon) { this.prizeWon = prizeWon; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

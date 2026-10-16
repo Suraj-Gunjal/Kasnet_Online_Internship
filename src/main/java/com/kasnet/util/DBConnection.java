@@ -11,9 +11,9 @@ import java.sql.SQLException;
  * to the MySQL database for the Kasnet Online Internship Portal.
  *
  * Usage (try-with-resources recommended):
- *   try (Connection conn = DBConnection.getConnection()) {
- *       // use connection
- *   }
+ * try (Connection conn = DBConnection.getConnection()) {
+ * // use connection
+ * }
  */
 public class DBConnection {
 
@@ -21,24 +21,28 @@ public class DBConnection {
     // DATABASE CONFIGURATION — Change these values for your environment
     // -------------------------------------------------------------------------
 
-    /** JDBC URL for the MySQL database.
-     *  Parameters: useSSL=false        — disable SSL for local dev
-     *              serverTimezone=UTC  — avoid timezone mismatch errors
-     *              allowPublicKeyRetrieval=true — required for MySQL 8+ caching_sha2 auth
+    /**
+     * JDBC URL for the MySQL database.
+     * Parameters: useSSL=false — disable SSL for local dev
+     * serverTimezone=UTC — avoid timezone mismatch errors
+     * allowPublicKeyRetrieval=true — required for MySQL 8+ caching_sha2 auth
      */
-    private static final String DB_URL =
+        private static final String DB_URL = System.getenv().getOrDefault(
+            "KASNET_DB_URL",
             "jdbc:mysql://localhost:3306/online_internship"
-            + "?useSSL=false&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true";
+                + "?useSSL=false&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true");
 
     /** Database username. Change for production. */
     private static final String DB_USER = "root";
 
     /**
      * Database password.
-     * ⚠️  IMPORTANT: Change this to a strong password before deploying to production.
-     *     Consider externalising credentials via environment variables or a properties file.
+     * ⚠️ IMPORTANT: Change this to a strong password before deploying to
+     * production.
+     * Consider externalising credentials via environment variables or a properties
+     * file.
      */
-    private static final String DB_PASSWORD = "1827"; // active root password
+    private static final String DB_PASSWORD = "Ch@nd4n#V9!xQ7";
 
     /** Fully-qualified MySQL JDBC driver class name. */
     private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
@@ -54,17 +58,16 @@ public class DBConnection {
              * If this exception is thrown, the MySQL Connector/J JAR is missing
              * from the classpath / Maven dependencies.
              * Add to pom.xml:
-             *   <dependency>
-             *       <groupId>mysql</groupId>
-             *       <artifactId>mysql-connector-java</artifactId>
-             *       <version>8.0.33</version>
-             *   </dependency>
+             * <dependency>
+             * <groupId>mysql</groupId>
+             * <artifactId>mysql-connector-java</artifactId>
+             * <version>8.0.33</version>
+             * </dependency>
              */
             throw new ExceptionInInitializerError(
-                "MySQL JDBC Driver not found. "
-                + "Ensure mysql-connector-java is on the classpath. "
-                + "Cause: " + e.getMessage()
-            );
+                    "MySQL JDBC Driver not found. "
+                            + "Ensure mysql-connector-java is on the classpath. "
+                            + "Cause: " + e.getMessage());
         }
     }
 
@@ -80,19 +83,24 @@ public class DBConnection {
     /**
      * Returns a new {@link Connection} to the configured MySQL database.
      *
-     * <p>This method is thread-safe because {@link DriverManager#getConnection}
+     * <p>
+     * This method is thread-safe because {@link DriverManager#getConnection}
      * is synchronised internally and each call returns a fresh connection.
      * For high-traffic production use, replace with a connection pool such as
-     * HikariCP or Apache DBCP.</p>
+     * HikariCP or Apache DBCP.
+     * </p>
      *
-     * <p><strong>Always</strong> use this inside a try-with-resources block so
-     * the connection is closed automatically:</p>
+     * <p>
+     * <strong>Always</strong> use this inside a try-with-resources block so
+     * the connection is closed automatically:
+     * </p>
+     * 
      * <pre>{@code
-     *   try (Connection conn = DBConnection.getConnection()) {
-     *       // work with conn
-     *   } catch (SQLException e) {
-     *       // handle error
-     *   }
+     * try (Connection conn = DBConnection.getConnection()) {
+     *     // work with conn
+     * } catch (SQLException e) {
+     *     // handle error
+     * }
      * }</pre>
      *
      * @return a live {@link Connection} object
@@ -104,7 +112,7 @@ public class DBConnection {
 
     /**
      * Convenience method: quietly closes a {@link Connection} if it is not null
-     * and not already closed.  Useful in finally-blocks when try-with-resources
+     * and not already closed. Useful in finally-blocks when try-with-resources
      * cannot be used.
      *
      * @param connection the connection to close (may be {@code null})

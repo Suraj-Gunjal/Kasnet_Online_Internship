@@ -8,6 +8,9 @@
 
     <display-name>Kasnet Online Internship Portal</display-name>
 
+    <!-- Disables JAR scanning for web fragments / annotations, eliminating Tomcat 7 Java 9+ module-info BCEL parsing errors -->
+    <absolute-ordering />
+
     <!-- ======================== CONTEXT PARAMETERS ======================== -->
     <context-param>
         <param-name>uploadDir</param-name>
@@ -33,6 +36,14 @@
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/admin-login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/admin/login</url-pattern>
+    </servlet-mapping>
 
     <!-- Register -->
     <servlet>
@@ -54,11 +65,25 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
+    <!-- home -->
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.HomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
     <!-- Dashboard -->
     <servlet>
         <servlet-name>DashboardServlet</servlet-name>
         <servlet-class>com.kasnet.controller.DashboardServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>DashboardServlet</servlet-name>
         <url-pattern>/dashboard</url-pattern>

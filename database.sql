@@ -80,7 +80,17 @@ CREATE TABLE IF NOT EXISTS `student_profiles` (
   `gender`              ENUM('Male','Female','Other') DEFAULT NULL,
   `date_of_birth`       DATE          DEFAULT NULL,
   `address`             TEXT          DEFAULT NULL,
+  `city`                VARCHAR(100)  DEFAULT NULL,
   `state`               VARCHAR(100)  DEFAULT NULL,
+  `pincode`             VARCHAR(20)   DEFAULT NULL,
+  `college_name`        VARCHAR(150)  DEFAULT NULL,
+  `branch`              VARCHAR(150)  DEFAULT NULL,
+  `current_year`        VARCHAR(50)   DEFAULT NULL,
+  `enrollment_no`       VARCHAR(100)  DEFAULT NULL,
+  `linkedin_url`        VARCHAR(255)  DEFAULT NULL,
+  `github_url`          VARCHAR(255)  DEFAULT NULL,
+  `portfolio_url`       VARCHAR(255)  DEFAULT NULL,
+  `bio`                 TEXT          DEFAULT NULL,
   `profile_photo_path`  VARCHAR(255)  DEFAULT NULL,
   `resume_path`         VARCHAR(255)  DEFAULT NULL,
   `resume_filename`     VARCHAR(255)  DEFAULT NULL,
@@ -455,28 +465,26 @@ CREATE TABLE IF NOT EXISTS `login_activity` (
 
 -- -------------------------------------------------------------
 --  Admin user
---  NOTE: The password_hash below is a PLACEHOLDER only.
---        BCrypt hashes MUST be generated at runtime (e.g. via
---        RegisterServlet or BCrypt.hashpw()).
---        Replace '$2a$12$PLACEHOLDER_HASH' with a real BCrypt
---        hash before use, or use RegisterServlet to create
---        accounts properly.
---
---  Example plain-text password intended: Admin@1234
+--  NOTE: Development credentials only. Replace this password hash
+--        before deploying outside a local test environment.
 -- -------------------------------------------------------------
 INSERT INTO `users`
   (`first_name`, `last_name`, `email`, `password_hash`, `mobile`, `country_code`, `role`, `is_active`)
 VALUES
   ('Kasnet', 'Admin', 'admin@kasnet.in',
-   '$2a$12$PLACEHOLDER_REPLACE_WITH_REAL_BCRYPT_HASH_FOR_Admin1234',
-   '9000000000', '+91', 'ADMIN', 1);
+  '$2a$12$/k/s5c7fjYGy.NFlkhI1PuTZ7LU0dBaBxFprT0FD5Y1rxiZwVSFZS',
+  '9000000000', '+91', 'ADMIN', 1);
 
--- NOTE: To create a proper admin, run the application and call:
---   BCrypt.hashpw("Admin@1234", BCrypt.gensalt(12))
--- then UPDATE users SET password_hash='<hash>' WHERE email='admin@kasnet.in';
---
--- Or simply register through RegisterServlet and promote to ADMIN:
---   UPDATE users SET role='ADMIN' WHERE email='admin@kasnet.in';
+-- Local development student account used by SystemVerifier.
+INSERT INTO `users`
+  (`first_name`, `last_name`, `email`, `password_hash`, `mobile`, `country_code`, `role`, `is_active`)
+VALUES
+  ('Test', 'Student', 'test@kasnet.in',
+  '$2a$12$T5RvOQ4RXduI71r/RadqAOsDC/UKmYGkl/WLnb.W8fagjq2pWbVnm',
+  '9000000001', '+91', 'STUDENT', 1);
+
+INSERT INTO `student_profiles` (`user_id`, `profile_completion`)
+SELECT `user_id`, 0 FROM `users` WHERE `email` = 'test@kasnet.in';
 
 -- -------------------------------------------------------------
 --  Sample Assignments
