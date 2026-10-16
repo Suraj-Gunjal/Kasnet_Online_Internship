@@ -45,3 +45,9 @@
 0:0:0:0:0:0:0:1 - - [17/Oct/2026:00:51:29 +0530] "POST /internship/login HTTP/1.1" 302 - http-bio-8080-exec-3 26
 0:0:0:0:0:0:0:1 - - [17/Oct/2026:00:51:29 +0530] "GET /internship/home HTTP/1.1" 302 - http-bio-8080-exec-4 7
 0:0:0:0:0:0:0:1 - - [17/Oct/2026:00:51:29 +0530] "GET /internship/admin HTTP/1.1" 200 64130 http-bio-8080-exec-5 28
+0:0:0:0:0:0:0:1 - - [17/Oct/2026:01:12:06 +0530] "GET /internship HTTP/1.1" 302 - http-bio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [17/Oct/2026:01:12:06 +0530] "GET /internship/ HTTP/1.1" 200 28281 http-bio-8080-exec-2 193
+0:0:0:0:0:0:0:1 - - [17/Oct/2026:01:12:42 +0530] "GET /internship/ HTTP/1.1" 200 28281 http-bio-8080-exec-4 8
+0:0:0:0:0:0:0:1 - - [17/Oct/2026:01:12:45 +0530] "GET /internship/admin-login HTTP/1.1" 200 36470 http-bio-8080-exec-5 76
+0:0:0:0:0:0:0:1 - - [17/Oct/2026:01:12:55 +0530] "POST /internship/login HTTP/1.1" 302 - http-bio-8080-exec-7 890
+0:0:0:0:0:0:0:1 - - [17/Oct/2026:01:12:57 +0530] "GET /internship/admin?loginSuccess=1 HTTP/1.1" 200 64770 http-bio-8080-exec-8 1650
