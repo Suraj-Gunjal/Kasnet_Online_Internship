@@ -27,7 +27,7 @@ public class DBConnection {
      *              allowPublicKeyRetrieval=true — required for MySQL 8+ caching_sha2 auth
      */
     private static final String DB_URL =
-            "jdbc:mysql://localhost:3306/onlineinternship_db"
+            "jdbc:mysql://localhost:3306/online_internship"
             + "?useSSL=false&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true";
 
     /** Database username. Change for production. */
@@ -35,11 +35,10 @@ public class DBConnection {
 
     /**
      * Database password.
-     * Checks environment variable DB_PASSWORD first, otherwise defaults to local root password "admin".
+     * ⚠️  IMPORTANT: Change this to a strong password before deploying to production.
+     *     Consider externalising credentials via environment variables or a properties file.
      */
-    private static final String DB_PASSWORD = System.getenv("DB_PASSWORD") != null 
-            ? System.getenv("DB_PASSWORD") 
-            : (System.getProperty("db.password") != null ? System.getProperty("db.password") : "admin");
+    private static final String DB_PASSWORD = "Sur4j@23sg8"; // active root password
 
     /** Fully-qualified MySQL JDBC driver class name. */
     private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";

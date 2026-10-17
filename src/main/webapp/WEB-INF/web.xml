@@ -213,31 +213,7 @@
         <url-pattern>/lectures</url-pattern>
     </servlet-mapping>
 
-    <!-- Courses -->
-    <servlet>
-        <servlet-name>CourseServlet</servlet-name>
-        <servlet-class>com.kasnet.controller.CourseServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CourseServlet</servlet-name>
-        <url-pattern>/courses</url-pattern>
-    </servlet-mapping>
-
-    <!-- Lecture API (Secure Video Streams & Progress) -->
-    <servlet>
-        <servlet-name>LectureApiServlet</servlet-name>
-        <servlet-class>com.kasnet.controller.LectureApiServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LectureApiServlet</servlet-name>
-        <url-pattern>/api/lectures/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LectureApiServlet</servlet-name>
-        <url-pattern>/api/lectures</url-pattern>
-    </servlet-mapping>
-
-    <!-- Admin User Monitoring -->
+    <!-- Admin -->
     <servlet>
         <servlet-name>AdminServlet</servlet-name>
         <servlet-class>com.kasnet.controller.AdminServlet</servlet-class>
@@ -245,21 +221,6 @@
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
         <url-pattern>/admin</url-pattern>
-    </servlet-mapping>
-
-    <!-- Admin Course & Lecture Management -->
-    <servlet>
-        <servlet-name>AdminCourseServlet</servlet-name>
-        <servlet-class>com.kasnet.controller.AdminCourseServlet</servlet-class>
-        <multipart-config>
-            <max-file-size>524288000</max-file-size>
-            <max-request-size>534773760</max-request-size>
-            <file-size-threshold>2097152</file-size-threshold>
-        </multipart-config>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AdminCourseServlet</servlet-name>
-        <url-pattern>/admin/courses</url-pattern>
     </servlet-mapping>
 
     <!-- Question Bank -->

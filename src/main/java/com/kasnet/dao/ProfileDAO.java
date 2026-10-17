@@ -17,9 +17,10 @@ public class ProfileDAO {
 
     public StudentProfile getProfileByUserId(int userId) {
         final String sql =
-                "SELECT id, user_id, avatar_url, dob, gender, current_year, skills, "
-                + "linkedin_url, github_url, portfolio_url, bio, resume_url, created_at, updated_at "
-                + "FROM profiles WHERE user_id = ?";
+                "SELECT profile_id, user_id, gender, date_of_birth, address, state, "
+                + "profile_photo_path, resume_path, resume_filename, resume_uploaded_at, "
+                + "profile_completion, last_login, previous_login, created_at, updated_at "
+                + "FROM student_profiles WHERE user_id = ?";
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -44,8 +45,8 @@ public class ProfileDAO {
 
     public boolean createProfile(int userId) {
         final String sql =
-                "INSERT INTO profiles (user_id, created_at, updated_at) "
-                + "VALUES (?, NOW(), NOW())";
+                "INSERT INTO student_profiles (user_id, profile_completion, created_at, updated_at) "
+                + "VALUES (?, 20, NOW(), NOW())";
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -65,8 +66,8 @@ public class ProfileDAO {
 
     public boolean updatePersonalDetails(StudentProfile profile) {
         final String sql =
-                "UPDATE profiles SET "
-                + "gender = ?, dob = ?, bio = ?, updated_at = NOW() "
+                "UPDATE student_profiles SET "
+                + "gender = ?, date_of_birth = ?, address = ?, state = ?, updated_at = NOW() "
                 + "WHERE user_id = ?";
 
         Connection conn = null;
@@ -77,8 +78,9 @@ public class ProfileDAO {
             ps   = conn.prepareStatement(sql);
             ps.setString(1, profile.getGender());
             ps.setDate(2, profile.getDateOfBirth());
-            ps.setString(3, profile.getAddress()); // mapped to bio
-            ps.setInt(4, profile.getUserId());
+            ps.setString(3, profile.getAddress());
+            ps.setString(4, profile.getState());
+            ps.setInt(5, profile.getUserId());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -110,12 +112,12 @@ public class ProfileDAO {
             score += 20;
 
             // Personal details (20%)
-            final String personalSql = "SELECT gender, dob, bio FROM profiles WHERE user_id = ?";
+            final String personalSql = "SELECT gender, date_of_birth, address FROM student_profiles WHERE user_id = ?";
             try (PreparedStatement ps = conn.prepareStatement(personalSql)) {
                 ps.setInt(1, userId);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        if (rs.getString("gender") != null || rs.getDate("dob") != null || rs.getString("bio") != null) {
+                        if (rs.getString("gender") != null || rs.getDate("date_of_birth") != null || rs.getString("address") != null) {
                             score += 20;
                         }
                     }
@@ -165,18 +167,39 @@ public class ProfileDAO {
     }
 
     public boolean updateProfileCompletion(int userId, int completion) {
-        // Profile completion is calculated dynamically, no column to update
-        return true;
+        final String sql = "UPDATE student_profiles SET profile_completion = ?, updated_at = NOW() WHERE user_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = DBConnection.getConnection();
+            ps   = conn.prepareStatement(sql);
+            ps.setInt(1, Math.min(Math.max(completion, 0), 100));
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "updateProfileCompletion: failed for userId=" + userId, e);
+            return false;
+        } finally {
+            closeResources(null, ps, conn);
+        }
     }
 
     private StudentProfile mapRowToProfile(ResultSet rs) throws SQLException {
         StudentProfile p = new StudentProfile();
-        p.setProfileId(rs.getInt("id"));
+        p.setProfileId(rs.getInt("profile_id"));
         p.setUserId(rs.getInt("user_id"));
         p.setGender(rs.getString("gender"));
-        p.setDateOfBirth(rs.getDate("dob"));
-        p.setProfilePhotoPath(rs.getString("avatar_url"));
-        p.setResumePath(rs.getString("resume_url"));
+        p.setDateOfBirth(rs.getDate("date_of_birth"));
+        p.setAddress(rs.getString("address"));
+        p.setState(rs.getString("state"));
+        p.setProfilePhotoPath(rs.getString("profile_photo_path"));
+        p.setResumePath(rs.getString("resume_path"));
+        p.setResumeFilename(rs.getString("resume_filename"));
+        p.setResumeUploadedAt(rs.getTimestamp("resume_uploaded_at"));
+        p.setProfileCompletion(rs.getInt("profile_completion"));
+        p.setLastLogin(rs.getTimestamp("last_login"));
+        p.setPreviousLogin(rs.getTimestamp("previous_login"));
         p.setCreatedAt(rs.getTimestamp("created_at"));
         p.setUpdatedAt(rs.getTimestamp("updated_at"));
         return p;

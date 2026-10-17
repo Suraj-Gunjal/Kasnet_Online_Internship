@@ -104,7 +104,6 @@ public class AuthenticationService {
             testUser.setEmail(normalizedEmail);
             testUser.setPasswordHash(PasswordUtil.hashPassword(TEST_STUDENT_PASSWORD));
             testUser.setRole("STUDENT");
-            testUser.setMobile("9999999999");
             testUser.setStream("Graduation");
             testUser.setBranch("Computer Science and Engineering");
             testUser.setCollegeName("Institute of Technology");
@@ -132,27 +131,6 @@ public class AuthenticationService {
                 userDAO.updateLastLogin(adminUser.getUserId());
                 return adminUser;
             }
-
-            // Auto-create admin account if it doesn't exist
-            User newAdmin = new User();
-            newAdmin.setFirstName("Admin");
-            newAdmin.setLastName("Kasnet");
-            newAdmin.setEmail("admin@kasnet.in");
-            newAdmin.setPasswordHash(PasswordUtil.hashPassword("Admin@12345"));
-            newAdmin.setRole("ADMIN");
-            newAdmin.setMobile("9999999990");
-            newAdmin.setStream("Administration");
-            newAdmin.setCollegeName("Kasnet Institute of Technology");
-            newAdmin.setCity("Pune");
-            newAdmin.setCountryCode("+91");
-
-            User persistedAdmin = userDAO.registerUser(newAdmin);
-            if (persistedAdmin == null || persistedAdmin.getUserId() <= 0) {
-                throw new Exception("Unable to create the admin account. Check the database connection.");
-            }
-            profileDAO.createProfile(persistedAdmin.getUserId());
-            userDAO.updateLastLogin(persistedAdmin.getUserId());
-            return persistedAdmin;
         }
 
         // 3. Database user lookup

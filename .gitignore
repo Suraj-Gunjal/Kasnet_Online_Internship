@@ -1,4 +1,3 @@
-# Build output
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -16,7 +15,6 @@ buildNumber.properties
 # OS
 .DS_Store
 Thumbs.db
-desktop.ini
 
 # IDEs
 .idea/
@@ -25,8 +23,3 @@ desktop.ini
 .classpath
 .settings/
 .vscode/
-*.swp
-*.swo
-
-# Package archives
-src.zip

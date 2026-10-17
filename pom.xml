@@ -85,20 +85,6 @@
             <version>5.2.5</version>
         </dependency>
 
-        <!-- Cloudinary SDK for video upload & signed URL generation -->
-        <dependency>
-            <groupId>com.cloudinary</groupId>
-            <artifactId>cloudinary-http44</artifactId>
-            <version>1.36.0</version>
-        </dependency>
-
-        <!-- JSON processing for API endpoints -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20231013</version>
-        </dependency>
-
     </dependencies>
 
     <build>

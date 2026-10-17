@@ -76,24 +76,6 @@ public class SessionUtil {
         return (name instanceof String) ? (String) name : null;
     }
 
-    /** Session key for the logged-in user's role. */
-    public static final String ATTR_USER_ROLE = "userRole";
-
-    /**
-     * Returns the logged-in user's role from the current session.
-     *
-     * @param request the current HTTP request
-     * @return the user's role (STUDENT, ADMIN), or {@code null} if not logged in
-     */
-    public static String getUserRole(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return null;
-        }
-        Object role = session.getAttribute(ATTR_USER_ROLE);
-        return (role instanceof String) ? (String) role : null;
-    }
-
     /**
      * Checks whether a valid login session is present (i.e. a userId is stored).
      *
@@ -102,17 +84,6 @@ public class SessionUtil {
      */
     public static boolean isLoggedIn(HttpServletRequest request) {
         return getUserId(request) != null;
-    }
-
-    /**
-     * Stores the authenticated user's role in the session.
-     *
-     * @param request the current HTTP request
-     * @param role    the role string (STUDENT, ADMIN)
-     */
-    public static void setUserRole(HttpServletRequest request, String role) {
-        HttpSession session = request.getSession(true);
-        session.setAttribute(ATTR_USER_ROLE, role);
     }
 
     // -------------------------------------------------------------------------
