@@ -23,3 +23,7 @@ Thumbs.db
 .classpath
 .settings/
 .vscode/
+
+.idea/
+.vscode/
+target/
