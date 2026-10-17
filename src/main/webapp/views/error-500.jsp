@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>500 - Server Error | Kasnet Internship Portal</title>
+    <title>500 - Server Error | My Internship Technologies Portal</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -269,7 +269,7 @@
                 <span class="support-icon">&#128222;</span>
                 <p>
                     If this problem persists, please contact our support team at
-                    <a href="mailto:support@kasnet.com">support@kasnet.com</a>
+                    <a href="mailto:support@myinternshiptech.com">support@myinternshiptech.com</a>
                     or call <strong>+91 98765 43210</strong>.
                 </p>
             </div>
@@ -290,7 +290,7 @@
                 </a>
             </div>
 
-            <p class="footer-note">Error 500 &bull; Kasnet Internship Portal &bull; Please note your time of visit for support</p>
+            <p class="footer-note">Error 500 &bull; My Internship Technologies Portal &bull; Please note your time of visit for support</p>
         </div>
     </div>
 </body>

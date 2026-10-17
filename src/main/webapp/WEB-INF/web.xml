@@ -6,10 +6,7 @@
          version="3.1"
          metadata-complete="true">
 
-    <display-name>Kasnet Online Internship Portal</display-name>
-
-    <!-- Disables JAR scanning for web fragments / annotations, eliminating Tomcat 7 Java 9+ module-info BCEL parsing errors -->
-    <absolute-ordering />
+    <display-name>My Internship Technologies Portal</display-name>
 
     <!-- ======================== CONTEXT PARAMETERS ======================== -->
     <context-param>
@@ -35,14 +32,6 @@
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/admin-login</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/admin/login</url-pattern>
     </servlet-mapping>
 
     <!-- Register -->
@@ -117,6 +106,16 @@
     <servlet-mapping>
         <servlet-name>EducationServlet</servlet-name>
         <url-pattern>/education</url-pattern>
+    </servlet-mapping>
+
+    <!-- Engineering Marks -->
+    <servlet>
+        <servlet-name>EngineeringMarksServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.EngineeringMarksServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EngineeringMarksServlet</servlet-name>
+        <url-pattern>/engineering-marks</url-pattern>
     </servlet-mapping>
 
     <!-- Achievements -->

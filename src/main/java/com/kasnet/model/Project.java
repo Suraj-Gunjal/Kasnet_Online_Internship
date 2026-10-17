@@ -14,7 +14,6 @@ public class Project {
     private int       projectId;
     private int       userId;
     private String    projectName;
-    private String    projectTitle;
     private String    description;
     private String    technologiesUsed;
     private String    role;
@@ -22,7 +21,6 @@ public class Project {
     private int       teamSize;
     private Date      startDate;
     private Date      endDate;
-    private boolean   ongoing;
     private String    projectUrl;
     private String    githubUrl;
     private Timestamp createdAt;
@@ -69,9 +67,6 @@ public class Project {
     public String getProjectName() { return projectName; }
     public void setProjectName(String projectName) { this.projectName = projectName; }
 
-    public String getProjectTitle() { return projectTitle != null ? projectTitle : projectName; }
-    public void setProjectTitle(String projectTitle) { this.projectTitle = projectTitle; this.projectName = projectTitle; }
-
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
@@ -92,9 +87,6 @@ public class Project {
 
     public Date getEndDate() { return endDate; }
     public void setEndDate(Date endDate) { this.endDate = endDate; }
-
-    public boolean isOngoing() { return ongoing; }
-    public void setOngoing(boolean ongoing) { this.ongoing = ongoing; }
 
     public String getProjectUrl() { return projectUrl; }
     public void setProjectUrl(String projectUrl) { this.projectUrl = projectUrl; }

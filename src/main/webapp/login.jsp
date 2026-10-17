@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%--
-    Login Page – Kasnet Online Internship Portal
+    Login Page – My Internship Technologies Portal
     Redirects authenticated users straight to /home.
 --%>
 <%
@@ -23,7 +23,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login – Kasnet Online Internship Portal</title>
+    <title>Login – My Internship Technologies</title>
 
     <style>
         /* ═══════════════════════════════════════════════════
@@ -245,73 +245,18 @@
             overflow-y: auto;
         }
 
-        /* Role Tabs */
-        .role-tabs-container {
-            display: flex;
-            background: #eef2f6;
-            padding: 5px;
-            border-radius: 10px;
-            margin-bottom: 22px;
-            gap: 6px;
-            border: 1px solid #e2e8f0;
-        }
-        .role-tab {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            font-size: 13.5px;
-            font-weight: 700;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
-        }
-        .role-tab:hover {
-            color: #1e293b;
-            background: rgba(255, 255, 255, 0.6);
-        }
-        .role-tab.active {
-            background: #ffffff;
-            color: #1e293b;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        }
-        .role-tab.active.admin-active {
-            background: #dc2626;
-            color: #ffffff;
-        }
-        .admin-warning-badge {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            padding: 9px 12px;
-            border-radius: 8px;
-            font-size: 12.5px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            line-height: 1.4;
-        }
-
         /* heading */
         .form-heading {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
             color: var(--text-dark);
             letter-spacing: -0.4px;
             margin-bottom: 6px;
         }
         .form-subheading {
-            font-size: 13.5px;
+            font-size: 14px;
             color: var(--text-mid);
-            margin-bottom: 24px;
+            margin-bottom: 32px;
             line-height: 1.5;
         }
 
@@ -590,14 +535,14 @@
         ══════════════════════════════════════ -->
         <aside class="brand-panel">
             <div class="logo-wrap">
-                <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" class="brand-logo-img" />
+                <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="My Internship Technologies Logo" class="brand-logo-img" />
                 <div class="logo-text-wrap">
-                    <span class="logo-name">Kasnet</span>
+                    <span class="logo-name">My Internship Technologies</span>
                     <span class="logo-sub">Online Internship Portal</span>
                 </div>
             </div>
 
-            <h1 class="brand-title">Kasnet Online<br />Internship Portal</h1>
+            <h1 class="brand-title">My Internship<br />Technologies</h1>
             <p class="brand-tagline">
                 Your gateway to real-world experience —<br />
                 bridging talent with opportunity.
@@ -630,50 +575,23 @@
                 </li>
             </ul>
 
-            <p class="brand-footer">© 2026 Kasnet Technologies · All rights reserved</p>
+            <p class="brand-footer">&copy; 2026 My Internship Technologies &bull; All rights reserved</p>
         </aside>
 
         <!-- ══════════════════════════════════════
              RIGHT – FORM PANEL
         ══════════════════════════════════════ -->
         <main class="form-panel">
-
-            <!-- Role Selector Tabs -->
-            <div class="role-tabs-container">
-                <button type="button" class="role-tab ${selectedRole == 'admin' ? '' : 'active'}" id="tabStudent" onclick="switchLoginRole('student')">
-                    <span class="role-tab-icon">🎓</span>
-                    <span>Student Login</span>
-                </button>
-                <button type="button" class="role-tab ${selectedRole == 'admin' ? 'active admin-active' : ''}" id="tabAdmin" onclick="switchLoginRole('admin')">
-                    <span class="role-tab-icon">🛡️</span>
-                    <span>Admin Console</span>
-                </button>
-            </div>
-
-            <h2 class="form-heading" id="formHeading">${selectedRole == 'admin' ? 'Admin Console Login' : 'Student Login'}</h2>
-            <p class="form-subheading" id="formSubheading">${selectedRole == 'admin' ? 'Authorized administrative personnel only.' : 'Sign in to access your internship portal account.'}</p>
-
-            <!-- Admin Notice Badge -->
-            <div class="admin-warning-badge" id="adminSecurityNotice" style="display: ${selectedRole == 'admin' ? 'flex' : 'none'};">
-                <span>⚠️</span>
-                <span>Restricted Portal: Student accounts cannot log in here. Use your assigned admin credentials.</span>
-            </div>
+            <h2 class="form-heading">Welcome Back!</h2>
+            <p class="form-subheading">Sign in to continue to your internship portal account.</p>
 
             <%-- ── Error alert ── --%>
-            <c:if test="${not empty requestScope.error || not empty requestScope.errorMessage}">
-                <c:set var="alertErr" value="${not empty requestScope.errorMessage ? requestScope.errorMessage : requestScope.error}" />
+            <c:if test="${not empty requestScope.error}">
                 <div class="alert alert-error" id="errorAlert">
                     <span class="alert-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     </span>
-                    <span>${alertErr}</span>
-                </div>
-            </c:if>
-
-            <c:if test="${not empty requestScope.adminNotice}">
-                <div class="alert alert-error" style="background:#fff7ed; border-color:#f97316; color:#9a3412;">
-                    <span class="alert-icon">🔒</span>
-                    <span>${requestScope.adminNotice}</span>
+                    <span>${requestScope.error}</span>
                 </div>
             </c:if>
 
@@ -691,7 +609,7 @@
                 }
             %>
 
-            <div class="divider" id="dividerText">${selectedRole == 'admin' ? 'ADMINISTRATOR AUTHENTICATION' : 'STUDENT AUTHENTICATION'}</div>
+            <div class="divider">SIGN IN TO YOUR ACCOUNT</div>
 
             <form
                 id="loginForm"
@@ -699,13 +617,11 @@
                 action="${pageContext.request.contextPath}/login"
                 novalidate
             >
-                <!-- Role is strictly set according to the selected tab -->
-                <input type="hidden" id="loginRole" name="role" value="${selectedRole == 'admin' ? 'admin' : 'student'}" />
 
                 <%-- 1. Email --%>
                 <div class="form-group">
                     <label class="form-label" for="email">
-                        <span id="emailLabelText">${selectedRole == 'admin' ? 'Administrator Email' : 'Student Email Address'}</span> <span class="required">*</span>
+                        Email Address <span class="required">*</span>
                     </label>
                     <div class="input-wrap">
                         <input
@@ -713,10 +629,10 @@
                             id="email"
                             name="email"
                             class="form-control"
-                            placeholder="${selectedRole == 'admin' ? 'admin@kasnet.in' : 'student@example.com'}"
+                            placeholder="you@example.com"
                             autocomplete="email"
                             required
-                            value="${not empty requestScope.enteredEmail ? fn:escapeXml(requestScope.enteredEmail) : (not empty param.email ? fn:escapeXml(param.email) : '')}"
+                            value="${not empty param.email ? fn:escapeXml(param.email) : ''}"
                         />
                     </div>
                     <span class="field-error" id="emailError">Please enter a valid email address.</span>
@@ -769,7 +685,26 @@
                     <span class="field-error" id="passwordError">Password cannot be empty.</span>
                 </div>
 
-                <%-- 3. CAPTCHA --%>
+                <%-- 3. Login As --%>
+                <div class="form-group">
+                    <label class="form-label" for="role">
+                        Login As <span class="required">*</span>
+                    </label>
+                    <select id="role" name="role" class="form-control" required>
+                        <option value="" disabled selected>— Select your role —</option>
+                        <option value="student"
+                            ${param.role == 'student' ? 'selected' : ''}>
+                            Student
+                        </option>
+                        <option value="admin"
+                            ${param.role == 'admin' ? 'selected' : ''}>
+                            Admin
+                        </option>
+                    </select>
+                    <span class="field-error" id="roleError">Please select your role.</span>
+                </div>
+
+                <%-- 4. CAPTCHA --%>
                 <div class="form-group">
                     <label class="form-label">
                         Security Code <span class="required">*</span>
@@ -792,23 +727,17 @@
                     <span class="field-error" id="captchaError">Please enter the security code.</span>
                 </div>
 
-                <%-- 4. Submit --%>
-                <button type="submit" class="btn-submit" id="submitBtn" style="${selectedRole == 'admin' ? 'background: #b91c1c;' : ''}">
-                    ${selectedRole == 'admin' ? 'Sign In to Admin Console &rarr;' : 'Sign In as Student &rarr;'}
+                <%-- 5. Submit --%>
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    Sign In &rarr;
                 </button>
 
             </form>
 
-            <%-- 5. Role-specific footer --%>
-            <p class="register-row" id="registerRow">
-                <c:choose>
-                    <c:when test="${selectedRole == 'admin'}">
-                        Student portal? <a href="javascript:void(0)" onclick="switchLoginRole('student')">Back to Student Login</a>
-                    </c:when>
-                    <c:otherwise>
-                        Don&rsquo;t have an account? <a href="${pageContext.request.contextPath}/register">Create Student Account</a>
-                    </c:otherwise>
-                </c:choose>
+            <%-- 6. Register link --%>
+            <p class="register-row">
+                Don&rsquo;t have an account?
+                <a href="${pageContext.request.contextPath}/register">Create an Account</a>
             </p>
         </main>
 
@@ -851,7 +780,7 @@
     /* ── 3. Client-side form validation ── */
     var form         = document.getElementById("loginForm");
     var emailField   = document.getElementById("email");
-    var roleField    = document.getElementById("loginRole");
+    var roleField    = document.getElementById("role");
     var captchaField = document.getElementById("captchaInput");
 
     /* helper – show/hide field error */
@@ -859,16 +788,15 @@
         var errEl = document.getElementById(errorId);
         if (show) {
             field.classList.add("is-invalid");
-            if (errEl) errEl.style.display = "block";
+            errEl.style.display = "block";
         } else {
             field.classList.remove("is-invalid");
-            if (errEl) errEl.style.display = "none";
+            errEl.style.display = "none";
         }
     }
 
     /* live validation – clear error on typing */
     [emailField, pwField, captchaField].forEach(function (f) {
-        if (!f) return;
         f.addEventListener("input", function () {
             f.classList.remove("is-invalid");
             var id = f.id + "Error";
@@ -876,70 +804,20 @@
             if (el) el.style.display = "none";
         });
     });
-
-    /* Role switcher function */
-    window.switchLoginRole = function(role) {
-        var isAdm = (role === 'admin');
-        if (roleField) roleField.value = isAdm ? 'admin' : 'student';
-
-        var tabS = document.getElementById('tabStudent');
-        var tabA = document.getElementById('tabAdmin');
-        var heading = document.getElementById('formHeading');
-        var subheading = document.getElementById('formSubheading');
-        var adminNotice = document.getElementById('adminSecurityNotice');
-        var dividerText = document.getElementById('dividerText');
-        var emailLabelText = document.getElementById('emailLabelText');
-        var registerRow = document.getElementById('registerRow');
-        var submitBtn = document.getElementById('submitBtn');
-
-        if (isAdm) {
-            if (tabS) tabS.classList.remove('active');
-            if (tabA) {
-                tabA.classList.add('active');
-                tabA.classList.add('admin-active');
-            }
-            if (heading) heading.textContent = 'Admin Console Login';
-            if (subheading) subheading.textContent = 'Authorized administrative personnel only.';
-            if (adminNotice) adminNotice.style.display = 'flex';
-            if (dividerText) dividerText.textContent = 'ADMINISTRATOR AUTHENTICATION';
-            if (emailLabelText) emailLabelText.textContent = 'Administrator Email';
-            if (emailField) emailField.placeholder = 'admin@kasnet.in';
-            if (registerRow) registerRow.innerHTML = 'Student portal? <a href="javascript:void(0)" onclick="switchLoginRole(\'student\')">Back to Student Login</a>';
-            if (submitBtn) {
-                submitBtn.innerHTML = 'Sign In to Admin Console &rarr;';
-                submitBtn.style.backgroundColor = '#b91c1c';
-            }
-        } else {
-            if (tabA) {
-                tabA.classList.remove('active');
-                tabA.classList.remove('admin-active');
-            }
-            if (tabS) tabS.classList.add('active');
-            if (heading) heading.textContent = 'Student Login';
-            if (subheading) subheading.textContent = 'Sign in to access your internship portal account.';
-            if (adminNotice) adminNotice.style.display = 'none';
-            if (dividerText) dividerText.textContent = 'STUDENT AUTHENTICATION';
-            if (emailLabelText) emailLabelText.textContent = 'Student Email Address';
-            if (emailField) emailField.placeholder = 'student@example.com';
-            if (registerRow) registerRow.innerHTML = 'Don&rsquo;t have an account? <a href="${pageContext.request.contextPath}/register">Create Student Account</a>';
-            if (submitBtn) {
-                submitBtn.innerHTML = 'Sign In as Student &rarr;';
-                submitBtn.style.backgroundColor = '';
-            }
-        }
-    };
+    roleField.addEventListener("change", function () {
+        roleField.classList.remove("is-invalid");
+        document.getElementById("roleError").style.display = "none";
+    });
 
     /* email regex */
     var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     form.addEventListener("submit", function (e) {
         var valid = true;
-        var firstErrorMessage = "";
 
         /* email */
         if (!emailField.value.trim() || !emailRe.test(emailField.value.trim())) {
             setError(emailField, "emailError", true);
-            if (!firstErrorMessage) firstErrorMessage = "Please enter a valid email address.";
             valid = false;
         } else {
             setError(emailField, "emailError", false);
@@ -948,16 +826,22 @@
         /* password */
         if (!pwField.value) {
             setError(pwField, "passwordError", true);
-            if (!firstErrorMessage) firstErrorMessage = "Password cannot be empty.";
             valid = false;
         } else {
             setError(pwField, "passwordError", false);
         }
 
+        /* role */
+        if (!roleField.value) {
+            setError(roleField, "roleError", true);
+            valid = false;
+        } else {
+            setError(roleField, "roleError", false);
+        }
+
         /* captcha */
         if (!captchaField.value.trim()) {
             setError(captchaField, "captchaError", true);
-            if (!firstErrorMessage) firstErrorMessage = "Please enter the security CAPTCHA code.";
             valid = false;
         } else {
             setError(captchaField, "captchaError", false);
@@ -965,9 +849,7 @@
 
         if (!valid) {
             e.preventDefault();
-            // Standard Chrome popup message for missing/invalid input
-            window.alert(firstErrorMessage);
-
+            /* scroll to first error */
             var firstInvalid = form.querySelector(".is-invalid");
             if (firstInvalid) {
                 firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -977,22 +859,6 @@
     });
 
 })();
-
-// Trigger standard Chrome popup on page load if server returned error or notice
-document.addEventListener("DOMContentLoaded", function() {
-    <c:if test="${not empty requestScope.errorMessage || not empty requestScope.error}">
-        var serverErr = "${fn:escapeXml(not empty requestScope.errorMessage ? requestScope.errorMessage : requestScope.error)}";
-        if (serverErr) {
-            window.alert(serverErr);
-        }
-    </c:if>
-    <c:if test="${not empty requestScope.adminNotice}">
-        var notice = "${fn:escapeXml(requestScope.adminNotice)}";
-        if (notice) {
-            window.alert(notice);
-        }
-    </c:if>
-});
 </script>
 
 </body>

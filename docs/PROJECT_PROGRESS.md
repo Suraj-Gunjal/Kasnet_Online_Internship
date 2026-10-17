@@ -1,13 +1,13 @@
-# Kasnet Online Internship Portal — Comprehensive Project Progress & Handover Guide
+# My Internship Technologies Portal — Comprehensive Project Progress & Handover Guide
 
 > **Document Purpose:**  
-> This document records all architectural decisions, components implemented, validations, database structures, and testing results for the **Kasnet Online Internship Portal**. Any AI model, senior engineer, or team member can consult this document to immediately understand the project state and seamlessly resume work where it was left off.
+> This document records all architectural decisions, components implemented, validations, database structures, and testing results for the **My Internship Technologies Portal**. Any AI model, senior engineer, or team member can consult this document to immediately understand the project state and seamlessly resume work where it was left off.
 
 ---
 
 ## 1. Project Overview & Architecture
 
-- **Project Name:** Kasnet Online Internship Portal
+- **Project Name:** My Internship Technologies Portal
 - **Nature of Application:** Production-grade Java EE MVC Web Application module designed for seamless integration into an existing hosted student internship portal (`https://www.onlineinternship.in/`).
 - **Architecture Pattern:** Strict **Model-View-Controller (MVC)**
   - **Model:** POJOs / JavaBeans (`com.kasnet.model.*`)
@@ -49,10 +49,15 @@
 
 ### B. Registration Module (`register.jsp` & `RegisterServlet.java`)
 - Self-registration restricted to **Student** role (Admin option removed from public registration).
+- **Academic Information Reordered strictly as:**
+  1. **College Name:** Text field with institution validation.
+  2. **Stream:** Dropdown (Graduation, Post Graduation, Diploma, Engineering, etc.).
+  3. **Branch Name:** Comprehensive dropdown covering all engineering/technical branches (Computer Engineering, AI & Machine Learning, Data Science, IT, Mechanical, Electrical, Civil, Robotics, Biotechnology, etc.).
+  4. **City:** Student's current residing or college city.
 - Enforces strict client-side and server-side validation:
   - **Phone:** Exactly 10 numeric digits (`/^[0-9]{10}$/`).
   - **Email:** RFC 5322 regex validation and duplicate email check in MySQL.
-  - **Required fields:** First Name, Last Name, Mobile, Email, Password, Confirm Password, Stream, College Name, City.
+  - **Required fields:** First Name, Last Name, Mobile, Email, Password, Confirm Password, College Name, Stream, Branch Name, City.
   - **Password Strength & Match:** Minimum 8 characters with strength indicator and matching confirmation.
   - **CAPTCHA:** Server/client CAPTCHA verification to prevent automated bot signups.
 - **Enterprise-Grade UI Styling:** All emojis removed in favor of professional inline vector SVG icons (User, Phone, Email, Lock, Eye Toggle, College, Location, Shield, Refresh) and clean typography.
@@ -116,6 +121,13 @@ All original fields are preserved and organized into **exactly 5 sections**:
    - **Part B - Skills (Optional):** Technical Skills, Soft Skills, Domain Proficiencies.
    - **Part C - Achievements (Optional):** Certifications, Projects, Extra-Curricular Activities, and saved achievements table with delete action.
 2. **Education** (`/profile?tab=education`):
+   - **Engineering Year-wise Performance (Optional):** Positioned at the very top of the Education tab, strictly before the 10th and 12th sections.
+     - Supports: First Year, Second Year, Third Year, Final Year.
+     - Evaluation Type: Percentage (0-100%) or CGPA (0-10.0 scale).
+     - Form fields: Year Level, Evaluation Type, Score/CGPA, Passing Year, College Name.
+     - Dynamic frontend & backend validation adapted to evaluation type.
+     - **Tabular Display:** Displays all recorded engineering year performances with formatted score badges.
+     - **Interactive Edit & Delete:** In-place edit form populator (`editEngMark()`) and one-click deletion with confirmation.
    - Form sections for SSC/10th, HSC/12th, Diploma, Graduation, and Master.
    - Strict range validation on percentage inputs (`min="0" max="100" step="0.01"`).
    - Sanity validation on passing year inputs (`min="1950" max="2035"`).
@@ -143,18 +155,19 @@ All original fields are preserved and organized into **exactly 5 sections**:
 The database name is `online_internship` (compatible with MySQL 5.7+ / 8.0 and MySQL Workbench 6.3).
 
 ### Key Tables:
-1. `users`: Stores user identity, BCrypt password hash, role (`STUDENT`, `ADMIN`), stream, college, city, mobile, timestamps.
+1. `users`: Stores user identity, BCrypt password hash, role (`STUDENT`, `ADMIN`), stream, `branch` (Engineering/technical branch), college, city, mobile, timestamps.
 2. `student_profiles`: 1-to-1 profile record linked to `users.user_id` storing gender, date_of_birth, address, state, `profile_completion`, previous_login, last_login.
-3. `education_details`: Stores educational records by level (`SSC`, `HSC`, `Graduation`, `Master`, `Diploma`) with percentage and passing year.
-4. `skills`: Stores technical, soft, and domain skills.
-5. `certifications`: Stores verified certifications, providers, and verification URLs.
-6. `projects`: Stores portfolio projects, technologies, and GitHub links.
-7. `hackathons`: Stores hackathon participation and awards.
-8. `intercollege_competitions`: Stores project exhibition entries and prizes.
-9. `achievements`: Stores legacy achievements and extra-curricular highlights.
-10. `assignments` & `assignment_submissions`: Stores internship assignment briefs and student submissions.
-11. `lectures` & `lecture_progress`: Stores video lectures and student completion progress.
-12. `login_activity`: Audit log of user login sessions and timestamps.
+3. `engineering_year_marks`: Stores year-wise engineering evaluation (`First Year`, `Second Year`, `Third Year`, `Final Year`), score type (`Percentage`, `CGPA`), score value, passing year, and college name.
+4. `education_details`: Stores educational records by level (`SSC`, `HSC`, `Graduation`, `Master`, `Diploma`) with percentage and passing year.
+5. `skills`: Stores technical, soft, and domain skills.
+6. `certifications`: Stores verified certifications, providers, and verification URLs.
+7. `projects`: Stores portfolio projects, technologies, and GitHub links.
+8. `hackathons`: Stores hackathon participation and awards.
+9. `intercollege_competitions`: Stores project exhibition entries and prizes.
+10. `achievements`: Stores legacy achievements and extra-curricular highlights.
+11. `assignments` & `assignment_submissions`: Stores internship assignment briefs and student submissions.
+12. `lectures` & `lecture_progress`: Stores video lectures and student completion progress.
+13. `login_activity`: Audit log of user login sessions and timestamps.
 
 ---
 
@@ -162,8 +175,8 @@ The database name is `online_internship` (compatible with MySQL 5.7+ / 8.0 and M
 
 | Role | Email | Password | Intended Page |
 |---|---|---|---|
-| **Hardcoded Student Test ID** | `test@kasnet.in` | `Test@12345` | `/dashboard` (Student Portal) |
-| **Admin Account** | `admin@kasnet.in` | `Admin@12345` | `/admin` (Monitoring Console) |
+| **Hardcoded Student Test ID** | `test@myinternshiptech.com` *(or `test@kasnet.in`)* | `Test@12345` | `/dashboard` (Student Portal) |
+| **Admin Account** | `admin@myinternshiptech.com` *(or `admin@kasnet.in`)* | `Admin@12345` | `/admin` (Monitoring Console) |
 | **Registered Student** | `surajgunjaldev@gmail.com` | Registered Password | `/dashboard` |
 
 ---
@@ -237,3 +250,5 @@ The database name is `online_internship` (compatible with MySQL 5.7+ / 8.0 and M
   1. Set the database URL, username, and password in `com.kasnet.util.DBConnection.java` (or extract to environment variables / JNDI DataSource).
   2. The WAR is ready for zero-downtime deployment into Apache Tomcat.
   3. Resume Analysis parsing engine can be wired directly into `ResumeAnalysisServlet.java`.
+- **Developer Handover & Continuity:**
+  - A dedicated developer handover guide has been created at [`HANDOVER.md`](file:///d:/My%20Workspace/Kasnet_Online_Internship/HANDOVER.md) with complete architectural guidelines, setup steps, gotchas, and roadmap for team members and AI assistants.

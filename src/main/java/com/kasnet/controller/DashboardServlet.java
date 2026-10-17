@@ -66,11 +66,6 @@ public class DashboardServlet extends HttpServlet {
             return;
         }
 
-        if (SessionUtil.isAdmin(req)) {
-            resp.sendRedirect(req.getContextPath() + "/admin");
-            return;
-        }
-
         Integer userId = SessionUtil.getUserId(req);
 
         if (userId == null) {

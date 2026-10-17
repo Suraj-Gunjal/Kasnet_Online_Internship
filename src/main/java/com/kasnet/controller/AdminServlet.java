@@ -26,13 +26,13 @@ public class AdminServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("userId") == null) {
-            resp.sendRedirect(req.getContextPath() + "/login?role=admin&msg=admin_required");
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
         String role = (String) session.getAttribute("userRole");
         if (!"ADMIN".equalsIgnoreCase(role)) {
-            resp.sendRedirect(req.getContextPath() + "/home?error=admin_denied");
+            resp.sendRedirect(req.getContextPath() + "/views/unauthorized.jsp");
             return;
         }
 
@@ -49,7 +49,6 @@ public class AdminServlet extends HttpServlet {
         int studentCount = (studentList != null) ? studentList.size() : 0;
         List<com.kasnet.model.Certification> certList = certDAO.getAllCertificationsWithStudent();
 
-        // Pass strictly students to the student details table
         req.setAttribute("userList", studentList != null ? studentList : java.util.Collections.emptyList());
         req.setAttribute("certList", certList != null ? certList : java.util.Collections.emptyList());
         req.setAttribute("certCount", certList != null ? certList.size() : 0);
@@ -70,7 +69,7 @@ public class AdminServlet extends HttpServlet {
 
         String role = (String) session.getAttribute("userRole");
         if (!"ADMIN".equalsIgnoreCase(role)) {
-            resp.sendRedirect(req.getContextPath() + "/home?error=admin_denied");
+            resp.sendRedirect(req.getContextPath() + "/views/unauthorized.jsp");
             return;
         }
 
@@ -93,7 +92,6 @@ public class AdminServlet extends HttpServlet {
         Integer currentUserId = (Integer) session.getAttribute("userId");
         String userIdParam = req.getParameter("userId");
         String[] userIdsParam = req.getParameterValues("userIds");
-        String userIdsCsv = req.getParameter("userIdsCsv");
 
         boolean success = false;
         String message = "";
@@ -121,22 +119,6 @@ public class AdminServlet extends HttpServlet {
                 if (!ids.isEmpty()) {
                     success = userDAO.deleteUsers(ids);
                     message = success ? ids.size() + " student record(s) deleted successfully." : "Failed to delete selected student records.";
-                } else {
-                    message = "No valid records selected to delete.";
-                }
-            } else if (userIdsCsv != null && !userIdsCsv.trim().isEmpty()) {
-                java.util.List<Integer> ids = new java.util.ArrayList<>();
-                for (String s : userIdsCsv.split(",")) {
-                    try {
-                        int id = Integer.parseInt(s.trim());
-                        if (currentUserId == null || currentUserId != id) {
-                            ids.add(id);
-                        }
-                    } catch (NumberFormatException ignored) {}
-                }
-                if (!ids.isEmpty()) {
-                    success = userDAO.deleteUsers(ids);
-                    message = success ? ids.size() + " student record(s) deleted successfully." : "Failed to delete selected records.";
                 } else {
                     message = "No valid records selected to delete.";
                 }

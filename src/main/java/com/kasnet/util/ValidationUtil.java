@@ -1,8 +1,6 @@
 package com.kasnet.util;
 
 import java.util.regex.Pattern;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 /**
  * ValidationUtil - Server-Side Input Validation & Sanitization Utility
@@ -73,17 +71,40 @@ public class ValidationUtil {
     }
 
     /**
-     * Validates an Indian mobile number (10 digits, starting with 6–9).
-     * Accepts optional {@code +91} or {@code 0} prefix.
+     * Validates a 10-digit mobile number.
+     * Must be exactly 10 numeric digits.
      *
      * @param mobile the mobile number string to validate
-     * @return {@code true} if the mobile number format is valid
+     * @return {@code true} if exactly 10 digits
      */
     public static boolean isValidMobile(String mobile) {
         if (mobile == null || mobile.trim().isEmpty()) {
             return false;
         }
-        return MOBILE_PATTERN.matcher(mobile.trim()).matches();
+        return mobile.trim().matches("^[0-9]{10}$");
+    }
+
+    /**
+     * Validates that a date string is in valid yyyy-MM-dd format and not in the future.
+     *
+     * @param dateStr the date string to validate
+     * @return {@code true} if valid date in the past
+     */
+    public static boolean isValidDate(String dateStr) {
+        if (dateStr == null || dateStr.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false);
+            java.util.Date d = sdf.parse(dateStr.trim());
+            java.util.Date now = new java.util.Date();
+            java.util.Calendar minCal = java.util.Calendar.getInstance();
+            minCal.set(1920, java.util.Calendar.JANUARY, 1);
+            return d.before(now) && d.after(minCal.getTime());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -114,18 +135,6 @@ public class ValidationUtil {
         int y = Integer.parseInt(year.trim());
         // Sanity range: 1900 – 2100
         return y >= 1900 && y <= 2100;
-    }
-
-    public static boolean isValidDate(String date) {
-        if (date == null || date.trim().isEmpty()) {
-            return false;
-        }
-        try {
-            LocalDate parsedDate = LocalDate.parse(date.trim());
-            return !parsedDate.isAfter(LocalDate.now());
-        } catch (DateTimeParseException e) {
-            return false;
-        }
     }
 
     /**
@@ -163,11 +172,6 @@ public class ValidationUtil {
             return false;
         }
         return PASSWORD_PATTERN.matcher(pwd).matches();
-    }
-
-    /** Backward-compatible alias used by older registration logic. */
-    public static boolean isStrongPassword(String pwd) {
-        return isValidPassword(pwd);
     }
 
     /**

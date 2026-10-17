@@ -13,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasnet Online Internship Portal - Practical Learning &amp; Industry Experience</title>
+    <title>My Internship Technologies Portal - Practical Learning &amp; Industry Experience</title>
     <style>
         /* =========================================================
            RESET & CORE TYPOGRAPHY
@@ -562,9 +562,9 @@
     <header class="navbar">
         <div class="container navbar-inner">
             <a href="${pageContext.request.contextPath}/" class="brand">
-                <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" style="height: 38px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 6px; background: #ffffff; padding: 2px;" />
+                <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="My Internship Technologies Logo" style="height: 38px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 6px; background: #ffffff; padding: 2px;" />
                 <div class="brand-text">
-                    <span class="brand-title">Kasnet Online Internship</span>
+                    <span class="brand-title">My Internship Technologies</span>
                     <span class="brand-subtitle">Skill Development Platform</span>
                 </div>
             </a>
@@ -577,8 +577,7 @@
             </ul>
 
             <div class="nav-auth">
-                <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Student Login</a>
-                <a href="${pageContext.request.contextPath}/admin-login" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444;">Admin Console</a>
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Sign In</a>
                 <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Sign Up</a>
             </div>
         </div>
@@ -788,18 +787,17 @@
         <div class="container">
             <div class="footer-inner">
                 <div>
-                    <strong style="color: #fff;">Kasnet Online Internship Portal</strong>
-                    <div style="margin-top: 4px; font-size: 0.8rem;">Kasnet Technologies Pvt Ltd &bull; Pune, Maharashtra</div>
+                    <strong style="color: #fff;">My Internship Technologies Portal</strong>
+                    <div style="margin-top: 4px; font-size: 0.8rem;">My Internship Technologies &bull; Pune, Maharashtra</div>
                 </div>
                 <ul class="footer-links">
-                    <li><a href="${pageContext.request.contextPath}/login">Student Login</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin-login">Admin Console</a></li>
-                    <li><a href="${pageContext.request.contextPath}/register">Student Register</a></li>
+                    <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+                    <li><a href="${pageContext.request.contextPath}/register">Register</a></li>
                     <li><a href="#overview">Overview</a></li>
                     <li><a href="#domains">Tracks</a></li>
                 </ul>
             </div>
-            <p class="footer-copy">&copy; 2026 Kasnet Technologies Pvt Ltd. All rights reserved. Designed for student internship enablement.</p>
+            <p class="footer-copy">&copy; 2026 My Internship Technologies. All rights reserved. Designed for student internship enablement.</p>
         </div>
     </footer>
 
@@ -829,9 +827,6 @@
                 window.history.replaceState({}, document.title, cleanUrl);
             }
         }
-        document.addEventListener("DOMContentLoaded", function() {
-            window.alert("Congratulations! Account created successfully.\nYour student registration has been completed. Please sign in with your email and password.");
-        });
     </script>
     <% } %>
 

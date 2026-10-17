@@ -21,7 +21,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Industrial Training Details - Admin Portal</title>
+    <title>Industrial Training Details - Admin Portal - My Internship Technologies</title>
     <!-- Google Fonts for sleek modern typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -842,10 +842,10 @@
     <aside class="sidebar" id="sidebar">
         <!-- Top Red Header Banner -->
         <div class="sidebar-header">
-            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="MicroCert Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'36\' height=\'36\' viewBox=\'0 0 24 24\' fill=\'%23c62828\'><rect width=\'24\' height=\'24\' rx=\'4\' fill=\'white\'/><text x=\'50%25\' y=\'68%25\' text-anchor=\'middle\' font-size=\'14\' font-weight=\'bold\' fill=\'%23c62828\'>M</text></svg>'"/>
+            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="My Internship Technologies Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'36\' height=\'36\' viewBox=\'0 0 24 24\' fill=\'%23c62828\'><rect width=\'24\' height=\'24\' rx=\'4\' fill=\'white\'/><text x=\'50%25\' y=\'68%25\' text-anchor=\'middle\' font-size=\'14\' font-weight=\'bold\' fill=\'%23c62828\'>M</text></svg>'"/>
             <div class="sidebar-header-text">
-                <h2>Kasnet / MicroCert</h2>
-                <span>Online Internship</span>
+                <h2>My Internship</h2>
+                <span>Technologies</span>
             </div>
         </div>
 

@@ -41,6 +41,7 @@ public class RegisterServlet extends HttpServlet {
         String confirmPass = req.getParameter("confirmPassword");
         String role = req.getParameter("role");
         String stream = req.getParameter("stream");
+        String branchName = req.getParameter("branchName");
         String collegeName = req.getParameter("collegeName");
         String city = req.getParameter("city");
         String referralCode = req.getParameter("referralCode");
@@ -55,7 +56,7 @@ public class RegisterServlet extends HttpServlet {
         // Required field validation
         if (isNullOrBlank(firstName) || isNullOrBlank(lastName) || isNullOrBlank(email) ||
             isNullOrBlank(mobile) || isNullOrBlank(password) || isNullOrBlank(confirmPass) ||
-            isNullOrBlank(stream) || isNullOrBlank(collegeName) || isNullOrBlank(city)) {
+            isNullOrBlank(collegeName) || isNullOrBlank(stream) || isNullOrBlank(branchName) || isNullOrBlank(city)) {
             forwardWithError(req, resp, "All required fields must be filled.");
             return;
         }
@@ -91,6 +92,7 @@ public class RegisterServlet extends HttpServlet {
         user.setMobile(mobile.trim());
         user.setRole("STUDENT");
         user.setStream(stream != null ? stream.trim() : "Graduation");
+        user.setBranch(branchName != null ? branchName.trim() : "");
         user.setCollegeName(collegeName != null ? collegeName.trim() : "");
         user.setCity(city != null ? city.trim() : "");
         user.setReferralCode(referralCode != null ? referralCode.trim() : "");

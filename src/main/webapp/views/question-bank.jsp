@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question Bank - Kasnet Internship Portal</title>
+    <title>Question Bank - My Internship Technologies Portal</title>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -289,8 +289,8 @@
     <!-- Top Navbar -->
     <nav class="navbar">
         <a href="${pageContext.request.contextPath}/home" class="navbar-brand">
-            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
-            <span>Kasnet Internship Portal</span>
+            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="My Internship Technologies Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
+            <span>My Internship Technologies</span>
         </a>
         <div class="navbar-menu">
             <a href="${pageContext.request.contextPath}/home" class="nav-link">Home</a>

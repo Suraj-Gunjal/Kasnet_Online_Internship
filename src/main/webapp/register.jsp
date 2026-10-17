@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account &mdash; Kasnet Online Internship Portal</title>
+    <title>Create Account &mdash; My Internship Technologies Portal</title>
     <style>
         /* ===== RESET & BASE ===== */
         *, *::before, *::after {
@@ -788,10 +787,10 @@
     <aside class="left-panel">
         <!-- Logo -->
         <div class="brand-logo">
-            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" class="brand-logo-img" />
+            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="My Internship Technologies Logo" class="brand-logo-img" />
             <div class="logo-text">
-                <span class="logo-name">Kasnet</span>
-                <span class="logo-tagline">Internship Portal</span>
+                <span class="logo-name">My Internship</span>
+                <span class="logo-tagline">Technologies Portal</span>
             </div>
         </div>
 
@@ -1052,32 +1051,7 @@
                         <!-- ====== ACADEMIC INFO ====== -->
                         <div class="section-divider"><span>Academic Information</span></div>
 
-                        <!-- Role -->
-                        <div class="form-group">
-                            <label for="role">Registering As <span class="required-star">*</span></label>
-                            <div class="input-wrapper select-wrapper">
-                                <select id="role" name="role" required>
-                                    <option value="STUDENT" selected>Student</option>
-                                </select>
-                            </div>
-                            <span class="field-error" id="roleError">Please select a role.</span>
-                        </div>
-
-                        <!-- Stream -->
-                        <div class="form-group">
-                            <label for="stream">Stream <span class="required-star">*</span></label>
-                            <div class="input-wrapper select-wrapper">
-                                <select id="stream" name="stream" required>
-                                    <option value="" disabled ${empty requestScope.stream ? 'selected' : ''}>-- Select Stream --</option>
-                                    <option value="Graduation"      ${requestScope.stream == 'Graduation'      ? 'selected' : ''}>Graduation</option>
-                                    <option value="Post Graduation" ${requestScope.stream == 'Post Graduation' ? 'selected' : ''}>Post Graduation</option>
-                                    <option value="Diploma"         ${requestScope.stream == 'Diploma'         ? 'selected' : ''}>Diploma</option>
-                                </select>
-                            </div>
-                            <span class="field-error" id="streamError">Please select your stream.</span>
-                        </div>
-
-                        <!-- College Name -->
+                        <!-- College Name (1st) -->
                         <div class="form-group">
                             <label for="collegeName">College Name <span class="required-star">*</span></label>
                             <div class="input-wrapper">
@@ -1095,7 +1069,86 @@
                             <span class="field-error" id="collegeNameError">College name is required.</span>
                         </div>
 
-                        <!-- City -->
+                        <!-- Stream (2nd) -->
+                        <div class="form-group">
+                            <label for="stream">Stream <span class="required-star">*</span></label>
+                            <div class="input-wrapper select-wrapper">
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                                </span>
+                                <select id="stream" name="stream" required>
+                                    <option value="" disabled ${empty requestScope.stream ? 'selected' : ''}>-- Select Stream --</option>
+                                    <option value="Graduation"      ${requestScope.stream == 'Graduation'      ? 'selected' : ''}>Graduation</option>
+                                    <option value="Post Graduation" ${requestScope.stream == 'Post Graduation' ? 'selected' : ''}>Post Graduation</option>
+                                    <option value="Diploma"         ${requestScope.stream == 'Diploma'         ? 'selected' : ''}>Diploma</option>
+                                </select>
+                            </div>
+                            <span class="field-error" id="streamError">Please select your stream.</span>
+                        </div>
+
+                        <!-- Branch Name (3rd) - full width -->
+                        <div class="form-group full-width">
+                            <label for="branchName">Branch Name <span class="required-star">*</span></label>
+                            <div class="input-wrapper select-wrapper">
+                                <span class="input-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                                </span>
+                                <select id="branchName" name="branchName" required>
+                                    <option value="" disabled ${empty requestScope.branchName ? 'selected' : ''}>-- Select Branch --</option>
+                                    <optgroup label="Computer &amp; IT">
+                                        <option value="Computer Engineering"                    ${requestScope.branchName == 'Computer Engineering'                    ? 'selected' : ''}>Computer Engineering</option>
+                                        <option value="Computer Science and Engineering"        ${requestScope.branchName == 'Computer Science and Engineering'        ? 'selected' : ''}>Computer Science and Engineering (CSE)</option>
+                                        <option value="Information Technology"                  ${requestScope.branchName == 'Information Technology'                  ? 'selected' : ''}>Information Technology (IT)</option>
+                                        <option value="AI and Machine Learning"                 ${requestScope.branchName == 'AI and Machine Learning'                 ? 'selected' : ''}>AI and Machine Learning (AIML)</option>
+                                        <option value="Data Science"                            ${requestScope.branchName == 'Data Science'                            ? 'selected' : ''}>Data Science</option>
+                                        <option value="Cyber Security"                          ${requestScope.branchName == 'Cyber Security'                          ? 'selected' : ''}>Cyber Security</option>
+                                        <option value="Cloud Computing"                         ${requestScope.branchName == 'Cloud Computing'                         ? 'selected' : ''}>Cloud Computing</option>
+                                        <option value="Internet of Things"                      ${requestScope.branchName == 'Internet of Things'                      ? 'selected' : ''}>Internet of Things (IoT)</option>
+                                    </optgroup>
+                                    <optgroup label="Electronics &amp; Communication">
+                                        <option value="Electronics and Communication Engineering" ${requestScope.branchName == 'Electronics and Communication Engineering' ? 'selected' : ''}>Electronics &amp; Communication Engineering (ECE)</option>
+                                        <option value="Electronics Engineering"                 ${requestScope.branchName == 'Electronics Engineering'                 ? 'selected' : ''}>Electronics Engineering</option>
+                                        <option value="Electrical Engineering"                  ${requestScope.branchName == 'Electrical Engineering'                  ? 'selected' : ''}>Electrical Engineering (EE)</option>
+                                        <option value="Electrical and Electronics Engineering"  ${requestScope.branchName == 'Electrical and Electronics Engineering'  ? 'selected' : ''}>Electrical &amp; Electronics Engineering (EEE)</option>
+                                        <option value="Instrumentation Engineering"             ${requestScope.branchName == 'Instrumentation Engineering'             ? 'selected' : ''}>Instrumentation Engineering</option>
+                                        <option value="Embedded Systems"                        ${requestScope.branchName == 'Embedded Systems'                        ? 'selected' : ''}>Embedded Systems</option>
+                                        <option value="VLSI Design"                             ${requestScope.branchName == 'VLSI Design'                             ? 'selected' : ''}>VLSI Design</option>
+                                    </optgroup>
+                                    <optgroup label="Mechanical">
+                                        <option value="Mechanical Engineering"                  ${requestScope.branchName == 'Mechanical Engineering'                  ? 'selected' : ''}>Mechanical Engineering</option>
+                                        <option value="Automobile Engineering"                  ${requestScope.branchName == 'Automobile Engineering'                  ? 'selected' : ''}>Automobile Engineering</option>
+                                        <option value="Production Engineering"                  ${requestScope.branchName == 'Production Engineering'                  ? 'selected' : ''}>Production Engineering</option>
+                                        <option value="Aerospace Engineering"                   ${requestScope.branchName == 'Aerospace Engineering'                   ? 'selected' : ''}>Aerospace Engineering</option>
+                                        <option value="Industrial Engineering"                  ${requestScope.branchName == 'Industrial Engineering'                  ? 'selected' : ''}>Industrial Engineering</option>
+                                        <option value="Robotics and Automation"                 ${requestScope.branchName == 'Robotics and Automation'                 ? 'selected' : ''}>Robotics and Automation</option>
+                                    </optgroup>
+                                    <optgroup label="Civil &amp; Construction">
+                                        <option value="Civil Engineering"                       ${requestScope.branchName == 'Civil Engineering'                       ? 'selected' : ''}>Civil Engineering</option>
+                                        <option value="Structural Engineering"                  ${requestScope.branchName == 'Structural Engineering'                  ? 'selected' : ''}>Structural Engineering</option>
+                                        <option value="Environmental Engineering"               ${requestScope.branchName == 'Environmental Engineering'               ? 'selected' : ''}>Environmental Engineering</option>
+                                        <option value="Transportation Engineering"              ${requestScope.branchName == 'Transportation Engineering'              ? 'selected' : ''}>Transportation Engineering</option>
+                                    </optgroup>
+                                    <optgroup label="Chemical &amp; Biotechnology">
+                                        <option value="Chemical Engineering"                    ${requestScope.branchName == 'Chemical Engineering'                    ? 'selected' : ''}>Chemical Engineering</option>
+                                        <option value="Biotechnology"                           ${requestScope.branchName == 'Biotechnology'                           ? 'selected' : ''}>Biotechnology</option>
+                                        <option value="Biomedical Engineering"                  ${requestScope.branchName == 'Biomedical Engineering'                  ? 'selected' : ''}>Biomedical Engineering</option>
+                                        <option value="Petrochemical Engineering"               ${requestScope.branchName == 'Petrochemical Engineering'               ? 'selected' : ''}>Petrochemical Engineering</option>
+                                        <option value="Food Technology"                         ${requestScope.branchName == 'Food Technology'                         ? 'selected' : ''}>Food Technology</option>
+                                    </optgroup>
+                                    <optgroup label="Management &amp; Applied Sciences">
+                                        <option value="BCA"                                     ${requestScope.branchName == 'BCA'                                     ? 'selected' : ''}>BCA (Bachelor of Computer Applications)</option>
+                                        <option value="MCA"                                     ${requestScope.branchName == 'MCA'                                     ? 'selected' : ''}>MCA (Master of Computer Applications)</option>
+                                        <option value="B.Sc Computer Science"                  ${requestScope.branchName == 'B.Sc Computer Science'                  ? 'selected' : ''}>B.Sc Computer Science</option>
+                                        <option value="B.Sc Information Technology"            ${requestScope.branchName == 'B.Sc Information Technology'            ? 'selected' : ''}>B.Sc Information Technology</option>
+                                        <option value="MBA Information Technology"              ${requestScope.branchName == 'MBA Information Technology'              ? 'selected' : ''}>MBA - Information Technology</option>
+                                        <option value="Other"                                   ${requestScope.branchName == 'Other'                                   ? 'selected' : ''}>Other</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <span class="field-error" id="branchNameError">Please select your branch.</span>
+                        </div>
+
+                        <!-- City (4th) -->
                         <div class="form-group">
                             <label for="city">City <span class="required-star">*</span></label>
                             <div class="input-wrapper">
@@ -1196,7 +1249,7 @@
             </div><!-- /form-card -->
 
             <div class="page-footer">
-                &copy; 2024 Kasnet Online Internship Portal. All rights reserved.
+                &copy; 2026 My Internship Technologies. All rights reserved.
             </div>
 
         </div><!-- /form-container -->
@@ -1380,7 +1433,7 @@
     }
 
     // Clear errors on user input
-    var fieldsToWatch = ['firstName','lastName','email','mobile','password','confirmPassword','role','stream','collegeName','city','captchaInput'];
+    var fieldsToWatch = ['firstName','lastName','email','mobile','password','confirmPassword','collegeName','stream','branchName','city','captchaInput'];
     fieldsToWatch.forEach(function(id) {
         var el = document.getElementById(id);
         if (el) {
@@ -1389,6 +1442,12 @@
                 var errorEl = document.getElementById(id + 'Error');
                 if (errorEl) errorEl.classList.remove('visible');
                 // Hide client alert too
+                document.getElementById('clientAlert').style.display = 'none';
+            });
+            el.addEventListener('change', function() {
+                this.classList.remove('input-error');
+                var errorEl = document.getElementById(id + 'Error');
+                if (errorEl) errorEl.classList.remove('visible');
                 document.getElementById('clientAlert').style.display = 'none';
             });
         }
@@ -1469,13 +1528,13 @@
             clearFieldError('confirmPassword', 'confirmPasswordError');
         }
 
-        // Role
-        require('role', 'roleError', 'Please select a role.');
-        // Stream
-        require('stream', 'streamError', 'Please select your stream.');
-        // College
+        // 1. College Name
         require('collegeName', 'collegeNameError', 'College name is required.');
-        // City
+        // 2. Stream
+        require('stream', 'streamError', 'Please select your stream.');
+        // 3. Branch Name
+        require('branchName', 'branchNameError', 'Please select your branch.');
+        // 4. City
         require('city', 'cityError', 'City is required.');
 
         // CAPTCHA
@@ -1495,13 +1554,9 @@
         }
 
         if (!valid) {
-            var msg = firstErrorMsg || 'Please fix the highlighted errors above.';
-            // Standard Chrome popup message
-            window.alert(msg);
-
             // Show client alert
             var alertBox = document.getElementById('clientAlert');
-            document.getElementById('clientAlertMsg').textContent = msg;
+            document.getElementById('clientAlertMsg').textContent = firstErrorMsg || 'Please fix the highlighted errors above.';
             alertBox.style.display = 'flex';
             // Scroll to top of form
             alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1518,21 +1573,6 @@
         document.getElementById('clientAlert').style.display = 'none';
 
         this.submit();
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
-        <c:if test="${not empty requestScope.errorMessage || not empty requestScope.error}">
-            var serverErr = "${fn:escapeXml(not empty requestScope.errorMessage ? requestScope.errorMessage : requestScope.error)}";
-            if (serverErr) {
-                window.alert(serverErr);
-            }
-        </c:if>
-        <c:if test="${not empty requestScope.success}">
-            var succ = "${fn:escapeXml(requestScope.success)}";
-            if (succ) {
-                window.alert(succ);
-            }
-        </c:if>
     });
 
     /* =============================================

@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Kasnet Internship Portal</title>
+    <title>Dashboard - My Internship Technologies Portal</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root { --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
@@ -92,8 +92,8 @@
                 <span></span><span></span><span></span>
             </button>
             <a href="${pageContext.request.contextPath}/home" class="navbar-brand">
-            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
-            <span>Kasnet Internship Portal</span>
+            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="My Internship Technologies Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
+            <span>My Internship Technologies</span>
             </a>
         </div>
         <nav class="navbar-menu" aria-label="Main navigation">
@@ -326,7 +326,7 @@
     (function () {
         var toggle = document.getElementById("sidebarToggle");
         var menuGroups = document.querySelectorAll(".menu-group[data-menu-key]");
-        var menuStateKey = "kasnet-dashboard-open-menus";
+        var menuStateKey = "mit-dashboard-open-menus";
         var openMenus = {};
 
         function readStoredValue(key) {

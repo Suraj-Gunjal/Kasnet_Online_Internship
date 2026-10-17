@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Not Found | Kasnet Internship Portal</title>
+    <title>404 - Page Not Found | My Internship Technologies Portal</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -249,7 +249,7 @@
                 </a>
             </div>
 
-            <p class="footer-note">Error 404 &bull; Kasnet Internship Portal</p>
+            <p class="footer-note">Error 404 &bull; My Internship Technologies Portal</p>
         </div>
     </div>
 </body>

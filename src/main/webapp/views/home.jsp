@@ -18,7 +18,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Home - Kasnet Internship Portal</title>
+    <title>Student Home - My Internship Technologies Portal</title>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -407,8 +407,8 @@
     <!-- Top Navbar -->
     <nav class="navbar">
         <a href="${pageContext.request.contextPath}/home" class="navbar-brand">
-            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
-            <span>Kasnet Internship Portal</span>
+            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="My Internship Technologies Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
+            <span>My Internship Technologies</span>
         </a>
         <div class="navbar-menu">
             <a href="${pageContext.request.contextPath}/home" class="nav-link active">Home</a>
@@ -419,7 +419,7 @@
             <a href="${pageContext.request.contextPath}/question-bank" class="nav-link">Question Bank</a>
             <a href="${pageContext.request.contextPath}/resume-analysis" class="nav-link">Resume Analysis</a>
             <span style="font-size: 0.88rem; color: #cbd5e0; margin-left: 6px;">Hi, ${user.firstName}</span>
-            <a href="${pageContext.request.contextPath}/logout" class="btn-logout" onclick="return confirm('Are you sure you want to log out from your student account?');">Logout</a>
+            <a href="${pageContext.request.contextPath}/logout" class="btn-logout">Logout</a>
         </div>
     </nav>
 
@@ -552,7 +552,7 @@
 
     </div>
 
-    <!-- Login Success Popup Modal & Browser Alerts -->
+    <!-- Login Success Popup Modal -->
     <% if (isLoginSuccess) { %>
     <div class="modal-overlay" id="loginSuccessModal">
         <div class="modal-card">
@@ -570,20 +570,8 @@
                 window.history.replaceState({}, document.title, cleanUrl);
             }
         }
-        document.addEventListener("DOMContentLoaded", function() {
-            window.alert("Welcome back, ${user.firstName}! You have logged in successfully to your student portal.");
-        });
     </script>
     <% } %>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('error') === 'admin_denied') {
-                window.alert("Access Denied: Student accounts do not have access to the Administrator Console.");
-            }
-        });
-    </script>
 
     <script>
         function navigateToSubject(subjectVal) {

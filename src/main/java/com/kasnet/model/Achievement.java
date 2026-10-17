@@ -1,7 +1,6 @@
 package com.kasnet.model;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * Represents an achievement (award, publication, activity, etc.) of a student.
@@ -16,8 +15,6 @@ public class Achievement {
     private String    achievementType;
     private String    title;
     private String    description;
-    private Date      achievementDate;
-    private String    category;
     private String    technology;
     private String    extraActivities;
     private Timestamp createdAt;
@@ -57,12 +54,6 @@ public class Achievement {
 
     public String getAchievementType() { return achievementType; }
     public void setAchievementType(String achievementType) { this.achievementType = achievementType; }
-
-    public Date getAchievementDate() { return achievementDate; }
-    public void setAchievementDate(Date achievementDate) { this.achievementDate = achievementDate; }
-
-    public String getCategory() { return category != null ? category : achievementType; }
-    public void setCategory(String category) { this.category = category; if (achievementType == null || achievementType.isBlank()) { this.achievementType = category; } }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }

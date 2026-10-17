@@ -37,6 +37,7 @@ DROP TABLE IF EXISTS `certifications`;
 DROP TABLE IF EXISTS `skills`;
 DROP TABLE IF EXISTS `career_goals`;
 DROP TABLE IF EXISTS `achievements`;
+DROP TABLE IF EXISTS `engineering_year_marks`;
 DROP TABLE IF EXISTS `education_details`;
 DROP TABLE IF EXISTS `student_profiles`;
 DROP TABLE IF EXISTS `users`;
@@ -55,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `country_code`  VARCHAR(5)     DEFAULT '+91',
   `role`          ENUM('STUDENT','ADMIN') NOT NULL DEFAULT 'STUDENT',
   `stream`        ENUM('Graduation','Post Graduation','Diploma') DEFAULT NULL,
+  `branch`        VARCHAR(100)   DEFAULT NULL,
   `college_name`  VARCHAR(150)   DEFAULT NULL,
   `city`          VARCHAR(100)   DEFAULT NULL,
   `referral_code` VARCHAR(20)    DEFAULT NULL,
@@ -80,17 +82,7 @@ CREATE TABLE IF NOT EXISTS `student_profiles` (
   `gender`              ENUM('Male','Female','Other') DEFAULT NULL,
   `date_of_birth`       DATE          DEFAULT NULL,
   `address`             TEXT          DEFAULT NULL,
-  `city`                VARCHAR(100)  DEFAULT NULL,
   `state`               VARCHAR(100)  DEFAULT NULL,
-  `pincode`             VARCHAR(20)   DEFAULT NULL,
-  `college_name`        VARCHAR(150)  DEFAULT NULL,
-  `branch`              VARCHAR(150)  DEFAULT NULL,
-  `current_year`        VARCHAR(50)   DEFAULT NULL,
-  `enrollment_no`       VARCHAR(100)  DEFAULT NULL,
-  `linkedin_url`        VARCHAR(255)  DEFAULT NULL,
-  `github_url`          VARCHAR(255)  DEFAULT NULL,
-  `portfolio_url`       VARCHAR(255)  DEFAULT NULL,
-  `bio`                 TEXT          DEFAULT NULL,
   `profile_photo_path`  VARCHAR(255)  DEFAULT NULL,
   `resume_path`         VARCHAR(255)  DEFAULT NULL,
   `resume_filename`     VARCHAR(255)  DEFAULT NULL,
@@ -134,6 +126,31 @@ CREATE TABLE IF NOT EXISTS `education_details` (
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci
   COMMENT='Academic history; one row per qualification level per user';
+
+-- =============================================================
+--  TABLE: engineering_year_marks
+--  Optional engineering year-wise marks (First Year, Second Year, Third Year, Final Year)
+--  Supports both Percentage and CGPA.
+-- =============================================================
+CREATE TABLE IF NOT EXISTS `engineering_year_marks` (
+  `mark_id`       INT           NOT NULL AUTO_INCREMENT,
+  `user_id`       INT           NOT NULL,
+  `year_level`    VARCHAR(50)   NOT NULL COMMENT 'First Year, Second Year, Third Year, Final Year',
+  `score_type`    ENUM('Percentage','CGPA') NOT NULL DEFAULT 'Percentage',
+  `score_value`   DECIMAL(5,2)  NOT NULL,
+  `passing_year`  YEAR          DEFAULT NULL,
+  `college_name`  VARCHAR(200)  DEFAULT NULL,
+  `created_at`    TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`    TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`mark_id`),
+  UNIQUE KEY `uq_user_year_level` (`user_id`, `year_level`),
+  CONSTRAINT `fk_eym_user`
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci
+  COMMENT='Engineering year-wise percentage/CGPA records';
 
 -- =============================================================
 --  TABLE: achievements
@@ -465,26 +482,28 @@ CREATE TABLE IF NOT EXISTS `login_activity` (
 
 -- -------------------------------------------------------------
 --  Admin user
---  NOTE: Development credentials only. Replace this password hash
---        before deploying outside a local test environment.
+--  NOTE: The password_hash below is a PLACEHOLDER only.
+--        BCrypt hashes MUST be generated at runtime (e.g. via
+--        RegisterServlet or BCrypt.hashpw()).
+--        Replace '$2a$12$PLACEHOLDER_HASH' with a real BCrypt
+--        hash before use, or use RegisterServlet to create
+--        accounts properly.
+--
+--  Example plain-text password intended: Admin@1234
 -- -------------------------------------------------------------
 INSERT INTO `users`
   (`first_name`, `last_name`, `email`, `password_hash`, `mobile`, `country_code`, `role`, `is_active`)
 VALUES
-  ('Kasnet', 'Admin', 'admin@kasnet.in',
-  '$2a$12$/k/s5c7fjYGy.NFlkhI1PuTZ7LU0dBaBxFprT0FD5Y1rxiZwVSFZS',
-  '9000000000', '+91', 'ADMIN', 1);
+  ('MIT', 'Admin', 'admin@myinternshiptech.com',
+   '$2a$12$PLACEHOLDER_REPLACE_WITH_REAL_BCRYPT_HASH_FOR_Admin1234',
+   '9000000000', '+91', 'ADMIN', 1);
 
--- Local development student account used by SystemVerifier.
-INSERT INTO `users`
-  (`first_name`, `last_name`, `email`, `password_hash`, `mobile`, `country_code`, `role`, `is_active`)
-VALUES
-  ('Test', 'Student', 'test@kasnet.in',
-  '$2a$12$T5RvOQ4RXduI71r/RadqAOsDC/UKmYGkl/WLnb.W8fagjq2pWbVnm',
-  '9000000001', '+91', 'STUDENT', 1);
-
-INSERT INTO `student_profiles` (`user_id`, `profile_completion`)
-SELECT `user_id`, 0 FROM `users` WHERE `email` = 'test@kasnet.in';
+-- NOTE: To create a proper admin, run the application and call:
+--   BCrypt.hashpw("Admin@1234", BCrypt.gensalt(12))
+-- then UPDATE users SET password_hash='<hash>' WHERE email='admin@myinternshiptech.com';
+--
+-- Or simply register through RegisterServlet and promote to ADMIN:
+--   UPDATE users SET role='ADMIN' WHERE email='admin@myinternshiptech.com';
 
 -- -------------------------------------------------------------
 --  Sample Assignments

@@ -13,17 +13,11 @@ public class Education {
     private int       eduId;
     private int       userId;
     private String    level;
-    private String    institutionName;
     private String    schoolCollegeName;
     private String    boardUniversity;
     private String    stream;
-    private String    fieldOfStudy;
     private int       passingYear;
-    private String    startYear;
-    private String    endYear;
     private double    percentage;
-    private double    percentageCgpa;
-    private boolean   currentlyStudying;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -63,11 +57,8 @@ public class Education {
     public String getLevel() { return level; }
     public void setLevel(String level) { this.level = level; }
 
-    public String getInstitutionName() { return institutionName != null ? institutionName : schoolCollegeName; }
-    public void setInstitutionName(String institutionName) { this.institutionName = institutionName; this.schoolCollegeName = institutionName; }
-
-    public String getSchoolCollegeName() { return schoolCollegeName != null ? schoolCollegeName : institutionName; }
-    public void setSchoolCollegeName(String schoolCollegeName) { this.schoolCollegeName = schoolCollegeName; this.institutionName = schoolCollegeName; }
+    public String getSchoolCollegeName() { return schoolCollegeName; }
+    public void setSchoolCollegeName(String schoolCollegeName) { this.schoolCollegeName = schoolCollegeName; }
 
     public String getBoardUniversity() { return boardUniversity; }
     public void setBoardUniversity(String boardUniversity) { this.boardUniversity = boardUniversity; }
@@ -75,26 +66,11 @@ public class Education {
     public String getStream() { return stream; }
     public void setStream(String stream) { this.stream = stream; }
 
-    public String getFieldOfStudy() { return fieldOfStudy != null ? fieldOfStudy : stream; }
-    public void setFieldOfStudy(String fieldOfStudy) { this.fieldOfStudy = fieldOfStudy; this.stream = fieldOfStudy; }
-
     public int getPassingYear() { return passingYear; }
     public void setPassingYear(int passingYear) { this.passingYear = passingYear; }
 
-    public String getStartYear() { return startYear != null ? startYear : (passingYear > 0 ? String.valueOf(passingYear) : null); }
-    public void setStartYear(String startYear) { this.startYear = startYear; if (startYear != null && !startYear.trim().isEmpty()) { try { this.passingYear = Integer.parseInt(startYear.trim()); } catch (NumberFormatException ignored) {} } }
-
-    public String getEndYear() { return endYear; }
-    public void setEndYear(String endYear) { this.endYear = endYear; }
-
     public double getPercentage() { return percentage; }
     public void setPercentage(double percentage) { this.percentage = percentage; }
-
-    public double getPercentageCgpa() { return percentageCgpa != 0 ? percentageCgpa : percentage; }
-    public void setPercentageCgpa(double percentageCgpa) { this.percentageCgpa = percentageCgpa; this.percentage = percentageCgpa; }
-
-    public boolean isCurrentlyStudying() { return currentlyStudying; }
-    public void setCurrentlyStudying(boolean currentlyStudying) { this.currentlyStudying = currentlyStudying; }
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }

@@ -1,4 +1,4 @@
-# Kasnet Online Internship Portal
+# My Internship Technologies Portal
 
 > **Production-Ready Java EE (MVC) Web Application Module**  
 > Designed for seamless integration into the hosted platform at [onlineinternship.in](https://www.onlineinternship.in/).  
@@ -79,10 +79,7 @@ private static final String DB_USER = "root";
 private static final String DB_PASSWORD = "YOUR_MYSQL_PASSWORD"; // <-- Enter your local MySQL root password
 ```
 
-### Step 4: Verify the Seeded Administrator Account
-The local development seed creates the administrator account shown in the credentials table below. This default password is for local testing only; replace it before any non-local deployment.
-
-### Step 5: Run Locally (One Single Command)
+### Step 4: Run Locally (One Single Command)
 We have included a configured embedded Tomcat runner in Maven. You do **not** need to install standalone Tomcat:
 
 **On Windows (PowerShell / CMD):**
@@ -100,7 +97,7 @@ Wait until you see:
 INFO: Starting ProtocolHandler ["http-bio-8080"]
 ```
 
-### Step 6: Open in Your Browser
+### Step 5: Open in Your Browser
 Open your browser and navigate to:
 👉 **`http://localhost:8080/internship/`**
 
@@ -110,12 +107,12 @@ Open your browser and navigate to:
 
 ## Pre-configured Test Credentials
 
-The application seeds local test accounts for both roles. Public registration creates student accounts; administrator accounts are provisioned separately and cannot be created through the public signup form.
+The application provides pre-configured credentials for quick testing:
 
 | Role | Email | Password | Destination Dashboard |
 |---|---|---|---|
-| **Student (Test ID)** | `test@kasnet.in` | `Test@12345` | Student Portal (`/dashboard`) |
-| **System Administrator** | `admin@kasnet.in` | `Admin@12345` | Admin Console (`/admin`) |
+| **Student (Test ID)** | `test@myinternshiptech.com` *(or `test@kasnet.in`)* | `Test@12345` | Student Portal (`/dashboard`) |
+| **System Administrator** | `admin@myinternshiptech.com` *(or `admin@kasnet.in`)* | `Admin@12345` | Admin Console (`/admin`) |
 
 You can also click **Register** on the landing page to register a fresh student account. New accounts are immediately persisted in your local MySQL database.
 
@@ -132,12 +129,12 @@ You can verify database connectivity, validations, password hashing, and profile
 Output:
 ```text
 ==================================================
- KASNET INTERNSHIP PORTAL - SYSTEM VERIFICATION
+ MY INTERNSHIP TECHNOLOGIES - SYSTEM VERIFICATION
 ==================================================
 [TEST 1] Verifying MySQL connection... PASSED (Connected to online_internship)
 [TEST 2] Verifying Input Validations... PASSED (Phone 10-digits, Percentage 0-100, Email, Date verified)
-[TEST 3] Verifying Hardcoded Student Test ID (test@kasnet.in)... PASSED
-[TEST 4] Verifying Admin Account (admin@kasnet.in)... PASSED
+[TEST 3] Verifying Hardcoded Student Test ID (test@myinternshiptech.com / test@kasnet.in)... PASSED
+[TEST 4] Verifying Admin Account... PASSED (Authenticated as Admin)
 [TEST 5] Verifying Admin User Monitoring Query... PASSED
 [TEST 6] Verifying Profile Completeness Calculation... PASSED
 [TEST 7] Verifying Education Percentage & Record Persistence... PASSED

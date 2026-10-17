@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Profile - Kasnet Internship Portal</title>
+    <title>Student Profile - My Internship Technologies Portal</title>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -441,6 +441,67 @@
             font-size: 0.9rem;
         }
 
+        .eng-section-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .badge-optional {
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 0.72rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .badge-score-pct {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .badge-score-cgpa {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .btn-edit-sm {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 6px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-edit-sm:hover {
+            background: #1d4ed8;
+        }
+
         @media (max-width: 900px) {
             .container {
                 flex-direction: column;
@@ -459,8 +520,8 @@
     <!-- Top Navigation Bar -->
     <nav class="navbar">
         <a href="${pageContext.request.contextPath}/home" class="navbar-brand">
-            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="Kasnet Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
-            <span>Kasnet Internship Portal</span>
+            <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="My Internship Technologies Logo" style="height: 32px; width: auto; object-fit: contain; margin-right: 10px; border-radius: 4px; background: #ffffff; padding: 2px;" />
+            <span>My Internship Technologies</span>
         </a>
         <div class="navbar-menu">
             <a href="${pageContext.request.contextPath}/home" class="nav-link">Home</a>
@@ -539,6 +600,23 @@
                 <div class="alert-success">
                     ✓ Profile section details updated and saved successfully!
                 </div>
+            </c:if>
+            <c:if test="${param.deleted == '1'}">
+                <div class="alert-success">
+                    ✓ Record removed successfully!
+                </div>
+            </c:if>
+            <c:if test="${param.error == 'missingMarks'}">
+                <div class="alert-error" role="alert">Please provide Year and Score for the engineering performance entry.</div>
+            </c:if>
+            <c:if test="${param.error == 'invalidScore'}">
+                <div class="alert-error" role="alert">Please enter a valid numeric score (e.g. 78.50 or 8.5).</div>
+            </c:if>
+            <c:if test="${param.error == 'cgpaRange'}">
+                <div class="alert-error" role="alert">CGPA score must be between 0.00 and 10.00.</div>
+            </c:if>
+            <c:if test="${param.error == 'pctRange'}">
+                <div class="alert-error" role="alert">Percentage score must be between 0.00 and 100.00.</div>
             </c:if>
             <c:if test="${param.error == 'futureDob'}">
                 <div class="alert-error" role="alert">Date of birth cannot be in the future.</div>
@@ -722,6 +800,125 @@
                  SECTION 2: EDUCATION DETAILS
                  ========================================================= -->
             <c:if test="${activeTab == 'education'}">
+
+                <!-- Part A: Engineering Year-wise Marks (First Year, Second Year, Third Year, Final Year) - BEFORE 10th and 12th -->
+                <div class="eng-section-box" id="engineeringSection">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #edf2f7; padding-bottom:10px; flex-wrap:wrap; gap:8px;">
+                        <div>
+                            <h3 class="form-section-title" style="margin:0; display:inline-block;">Engineering Year-wise Performance</h3>
+                            <span class="badge-optional">Optional</span>
+                        </div>
+                        <span style="font-size:0.8rem; color:#64748b;">Add your percentage or CGPA for each engineering year (FE, SE, TE, BE)</span>
+                    </div>
+
+                    <!-- Add / Edit Engineering Year Mark Form -->
+                    <form action="${pageContext.request.contextPath}/engineering-marks" method="post" id="engMarksForm">
+                        <input type="hidden" name="markId" id="engMarkId" value="" />
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label class="form-label">Engineering Year *</label>
+                                <select name="yearLevel" id="engYearLevel" class="form-select" required>
+                                    <option value="First Year">First Year (FE)</option>
+                                    <option value="Second Year">Second Year (SE)</option>
+                                    <option value="Third Year">Third Year (TE)</option>
+                                    <option value="Final Year">Final Year (BE / B.Tech)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Evaluation Type *</label>
+                                <select name="scoreType" id="engScoreType" class="form-select" onchange="updateScoreConstraints()" required>
+                                    <option value="Percentage">Percentage (%)</option>
+                                    <option value="CGPA">CGPA (10 Point Scale)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" id="engScoreLabel">Score Value (0.00 - 100.00 %) *</label>
+                                <input type="number" step="0.01" min="0" max="100" name="scoreValue" id="engScoreValue" class="form-input" placeholder="e.g. 82.50" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Passing Year</label>
+                                <input type="number" min="1950" max="2035" name="passingYear" id="engPassingYear" class="form-input" placeholder="e.g. 2023">
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label class="form-label">College / Institute Name (Optional)</label>
+                                <input type="text" name="collegeName" id="engCollegeName" class="form-input" placeholder="e.g. College of Engineering, Pune" maxlength="200">
+                            </div>
+                        </div>
+
+                        <div class="btn-group" style="margin-top:14px; margin-bottom: 8px;">
+                            <button type="submit" class="btn-save" id="engSubmitBtn">Save Year Score</button>
+                            <button type="button" class="btn-edit" id="engCancelBtn" style="display:none;" onclick="cancelEngEdit()">Cancel Edit</button>
+                        </div>
+                    </form>
+
+                    <!-- Tabular Display of Added Engineering Year Marks -->
+                    <div style="margin-top:22px;">
+                        <h4 style="font-size:0.95rem; font-weight:700; color:#1e293b; margin-bottom:10px;">Recorded Engineering Scores</h4>
+                        <c:choose>
+                            <c:when test="${not empty engineeringMarksList}">
+                                <div style="overflow-x:auto;">
+                                    <table class="data-table" style="margin-top:6px; margin-bottom:10px;">
+                                        <thead>
+                                            <tr>
+                                                <th>Engineering Year</th>
+                                                <th>Evaluation Type</th>
+                                                <th>Score / Result</th>
+                                                <th>Passing Year</th>
+                                                <th>College / Institute</th>
+                                                <th style="width:140px; text-align:center;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="${engineeringMarksList}" var="em">
+                                                <tr>
+                                                    <td><strong>${em.yearLevel}</strong></td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${em.scoreType == 'CGPA'}">
+                                                                <span class="badge-score-cgpa">CGPA</span>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="badge-score-pct">Percentage</span>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                    <td>
+                                                        <strong style="color:#0f172a; font-size:0.95rem;">${em.formattedScore}</strong>
+                                                    </td>
+                                                    <td>${em.passingYear > 0 ? em.passingYear : '-'}</td>
+                                                    <td>${not empty em.collegeName ? em.collegeName : '-'}</td>
+                                                    <td style="text-align:center; white-space:nowrap;">
+                                                        <button type="button" class="btn-edit-sm"
+                                                                onclick="editEngMark(${em.markId}, '${em.yearLevel}', '${em.scoreType}', ${em.scoreValue}, ${em.passingYear}, '${em.collegeName}')">
+                                                            Edit
+                                                        </button>
+                                                        <a href="${pageContext.request.contextPath}/engineering-marks?action=delete&id=${em.markId}"
+                                                           class="btn-danger-sm"
+                                                           style="text-decoration:none; display:inline-block;"
+                                                           onclick="return confirm('Are you sure you want to delete ${em.yearLevel} record?');">
+                                                            Delete
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div style="padding:14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:6px; color:#64748b; font-size:0.86rem; text-align:center;">
+                                    No engineering year scores added yet. If you are pursuing or have completed engineering, use the form above to optionally add scores for First Year, Second Year, Third Year, or Final Year.
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+
+                <!-- Part B: Standard Academic History (SSC, HSC, Diploma, Graduation, Master) -->
                 <form action="${pageContext.request.contextPath}/education" method="post">
                     <!-- SSC/10th -->
                     <h3 class="form-section-title" style="margin-top:0;">SSC / 10th Standard</h3>
@@ -1194,5 +1391,50 @@
         </main>
     </div>
 
+    <!-- Inline script for dynamic interactive operations -->
+    <script>
+        function editEngMark(id, year, type, val, passYear, college) {
+            document.getElementById('engMarkId').value = id;
+            document.getElementById('engYearLevel').value = year;
+            document.getElementById('engScoreType').value = type;
+            document.getElementById('engScoreValue').value = val;
+            document.getElementById('engPassingYear').value = (passYear > 0 ? passYear : '');
+            document.getElementById('engCollegeName').value = college || '';
+            document.getElementById('engSubmitBtn').textContent = 'Update ' + year + ' Score';
+            document.getElementById('engCancelBtn').style.display = 'inline-block';
+            updateScoreConstraints();
+            var sec = document.getElementById('engineeringSection');
+            if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelEngEdit() {
+            document.getElementById('engMarkId').value = '';
+            document.getElementById('engYearLevel').value = 'First Year';
+            document.getElementById('engScoreType').value = 'Percentage';
+            document.getElementById('engScoreValue').value = '';
+            document.getElementById('engPassingYear').value = '';
+            document.getElementById('engCollegeName').value = '';
+            document.getElementById('engSubmitBtn').textContent = 'Save Year Score';
+            document.getElementById('engCancelBtn').style.display = 'none';
+            updateScoreConstraints();
+        }
+
+        function updateScoreConstraints() {
+            var typeEl = document.getElementById('engScoreType');
+            var inp = document.getElementById('engScoreValue');
+            var label = document.getElementById('engScoreLabel');
+            if (!typeEl || !inp) return;
+            var type = typeEl.value;
+            if (type === 'CGPA') {
+                inp.max = "10.00";
+                inp.placeholder = "e.g. 8.75 (0 - 10 CGPA)";
+                if (label) label.textContent = "CGPA Score (0.00 - 10.00) *";
+            } else {
+                inp.max = "100.00";
+                inp.placeholder = "e.g. 82.50 (0 - 100 %)";
+                if (label) label.textContent = "Percentage Score (0.00 - 100.00 %) *";
+            }
+        }
+    </script>
 </body>
 </html>

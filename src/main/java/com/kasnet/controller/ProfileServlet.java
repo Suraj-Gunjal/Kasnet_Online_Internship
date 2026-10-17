@@ -25,15 +25,11 @@ public class ProfileServlet extends HttpServlet {
     private ProjectDAO projectDAO = new ProjectDAO();
     private HackathonDAO hackathonDAO = new HackathonDAO();
     private CompetitionDAO competitionDAO = new CompetitionDAO();
+    private EngineeringMarksDAO engineeringMarksDAO = new EngineeringMarksDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!SessionUtil.requireLogin(req, resp)) return;
-
-        if (SessionUtil.isAdmin(req)) {
-            resp.sendRedirect(req.getContextPath() + "/admin");
-            return;
-        }
 
         Integer userId = SessionUtil.getUserId(req);
         if (userId == null) {
@@ -88,6 +84,9 @@ public class ProfileServlet extends HttpServlet {
         List<Hackathon> hackathonList = hackathonDAO.getHackathonsByUserId(userId);
         List<Competition> competitionList = competitionDAO.getCompetitionsByUserId(userId);
 
+        // 8. Fetch Engineering Year-wise Marks (Optional)
+        List<EngineeringMarks> engineeringMarksList = engineeringMarksDAO.getMarksByUserId(userId);
+
         // Active tab parameter - exactly 5 sections
         String activeTab = req.getParameter("tab");
         if (activeTab == null || activeTab.trim().isEmpty() || "skills".equalsIgnoreCase(activeTab) || "achievements".equalsIgnoreCase(activeTab)) {
@@ -98,6 +97,7 @@ public class ProfileServlet extends HttpServlet {
         req.setAttribute("user", user);
         req.setAttribute("profile", profile);
         req.setAttribute("educationMap", educationMap);
+        req.setAttribute("engineeringMarksList", engineeringMarksList);
         req.setAttribute("achievementList", achievementList);
         req.setAttribute("technicalSkills", technicalSkills);
         req.setAttribute("softSkills", softSkills);
