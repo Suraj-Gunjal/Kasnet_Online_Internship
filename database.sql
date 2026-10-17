@@ -15,11 +15,11 @@ SET CHARACTER SET utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- Create and select the database
-CREATE DATABASE IF NOT EXISTS `online_internship`
+CREATE DATABASE IF NOT EXISTS `onlineinternship_db`
   DEFAULT CHARACTER SET utf8mb4
   DEFAULT COLLATE utf8mb4_unicode_ci;
 
-USE `online_internship`;
+USE `onlineinternship_db`;
 
 -- =============================================================
 --  DROP existing tables (reverse FK order)
@@ -413,7 +413,7 @@ CREATE TABLE IF NOT EXISTS `assignment_submissions` (
 --  Video / lecture content published by admins.
 -- =============================================================
 CREATE TABLE IF NOT EXISTS `lectures` (
-  `lecture_id`       INT          NOT NULL AUTO_INCREMENT,
+  `id`               INT          NOT NULL AUTO_INCREMENT,
   `title`            VARCHAR(200) NOT NULL,
   `subject`          VARCHAR(200) DEFAULT NULL,
   `description`      TEXT         DEFAULT NULL,
@@ -424,7 +424,7 @@ CREATE TABLE IF NOT EXISTS `lectures` (
   `lecture_date`     DATE         DEFAULT NULL,
   `is_active`        TINYINT(1)   NOT NULL DEFAULT 1,
   `created_at`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`lecture_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci
@@ -438,14 +438,15 @@ CREATE TABLE IF NOT EXISTS `lecture_progress` (
   `progress_id`           INT        NOT NULL AUTO_INCREMENT,
   `lecture_id`            INT        NOT NULL,
   `user_id`               INT        NOT NULL,
-  `is_completed`          TINYINT(1) NOT NULL DEFAULT 0,
+  `completed`             TINYINT(1) NOT NULL DEFAULT 0,
   `watch_progress_percent` INT       NOT NULL DEFAULT 0 COMMENT '0-100',
-  `last_watched`          TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `progress_seconds`      INT        NOT NULL DEFAULT 0,
+  `last_watched_at`       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`progress_id`),
   UNIQUE KEY `uq_lecture_user` (`lecture_id`, `user_id`),
   INDEX `idx_lp_user` (`user_id`),
   CONSTRAINT `fk_lp_lecture`
-    FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`lecture_id`)
+    FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_lp_user`
     FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)

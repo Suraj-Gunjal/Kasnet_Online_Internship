@@ -26,10 +26,20 @@ public class Lecture {
     private Timestamp createdAt;
 
     // -------------------------------------------------------------------------
+    // Course Video System Fields (new)
+    // -------------------------------------------------------------------------
+    private int       courseId;               // FK to courses table
+    private String    cloudinaryPublicId;     // Cloudinary public_id (NEVER a permanent URL)
+    private int       durationSeconds;        // Video duration in seconds
+    private boolean   isPreview;              // If true, accessible without enrollment
+    private String    status;                 // DRAFT, PUBLISHED
+
+    // -------------------------------------------------------------------------
     // Progress-Tracking Fields  (populated by JOIN queries; default false/0/null)
     // -------------------------------------------------------------------------
     private boolean   isCompleted;
     private int       watchProgressPercent;
+    private int       progressSeconds;        // Watch position in seconds
     private Timestamp lastWatched;
 
     // -------------------------------------------------------------------------
@@ -38,7 +48,7 @@ public class Lecture {
     public Lecture() {}
 
     // -------------------------------------------------------------------------
-    // All-args Constructor
+    // All-args Constructor (original fields)
     // -------------------------------------------------------------------------
     public Lecture(int lectureId, String title, String subject,
                    String description, String instructor, int durationMinutes,
@@ -67,6 +77,8 @@ public class Lecture {
     // -------------------------------------------------------------------------
     public int getLectureId() { return lectureId; }
     public void setLectureId(int lectureId) { this.lectureId = lectureId; }
+    public int getId() { return lectureId; }
+    public void setId(int id) { this.lectureId = id; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -80,7 +92,11 @@ public class Lecture {
     public String getInstructor() { return instructor; }
     public void setInstructor(String instructor) { this.instructor = instructor; }
 
-    public int getDurationMinutes() { return durationMinutes; }
+    public int getDurationMinutes() {
+        if (durationMinutes > 0) return durationMinutes;
+        if (durationSeconds > 0) return (durationSeconds + 59) / 60;
+        return 0;
+    }
     public void setDurationMinutes(int durationMinutes) { this.durationMinutes = durationMinutes; }
 
     public String getVideoUrl() { return videoUrl; }
@@ -99,6 +115,42 @@ public class Lecture {
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 
     // -------------------------------------------------------------------------
+    // Getters and Setters  — Course Video System (new)
+    // -------------------------------------------------------------------------
+    public int getCourseId() { return courseId; }
+    public void setCourseId(int courseId) { this.courseId = courseId; }
+
+    public String getCloudinaryPublicId() { return cloudinaryPublicId; }
+    public void setCloudinaryPublicId(String cloudinaryPublicId) { this.cloudinaryPublicId = cloudinaryPublicId; }
+
+    public int getDurationSeconds() { return durationSeconds; }
+    public void setDurationSeconds(int durationSeconds) { this.durationSeconds = durationSeconds; }
+
+    public boolean isPreview() { return isPreview; }
+    public void setPreview(boolean isPreview) { this.isPreview = isPreview; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    /**
+     * Returns true if this lecture has a video available (either Cloudinary or legacy URL).
+     */
+    public boolean hasVideo() {
+        return (cloudinaryPublicId != null && !cloudinaryPublicId.isEmpty())
+            || (videoUrl != null && !videoUrl.isEmpty());
+    }
+
+    /**
+     * Returns the duration formatted as mm:ss.
+     */
+    public String getDurationFormatted() {
+        int totalSeconds = durationSeconds > 0 ? durationSeconds : durationMinutes * 60;
+        int mins = totalSeconds / 60;
+        int secs = totalSeconds % 60;
+        return String.format("%d:%02d", mins, secs);
+    }
+
+    // -------------------------------------------------------------------------
     // Getters and Setters  — Progress (joined)
     // -------------------------------------------------------------------------
     public boolean isCompleted() { return isCompleted; }
@@ -106,6 +158,9 @@ public class Lecture {
 
     public int getWatchProgressPercent() { return watchProgressPercent; }
     public void setWatchProgressPercent(int watchProgressPercent) { this.watchProgressPercent = watchProgressPercent; }
+
+    public int getProgressSeconds() { return progressSeconds; }
+    public void setProgressSeconds(int progressSeconds) { this.progressSeconds = progressSeconds; }
 
     public Timestamp getLastWatched() { return lastWatched; }
     public void setLastWatched(Timestamp lastWatched) { this.lastWatched = lastWatched; }
@@ -119,17 +174,11 @@ public class Lecture {
                 "lectureId=" + lectureId +
                 ", title='" + title + '\'' +
                 ", subject='" + subject + '\'' +
-                ", description='" + description + '\'' +
-                ", instructor='" + instructor + '\'' +
-                ", durationMinutes=" + durationMinutes +
-                ", videoUrl='" + videoUrl + '\'' +
+                ", courseId=" + courseId +
                 ", lectureNumber=" + lectureNumber +
-                ", lectureDate=" + lectureDate +
-                ", isActive=" + isActive +
-                ", createdAt=" + createdAt +
+                ", isPreview=" + isPreview +
+                ", status='" + status + '\'' +
                 ", isCompleted=" + isCompleted +
-                ", watchProgressPercent=" + watchProgressPercent +
-                ", lastWatched=" + lastWatched +
                 '}';
     }
 }

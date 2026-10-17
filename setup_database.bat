@@ -18,7 +18,7 @@ echo.
 if %ERRORLEVEL% EQU 0 (
     echo.
     echo ========================================================
-    echo   Database 'online_internship' created successfully!
+    echo   Database 'onlineinternship_db' created successfully!
     echo ========================================================
 ) else (
     echo.
