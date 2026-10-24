@@ -36,21 +36,21 @@ public class SkillsServlet extends HttpServlet {
         String techSkillsStr = req.getParameter("technicalSkills");
         if (techSkillsStr != null) {
             List<String> list = parseSkills(techSkillsStr);
-            skillDAO.saveSkillsOfType(userId, "Technical", list, "Intermediate");
+            skillDAO.saveSkillsOfType(userId, "Technical", list);
         }
 
         // 2. Soft Skills
         String softSkillsStr = req.getParameter("softSkills");
         if (softSkillsStr != null) {
             List<String> list = parseSkills(softSkillsStr);
-            skillDAO.saveSkillsOfType(userId, "Soft", list, "Intermediate");
+            skillDAO.saveSkillsOfType(userId, "Soft", list);
         }
 
         // 3. Domain Skills
         String domainSkillsStr = req.getParameter("domainSkills");
         if (domainSkillsStr != null) {
             List<String> list = parseSkills(domainSkillsStr);
-            skillDAO.saveSkillsOfType(userId, "Domain", list, "Intermediate");
+            skillDAO.saveSkillsOfType(userId, "Domain", list);
         }
 
         int completion = profileDAO.calculateProfileCompletion(userId);

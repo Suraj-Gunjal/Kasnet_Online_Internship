@@ -113,7 +113,7 @@ public class ResumeAnalysisVerifier {
         System.out.print("[TEST 6] Server-Side Validation: Reject Empty Skill Name... ");
         boolean rejectedEmptySkill = false;
         try {
-            service.saveSkill(42, 0, "   ", "Programming Languages", "Intermediate");
+            service.saveSkill(42, 0, "   ", "Programming Languages");
         } catch (IllegalArgumentException e) {
             rejectedEmptySkill = true;
         }
@@ -128,7 +128,7 @@ public class ResumeAnalysisVerifier {
         System.out.print("[TEST 7] Security Validation: Reject Invalid User ID (<= 0)... ");
         boolean rejectedInvalidSession = false;
         try {
-            service.saveSkill(0, 0, "Java", "Programming Languages", "Intermediate");
+            service.saveSkill(0, 0, "Java", "Programming Languages");
         } catch (IllegalArgumentException e) {
             rejectedInvalidSession = true;
         }

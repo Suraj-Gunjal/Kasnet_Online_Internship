@@ -32,6 +32,8 @@ DROP TABLE IF EXISTS `assignments`;
 DROP TABLE IF EXISTS `intercollege_competitions`;
 DROP TABLE IF EXISTS `hackathons`;
 DROP TABLE IF EXISTS `experience`;
+DROP TABLE IF EXISTS `platform_project_reports`;
+DROP TABLE IF EXISTS `platform_certificates`;
 DROP TABLE IF EXISTS `projects`;
 DROP TABLE IF EXISTS `certifications`;
 DROP TABLE IF EXISTS `skills`;
@@ -185,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `skills` (
   `user_id`     INT          NOT NULL,
   `skill_name`  VARCHAR(100) NOT NULL,
   `skill_type`  VARCHAR(50)  NOT NULL,
-  `proficiency` ENUM('Beginner','Intermediate','Advanced','Expert') NOT NULL DEFAULT 'Intermediate',
+  `proficiency` ENUM('Beginner','Intermediate','Advanced','Expert') DEFAULT NULL,
   `created_at`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`skill_id`),
   UNIQUE KEY `uq_user_skill` (`user_id`, `skill_name`, `skill_type`),
@@ -196,7 +198,10 @@ CREATE TABLE IF NOT EXISTS `skills` (
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci
-  COMMENT='Skills tagged to a user with proficiency level';
+  COMMENT='Skills tagged to a user';
+
+ALTER TABLE `skills`
+  MODIFY COLUMN `proficiency` ENUM('Beginner','Intermediate','Advanced','Expert') DEFAULT NULL;
 
 -- =============================================================
 --  TABLE: certifications
@@ -225,7 +230,69 @@ CREATE TABLE IF NOT EXISTS `certifications` (
   COMMENT='Formal certifications earned by a student';
 
 -- =============================================================
---  TABLE: projects
+  --  TABLE: platform_certificates
+  --  Exam results for certificates issued by the Kasnet platform.
+  -- =============================================================
+  CREATE TABLE IF NOT EXISTS `platform_certificates` (
+    `certificate_id`  INT            NOT NULL AUTO_INCREMENT,
+    `user_id`         INT            NOT NULL,
+    `exam_name`       VARCHAR(200)   NOT NULL,
+    `score_obtained`  DECIMAL(8,2)   NOT NULL,
+    `total_score`     DECIMAL(8,2)   NOT NULL,
+    `achievement_date` DATE          NOT NULL,
+    `created_at`      TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`certificate_id`),
+    INDEX `idx_platform_cert_user` (`user_id`),
+    CONSTRAINT `fk_platform_cert_user`
+      FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+      ON DELETE CASCADE ON UPDATE CASCADE
+  ) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_unicode_ci
+    COMMENT='Student exam results for certificates issued by the platform';
+
+-- =============================================================
+--  TABLE: platform_project_reports
+--  Detailed project reports submitted through the student dashboard.
+-- =============================================================
+CREATE TABLE IF NOT EXISTS `platform_project_reports` (
+    `report_id`                    INT            NOT NULL AUTO_INCREMENT,
+    `user_id`                      INT            NOT NULL,
+    `project_name`                 VARCHAR(200)   NOT NULL,
+    `scope_details`                TEXT           NOT NULL,
+    `project_domain`               VARCHAR(200)   DEFAULT NULL,
+    `project_technology`           VARCHAR(500)   DEFAULT NULL,
+    `project_application`          VARCHAR(500)   DEFAULT NULL,
+    `project_duration`             VARCHAR(100)   DEFAULT NULL,
+    `project_model`                VARCHAR(100)   NOT NULL,
+    `requirement_gathering_time`   VARCHAR(100)   DEFAULT NULL,
+    `project_analysis_time`        VARCHAR(100)   DEFAULT NULL,
+    `project_designing_time`       VARCHAR(100)   DEFAULT NULL,
+    `project_coding_time`          VARCHAR(100)   DEFAULT NULL,
+    `project_testing_time`         VARCHAR(100)   DEFAULT NULL,
+    `project_cost`                 DECIMAL(12,2)  DEFAULT NULL,
+    `testing_type`                 VARCHAR(100)   DEFAULT NULL,
+    `testing_duration`             VARCHAR(100)   DEFAULT NULL,
+    `issues_found`                 INT            NOT NULL DEFAULT 0,
+    `knowledge_requirement`        VARCHAR(40)    DEFAULT NULL,
+    `knowledge_analysis`           VARCHAR(40)    DEFAULT NULL,
+    `knowledge_designing`          VARCHAR(40)    DEFAULT NULL,
+    `knowledge_coding`             VARCHAR(40)    DEFAULT NULL,
+    `knowledge_testing`            VARCHAR(40)    DEFAULT NULL,
+    `knowledge_post_implementation` VARCHAR(40)   DEFAULT NULL,
+    `created_at`                   TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`report_id`),
+    INDEX `idx_platform_project_user` (`user_id`),
+    CONSTRAINT `fk_platform_project_user`
+      FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+      ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_unicode_ci
+    COMMENT='Detailed project reports submitted by students through the platform';
+
+    -- =============================================================
+  --  TABLE: projects
 --  Personal / academic / professional projects.
 -- =============================================================
 CREATE TABLE IF NOT EXISTS `projects` (

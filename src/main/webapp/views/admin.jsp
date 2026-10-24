@@ -584,6 +584,107 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+        .project-report-fact {
+            min-width: 0;
+            padding: 10px 12px;
+            border: 1px solid #e1e8f3;
+            border-radius: 8px;
+            color: #26364f;
+            background: #fff;
+            overflow-wrap: anywhere;
+        }
+        .project-report-fact strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #3f506b;
+            font-size: 12px;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+        .project-student-list {
+            display: grid;
+            gap: 10px;
+        }
+        .project-student-card {
+            overflow: hidden;
+            border: 1px solid #dbe5f1;
+            border-left: 4px solid #4f7fe8;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 3px 10px rgba(30, 41, 86, .05);
+        }
+        .project-student-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 18px;
+            cursor: pointer;
+            list-style: none;
+        }
+        .project-student-summary::-webkit-details-marker {
+            display: none;
+        }
+        .project-student-identity {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            column-gap: 12px;
+            row-gap: 4px;
+        }
+        .project-student-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .project-student-toggle {
+            color: #2563eb;
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .project-student-toggle::before {
+            content: '+';
+        }
+        .project-student-card[open] > .project-student-summary .project-student-toggle::before {
+            content: '−';
+        }
+        .project-student-name {
+            margin: 0 0 3px;
+            color: #172554;
+            font-size: 1rem;
+        }
+        .project-student-contact {
+            color: #64748b;
+            font-size: .9rem;
+        }
+        .project-count-badge {
+            flex-shrink: 0;
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: .82rem;
+            font-weight: 600;
+        }
+        .project-student-reports {
+            display: grid;
+            gap: 12px;
+            padding: 0 16px 16px;
+        }
+        .project-report-card {
+            padding: 16px;
+            border: 1px solid #e1e8f3;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+        .project-report-details-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
 
         /* Action Buttons */
         .btn-row-delete {
@@ -811,6 +912,9 @@
 
         /* Responsive styles */
         @media (max-width: 992px) {
+            .project-report-details-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
             .sidebar {
                 transform: translateX(-260px);
             }
@@ -829,6 +933,11 @@
             }
             .sidebar-backdrop.show {
                 display: block;
+            }
+        }
+        @media (max-width: 620px) {
+            .project-report-details-grid {
+                grid-template-columns: minmax(0, 1fr);
             }
         }
     </style>
@@ -867,15 +976,24 @@
                     </span>
                 </a>
             </li>
-            <!-- <li class="sidebar-menu-item">
+            <li class="sidebar-menu-item">
                 <a href="javascript:void(0)" class="sidebar-link" id="tabNavCerts" onclick="switchAdminTab('certificates')">
                     <span class="sidebar-link-content">
                         <span class="sidebar-link-icon">📜</span>
-                        <span>Student Certificates</span>
+                        <span>Global Certification</span>
                     </span>
-                    <span class="selected-counter-badge" style="display:inline-block; margin-left:auto; background:#1976d2;">${certCount}</span>
+                    <span class="selected-counter-badge" style="display:inline-block; margin-left:auto; background:#1976d2;"><c:out value="${platformCertificateCount}"/></span>
                 </a>
-            </li> -->
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="javascript:void(0)" class="sidebar-link" id="tabNavProjects" onclick="switchAdminTab('projects')">
+                    <span class="sidebar-link-content">
+                        <span class="sidebar-link-icon">📁</span>
+                        <span>Project</span>
+                    </span>
+                    <span class="selected-counter-badge" style="display:inline-block; margin-left:auto; background:#1976d2;"><c:out value="${platformProjectReportCount}"/></span>
+                </a>
+            </li>
             <li class="sidebar-menu-item" style="margin-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px;">
                 <a href="javascript:void(0)" class="sidebar-link" onclick="handleAdminLogout()">
                     <span class="sidebar-link-content">
@@ -1009,7 +1127,7 @@
                                                     pageContext.setAttribute("branchDisplay", branchDisplay);
                                                 %>
                                                 <tr data-user-id="${u.userId}"
-                                                    data-srno="${u.userId}"
+                                                    data-srno="${status.count}"
                                                     data-name="${u.firstName} ${u.lastName}"
                                                     data-email="${u.email}"
                                                     data-mobile="${u.mobile}"
@@ -1019,7 +1137,7 @@
                                                     <td class="col-checkbox">
                                                         <input type="checkbox" class="table-checkbox row-select-checkbox" value="${u.userId}" onchange="handleRowSelect(this)">
                                                     </td>
-                                                    <td class="col-srno">${u.userId}</td>
+                                                    <td class="col-srno">${status.count}</td>
                                                     <td class="student-name">${u.firstName} ${u.lastName}</td>
                                                     <td class="email-cell">${u.email}</td>
                                                     <td>${u.mobile != null && not empty u.mobile ? u.mobile : '-'}</td>
@@ -1064,18 +1182,69 @@
                 </div>
             </div>
 
-            <!-- ================= STUDENT CERTIFICATES TAB PANE ================= -->
+            <!-- ================= GLOBAL CERTIFICATION TAB PANE ================= -->
             <div id="sectionCertificates" class="admin-tab-pane" style="display:none;">
                 <!-- Page Title & Cert Count -->
                 <div class="content-header">
-                    <h1 class="page-title">Student Certificates</h1>
+                    <h1 class="page-title">Global Certification</h1>
                     <div class="student-counter" style="background:#e0f2fe; border-color:#bae6fd; color:#0369a1;">
-                        No Of Certificates: <span id="certCountDisplay">${certCount != null ? certCount : 0}</span>
+                        No Of Global Certifications: <c:out value="${platformCertificateCount}"/>
                     </div>
                 </div>
 
+                <div class="table-controls-bar" id="globalCertificationControls">
+                    <div class="controls-left">
+                        <button type="button" class="btn-export-excel" onclick="exportGlobalCertsToExcel()">
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/></svg>
+                            Export to EXCEL
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-card" id="globalCertificationTable">
+                    <div class="table-responsive">
+                        <table class="student-table" id="globalCertTable">
+                            <thead>
+                                <tr>
+                                    <th class="col-srno">Sr.No</th>
+                                    <th>Student Name</th>
+                                    <th>Student Email</th>
+                                    <th>Exam</th>
+                                    <th>Score</th>
+                                    <th>Date Achieved</th>
+                                </tr>
+                            </thead>
+                            <tbody id="globalCertTableBody">
+                                <c:choose>
+                                    <c:when test="${not empty platformCertificateList}">
+                                        <c:forEach items="${platformCertificateList}" var="platformCertificate" varStatus="certificateStatus">
+                                            <tr>
+                                                <td class="col-srno"><c:out value="${certificateStatus.count}"/></td>
+                                                <td class="student-name"><c:out value="${platformCertificate.studentName}"/></td>
+                                                <td class="email-cell"><c:out value="${platformCertificate.studentEmail}"/></td>
+                                                <td><c:out value="${platformCertificate.examName}"/></td>
+                                                <td><fmt:formatNumber value="${platformCertificate.scoreObtained}" minFractionDigits="0" maxFractionDigits="2" groupingUsed="false"/>/1000</td>
+                                                <td><c:out value="${platformCertificate.achievementDate}"/></td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr><td colspan="6" class="empty-row-td">No global certification results have been recorded.</td></tr>
+                                    </c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="content-header" id="additionalCertificateHeader">
+                    <h2 class="page-title">Additional Certificate</h2>
+                    <div class="student-counter" style="background:#e0f2fe; border-color:#bae6fd; color:#0369a1;">
+                        No Of Additional Certificates: <span id="certCountDisplay">${certCount != null ? certCount : 0}</span>
+                    </div>
+                </div>
                 <!-- Table Controls Bar -->
-                <div class="table-controls-bar">
+                <div class="table-controls-bar" id="additionalCertificateControls">
                     <div class="controls-left">
                         <button type="button" class="btn-export-excel" onclick="exportCertsToExcel()">
                             <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/></svg>
@@ -1101,7 +1270,7 @@
                 </div>
 
                 <!-- Certificates Data Table -->
-                <div class="table-card">
+                <div class="table-card" id="additionalCertificateTable">
                     <div class="table-responsive">
                         <table class="student-table" id="certsTable">
                             <thead>
@@ -1175,12 +1344,83 @@
                 </div>
 
                 <!-- Table Footer: Showing X to Y of Z entries & Pagination -->
-                <div class="table-footer">
+                <div class="table-footer" id="additionalCertificateFooter">
                     <div class="entries-info" id="certEntriesInfo">
                         Showing 0 to 0 of 0 entries
                     </div>
                     <div class="pagination-container" id="certPaginationControls"></div>
                 </div>
+
+            </div>
+
+            <div id="sectionProjectReports" class="admin-tab-pane" style="display:none;">
+                <div class="content-header">
+                    <h1 class="page-title">Student Project Reports</h1>
+                    <div class="student-counter" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;">
+                        No Of Reports: <c:out value="${platformProjectReportCount}"/>
+                    </div>
+                </div>
+                <c:choose>
+                    <c:when test="${not empty platformProjectReportsByStudent}">
+                        <div class="project-student-list">
+                            <c:forEach items="${platformProjectReportsByStudent}" var="studentReports">
+                                <details class="project-student-card">
+                                    <summary class="project-student-summary">
+                                        <span class="project-student-identity">
+                                            <strong class="project-student-name"><c:out value="${studentReports.value[0].studentName}"/></strong>
+                                            <span class="project-student-contact"><c:out value="${studentReports.value[0].studentEmail}"/></span>
+                                            <c:if test="${not empty studentReports.value[0].studentMobile}">
+                                                <span class="project-student-contact"><c:out value="${studentReports.value[0].studentMobile}"/></span>
+                                            </c:if>
+                                        </span>
+                                        <span class="project-student-actions">
+                                            <span class="project-count-badge">
+                                                <c:out value="${fn:length(studentReports.value)}"/> project<c:if test="${fn:length(studentReports.value) != 1}">s</c:if>
+                                            </span>
+                                            <span class="project-student-toggle" aria-hidden="true"></span>
+                                        </span>
+                                    </summary>
+                                    <div class="project-student-reports">
+                                        <c:forEach items="${studentReports.value}" var="projectReport">
+                                            <article class="project-report-card">
+                                                <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:start;">
+                                                    <h2 style="margin:0;color:#172554;font-size:1.1rem;"><c:out value="${projectReport.projectName}"/></h2>
+                                                </div>
+                                                <p style="margin:12px 0;color:#334155;line-height:1.6;white-space:pre-wrap;"><c:out value="${projectReport.scopeDetails}"/></p>
+                                                <details style="margin-top:14px;padding:12px;border:1px solid #e1e8f3;border-radius:8px;background:#fff;">
+                                                    <summary style="color:#1d4ed8;cursor:pointer;font-weight:700;">View all project details</summary>
+                                                    <div class="project-report-details-grid">
+                                                        <c:if test="${not empty projectReport.projectDomain}"><div class="project-report-fact"><strong>Domain</strong><c:out value="${projectReport.projectDomain}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.projectTechnology}"><div class="project-report-fact"><strong>Technology</strong><c:out value="${projectReport.projectTechnology}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.projectApplication}"><div class="project-report-fact"><strong>Application</strong><c:out value="${projectReport.projectApplication}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.projectDuration}"><div class="project-report-fact"><strong>Duration</strong><c:out value="${projectReport.projectDuration}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.projectModel}"><div class="project-report-fact"><strong>Model</strong><c:out value="${projectReport.projectModel}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.projectCost}"><div class="project-report-fact"><strong>Estimated project cost</strong><c:out value="${projectReport.projectCost}"/></div></c:if>
+                                                        <div class="project-report-fact"><strong>Issues found</strong><c:out value="${projectReport.issuesFound}"/></div>
+                                                        <c:if test="${not empty projectReport.testingType}"><div class="project-report-fact"><strong>Testing type</strong><c:out value="${projectReport.testingType}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.testingDuration}"><div class="project-report-fact"><strong>Testing duration</strong><c:out value="${projectReport.testingDuration}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.requirementGatheringTime}"><div class="project-report-fact"><strong>Requirement gathering</strong><c:out value="${projectReport.requirementGatheringTime}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.projectAnalysisTime}"><div class="project-report-fact"><strong>Data analysis</strong><c:out value="${projectReport.projectAnalysisTime}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.projectDesigningTime}"><div class="project-report-fact"><strong>Data cleaning</strong><c:out value="${projectReport.projectDesigningTime}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.projectCodingTime}"><div class="project-report-fact"><strong>Data modeling</strong><c:out value="${projectReport.projectCodingTime}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.projectTestingTime}"><div class="project-report-fact"><strong>Data visualization</strong><c:out value="${projectReport.projectTestingTime}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.knowledgeRequirement}"><div class="project-report-fact"><strong>Requirement learning</strong><c:out value="${projectReport.knowledgeRequirement}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.knowledgeAnalysis}"><div class="project-report-fact"><strong>Analysis learning</strong><c:out value="${projectReport.knowledgeAnalysis}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.knowledgeDesigning}"><div class="project-report-fact"><strong>Design learning</strong><c:out value="${projectReport.knowledgeDesigning}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.knowledgeCoding}"><div class="project-report-fact"><strong>Coding learning</strong><c:out value="${projectReport.knowledgeCoding}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.knowledgeTesting}"><div class="project-report-fact"><strong>Testing learning</strong><c:out value="${projectReport.knowledgeTesting}"/></div></c:if>
+                                                        <c:if test="${not empty projectReport.knowledgePostImplementation}"><div class="project-report-fact"><strong>Post-implementation learning</strong><c:out value="${projectReport.knowledgePostImplementation}"/></div></c:if>
+                                                    </div>
+                                                </details>
+                                            </article>
+                                        </c:forEach>
+                                    </div>
+                                </details>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise><p class="empty-row-td">No student project reports have been submitted yet.</p></c:otherwise>
+                </c:choose>
             </div>
 
         </main>
@@ -1220,10 +1460,11 @@
             initTableData();
             initCertTableData();
 
-            // Check URL tab parameter (?tab=certificates)
+            // Restore the selected admin section from the URL.
             var urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('tab') === 'certificates') {
-                switchAdminTab('certificates');
+            var activeTab = urlParams.get('tab');
+            if (activeTab === 'certificates' || activeTab === 'projects') {
+                switchAdminTab(activeTab);
             }
 
             <% if (flashMsg != null && !flashMsg.trim().isEmpty()) { %>
@@ -1241,33 +1482,31 @@
 
         // ================= TAB SWITCHING =================
         function switchAdminTab(tabName) {
-            var isCerts = (tabName === 'certificates');
-            var secStudents = document.getElementById('sectionStudents');
-            var secCerts = document.getElementById('sectionCertificates');
-            var navStudents = document.getElementById('tabNavStudents');
-            var navCerts = document.getElementById('tabNavCerts');
+            var sections = {
+                students: document.getElementById('sectionStudents'),
+                certificates: document.getElementById('sectionCertificates'),
+                projects: document.getElementById('sectionProjectReports')
+            };
+            var navigation = {
+                students: document.getElementById('tabNavStudents'),
+                certificates: document.getElementById('tabNavCerts'),
+                projects: document.getElementById('tabNavProjects')
+            };
+            if (!sections[tabName]) tabName = 'students';
+            Object.keys(sections).forEach(function (name) {
+                if (sections[name]) sections[name].style.display = name === tabName ? 'block' : 'none';
+                if (navigation[name]) navigation[name].classList.toggle('active', name === tabName);
+            });
             var breadcrumb = document.getElementById('topbarBreadcrumb');
-
-            if (isCerts) {
-                if (secStudents) secStudents.style.display = 'none';
-                if (secCerts) secCerts.style.display = 'block';
-                if (navStudents) navStudents.classList.remove('active');
-                if (navCerts) navCerts.classList.add('active');
-                if (breadcrumb) breadcrumb.textContent = 'Online Internship Administration / Student Certificates';
-                if (window.history && window.history.replaceState) {
-                    var newUrl = window.location.pathname + '?tab=certificates';
-                    window.history.replaceState({ tab: 'certificates' }, '', newUrl);
-                }
-            } else {
-                if (secCerts) secCerts.style.display = 'none';
-                if (secStudents) secStudents.style.display = 'block';
-                if (navCerts) navCerts.classList.remove('active');
-                if (navStudents) navStudents.classList.add('active');
-                if (breadcrumb) breadcrumb.textContent = 'Online Internship Administration / Student Details';
-                if (window.history && window.history.replaceState) {
-                    var newUrl = window.location.pathname + '?tab=students';
-                    window.history.replaceState({ tab: 'students' }, '', newUrl);
-                }
+            var labels = {
+                students: 'Student Details',
+                certificates: 'Global Certification',
+                projects: 'Student Project Reports'
+            };
+            if (breadcrumb) breadcrumb.textContent = 'Online Internship Administration / ' + labels[tabName];
+            if (window.history && window.history.replaceState) {
+                var newUrl = window.location.pathname + '?tab=' + encodeURIComponent(tabName);
+                window.history.replaceState({ tab: tabName }, '', newUrl);
             }
         }
 
@@ -1297,9 +1536,19 @@
             var tbody = document.getElementById('studentsTableBody');
             if (!tbody) return;
             allRows = Array.from(tbody.querySelectorAll('tr:not(#noDataRow)'));
+            updateStudentSerialNumbers();
             filteredRows = allRows.slice();
             currentPage = 1;
             renderTablePage();
+        }
+
+        function updateStudentSerialNumbers() {
+            allRows.forEach(function(row, index) {
+                var serialNumber = index + 1;
+                row.dataset.srno = serialNumber;
+                var serialCell = row.querySelector('.col-srno');
+                if (serialCell) serialCell.textContent = serialNumber;
+            });
         }
 
         // Search filtering across all fields
@@ -1574,6 +1823,7 @@
                         }
                         return true;
                     });
+                    updateStudentSerialNumbers();
 
                     toDeleteIds.forEach(function(id) {
                         selectedUserIds.delete(id);
@@ -1637,6 +1887,43 @@
             var timestamp = new Date().toISOString().slice(0, 10);
             link.setAttribute("href", url);
             link.setAttribute("download", "Industrial_Training_Students_" + timestamp + ".csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportGlobalCertsToExcel() {
+            var tbody = document.getElementById('globalCertTableBody');
+            var rowsToExport = tbody ? Array.from(tbody.querySelectorAll('tr')).filter(function(row) {
+                return !row.querySelector('.empty-row-td');
+            }) : [];
+
+            if (rowsToExport.length === 0) {
+                window.alert('No global certification records available to export.');
+                return;
+            }
+
+            window.alert('Exporting ' + rowsToExport.length + ' certificate records to Excel spreadsheet...');
+
+            var headers = ["Sr.No", "Student Name", "Student Email", "Exam", "Score", "Date Achieved"];
+            var csvContent = "\uFEFF";
+            csvContent += headers.map(escapeCsv).join(",") + "\r\n";
+
+            rowsToExport.forEach(function(row, index) {
+                var values = Array.from(row.cells).map(function(cell) {
+                    return cell.textContent.trim();
+                });
+                values[0] = index + 1;
+                csvContent += values.map(escapeCsv).join(",") + "\r\n";
+            });
+
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement("a");
+            var timestamp = new Date().toISOString().slice(0, 10);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "Global_Certifications_" + timestamp + ".csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

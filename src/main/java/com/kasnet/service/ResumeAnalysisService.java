@@ -93,8 +93,8 @@ public class ResumeAnalysisService {
         return skillDAO.getSkillById(skillId, userId);
     }
 
-    public boolean saveSkill(int userId, int skillId, String skillName, String skillType,
-                             String proficiency) throws IllegalArgumentException {
+    public boolean saveSkill(int userId, int skillId, String skillName, String skillType)
+            throws IllegalArgumentException {
         if (userId <= 0) {
             throw new IllegalArgumentException("Invalid user session.");
         }
@@ -104,13 +104,8 @@ public class ResumeAnalysisService {
         if (skillType == null || skillType.trim().isEmpty()) {
             skillType = "Programming Languages";
         }
-        if (proficiency == null || proficiency.trim().isEmpty()) {
-            proficiency = "Intermediate";
-        }
-
         String trimmedName = skillName.trim();
         String trimmedType = skillType.trim();
-        String trimmedProf = proficiency.trim();
 
         // Check for duplicate skill for the same user
         if (skillDAO.skillExists(userId, trimmedName, trimmedType, skillId)) {
@@ -125,14 +120,12 @@ public class ResumeAnalysisService {
             }
             s.setSkillName(trimmedName);
             s.setSkillType(trimmedType);
-            s.setProficiency(trimmedProf);
             success = skillDAO.updateSkill(s);
         } else {
             Skill s = new Skill();
             s.setUserId(userId);
             s.setSkillName(trimmedName);
             s.setSkillType(trimmedType);
-            s.setProficiency(trimmedProf);
             success = skillDAO.addSkill(s);
         }
 

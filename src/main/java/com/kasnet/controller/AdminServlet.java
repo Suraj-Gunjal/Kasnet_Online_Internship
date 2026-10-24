@@ -1,6 +1,10 @@
 package com.kasnet.controller;
 
 import com.kasnet.dao.UserDAO;
+import com.kasnet.dao.PlatformCertificateDAO;
+import com.kasnet.dao.PlatformProjectReportDAO;
+import com.kasnet.model.PlatformCertificate;
+import com.kasnet.model.PlatformProjectReport;
 import com.kasnet.model.User;
 import com.kasnet.util.SessionUtil;
 
@@ -10,7 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * AdminServlet - Simple monitoring interface for registered users and accounts.
@@ -21,6 +28,8 @@ public class AdminServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final UserDAO userDAO = new UserDAO();
     private final com.kasnet.dao.CertificationDAO certDAO = new com.kasnet.dao.CertificationDAO();
+    private final PlatformCertificateDAO platformCertificateDAO = new PlatformCertificateDAO();
+    private final PlatformProjectReportDAO platformProjectReportDAO = new PlatformProjectReportDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,10 +57,31 @@ public class AdminServlet extends HttpServlet {
         }
         int studentCount = (studentList != null) ? studentList.size() : 0;
         List<com.kasnet.model.Certification> certList = certDAO.getAllCertificationsWithStudent();
+        List<PlatformCertificate> platformCertificateList;
+        try {
+            platformCertificateList = platformCertificateDAO.getAllWithStudent();
+        } catch (java.sql.SQLException e) {
+            throw new ServletException("Unable to load platform certificates for administration.", e);
+        }
+        List<PlatformProjectReport> platformProjectReportList;
+        try {
+            platformProjectReportList = platformProjectReportDAO.getAllWithStudent();
+        } catch (java.sql.SQLException e) {
+            throw new ServletException("Unable to load platform project reports for administration.", e);
+        }
+        Map<Integer, List<PlatformProjectReport>> projectReportsByStudent = new LinkedHashMap<>();
+        for (PlatformProjectReport report : platformProjectReportList) {
+            projectReportsByStudent.computeIfAbsent(report.getUserId(), key -> new ArrayList<>()).add(report);
+        }
 
         req.setAttribute("userList", studentList != null ? studentList : java.util.Collections.emptyList());
         req.setAttribute("certList", certList != null ? certList : java.util.Collections.emptyList());
         req.setAttribute("certCount", certList != null ? certList.size() : 0);
+        req.setAttribute("platformCertificateList", platformCertificateList);
+        req.setAttribute("platformCertificateCount", platformCertificateList.size());
+        req.setAttribute("platformProjectReportList", platformProjectReportList);
+        req.setAttribute("platformProjectReportsByStudent", projectReportsByStudent.entrySet());
+        req.setAttribute("platformProjectReportCount", platformProjectReportList.size());
         req.setAttribute("totalUsers", allUsers != null ? allUsers.size() : 0);
         req.setAttribute("studentCount", studentCount);
         req.setAttribute("adminCount", adminCount);

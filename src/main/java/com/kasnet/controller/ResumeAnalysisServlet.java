@@ -155,9 +155,8 @@ public class ResumeAnalysisServlet extends HttpServlet {
                     int skillId = parseInt(req.getParameter("skillId"), 0);
                     String skillName   = req.getParameter("skillName");
                     String skillType   = req.getParameter("skillType");
-                    String proficiency = req.getParameter("proficiency");
 
-                    analysisService.saveSkill(userId, skillId, skillName, skillType, proficiency);
+                    analysisService.saveSkill(userId, skillId, skillName, skillType);
                     resp.sendRedirect(req.getContextPath() + "/resume-analysis?tab=skills&success=1");
                     return;
                 }

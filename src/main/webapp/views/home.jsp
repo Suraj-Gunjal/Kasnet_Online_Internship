@@ -412,7 +412,7 @@
         </a>
         <div class="navbar-menu">
             <a href="${pageContext.request.contextPath}/home" class="nav-link active">Home</a>
-            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">Dashboard</a>
+            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">My Dashboard</a>
             <a href="${pageContext.request.contextPath}/profile" class="nav-link">Profile</a>
             <a href="${pageContext.request.contextPath}/assignments" class="nav-link">Assignments</a>
             <a href="${pageContext.request.contextPath}/lectures" class="nav-link">Lectures</a>

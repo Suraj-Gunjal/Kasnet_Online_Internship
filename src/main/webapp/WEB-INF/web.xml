@@ -152,6 +152,26 @@
         <url-pattern>/certifications</url-pattern>
     </servlet-mapping>
 
+    <!-- Platform Exam Certificates -->
+    <servlet>
+        <servlet-name>PlatformCertificateServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.PlatformCertificateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PlatformCertificateServlet</servlet-name>
+        <url-pattern>/platform-certificates</url-pattern>
+    </servlet-mapping>
+
+    <!-- Student Project Reports -->
+    <servlet>
+        <servlet-name>PlatformProjectReportServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.PlatformProjectReportServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PlatformProjectReportServlet</servlet-name>
+        <url-pattern>/platform-project-reports</url-pattern>
+    </servlet-mapping>
+
     <!-- Projects -->
     <servlet>
         <servlet-name>ProjectServlet</servlet-name>
