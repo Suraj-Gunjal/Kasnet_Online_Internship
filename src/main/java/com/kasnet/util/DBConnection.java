@@ -37,7 +37,7 @@ public class DBConnection {
      * Database password.
      * Change the placeholder to your local MySQL password before running the application.
      */
-    private static final String DB_PASSWORD = "Sur4j@23sg8"; // active root password
+    private static final String DB_PASSWORD = "Your_Password"; // active root password
 
     /** Fully-qualified MySQL JDBC driver class name. */
     private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";

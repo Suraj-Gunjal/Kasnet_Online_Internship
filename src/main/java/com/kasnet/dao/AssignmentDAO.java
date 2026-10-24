@@ -42,7 +42,8 @@ public class AssignmentDAO {
 
     public List<Assignment> getActiveAssignments() throws SQLException {
         List<Assignment> list = new ArrayList<>();
-        String sql = "SELECT * FROM assignments WHERE is_active = 1 ORDER BY due_date ASC";
+        String sql = "SELECT * FROM assignments WHERE is_active = 1 "
+                + "ORDER BY assignment_number ASC, assignment_id ASC";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
