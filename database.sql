@@ -368,12 +368,15 @@ CREATE TABLE IF NOT EXISTS `assignments` (
   `title`             VARCHAR(200) NOT NULL,
   `subject`           VARCHAR(200) DEFAULT NULL,
   `description`       TEXT         DEFAULT NULL,
+  `instructions_text` TEXT         DEFAULT NULL,
+  `instruction_pdf_path` VARCHAR(255) DEFAULT NULL,
   `assignment_number` VARCHAR(50)  DEFAULT NULL,
   `due_date`          DATE         DEFAULT NULL,
   `total_marks`       INT          NOT NULL DEFAULT 100,
   `is_active`         TINYINT(1)   NOT NULL DEFAULT 1,
   `created_at`        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`assignment_id`)
+  PRIMARY KEY (`assignment_id`),
+  UNIQUE KEY `uq_assignment_number` (`assignment_number`)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci

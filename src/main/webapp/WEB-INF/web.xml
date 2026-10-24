@@ -18,6 +18,10 @@
         <param-value>5</param-value>
     </context-param>
     <context-param>
+        <param-name>assignmentInstructionsUploadDir</param-name>
+        <param-value>uploads</param-value>
+    </context-param>
+    <context-param>
         <param-name>javax.servlet.jsp.jstl.fmt.timeZone</param-name>
         <param-value>Asia/Kolkata</param-value>
     </context-param>
@@ -197,10 +201,39 @@
     <servlet>
         <servlet-name>AssignmentServlet</servlet-name>
         <servlet-class>com.kasnet.controller.AssignmentServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>11534336</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
     </servlet>
     <servlet-mapping>
         <servlet-name>AssignmentServlet</servlet-name>
         <url-pattern>/assignments</url-pattern>
+        <url-pattern>/assignment-details</url-pattern>
+    </servlet-mapping>
+
+    <!-- Admin assignment management and protected instruction PDFs -->
+    <servlet>
+        <servlet-name>AdminAssignmentServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.AdminAssignmentServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>6291456</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminAssignmentServlet</servlet-name>
+        <url-pattern>/admin/assignments</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AssignmentInstructionPdfServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.AssignmentInstructionPdfServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AssignmentInstructionPdfServlet</servlet-name>
+        <url-pattern>/assignment-instructions</url-pattern>
     </servlet-mapping>
 
     <!-- Lecture Videos -->

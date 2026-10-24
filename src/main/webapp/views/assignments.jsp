@@ -2,8 +2,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
-    if (session.getAttribute("userId") == null) {
-        response.sendRedirect(request.getContextPath() + "/login");
+    if (!com.kasnet.util.SessionUtil.requireLogin(request, response)) {
+        return;
+    }
+    if (!com.kasnet.util.SessionUtil.isStudent(request)) {
+        if (com.kasnet.util.SessionUtil.isAdmin(request)) {
+            response.sendRedirect(request.getContextPath() + "/admin/assignments");
+            return;
+        }
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
         return;
     }
 %>
@@ -166,19 +173,6 @@
             letter-spacing: 0.5px;
         }
 
-        .status-badge {
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-        }
-
-        .status-pending { background: #fef3c7; color: #92400e; }
-        .status-submitted { background: #dcfce7; color: #166534; }
-        .status-late { background: #fee2e2; color: #991b1b; }
-        .status-evaluated { background: #e0f2fe; color: #075985; }
-
         .card-title {
             font-size: 1.2rem;
             font-weight: 700;
@@ -193,70 +187,28 @@
             margin-bottom: 12px;
         }
 
-        .card-desc {
-            font-size: 0.88rem;
-            color: #4b5563;
-            line-height: 1.5;
-            margin-bottom: 16px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.82rem;
-            color: #6b7280;
-            border-top: 1px solid #f3f4f6;
-            padding-top: 12px;
-            margin-bottom: 18px;
-        }
-
-        .meta-due {
-            font-weight: 600;
-            color: #dc2626;
-        }
-
-        .form-upload {
-            background: #f9fafb;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px dashed #d1d5db;
-        }
-
-        .form-upload input[type="file"] {
-            font-size: 0.82rem;
-            width: 100%;
-            margin-bottom: 8px;
-        }
-
-        .btn-submit-task {
+        .view-assignment {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 16px;
+            border-radius: 7px;
             background: #1a237e;
-            color: #ffffff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.2s;
+            color: #fff;
+            font-weight: 650;
+            text-align: center;
+            text-decoration: none;
         }
 
-        .btn-submit-task:hover {
-            background: #283593;
+        .view-assignment:hover { background: #283593; }
+        .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; }
+        .empty-state { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 32px; text-align: center; color: #6b7280; }
+        @media (max-width: 560px) {
+            .navbar { align-items: flex-start; flex-direction: column; }
+            .navbar-menu { flex-wrap: wrap; gap: 8px; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .card { padding: 18px; }
         }
 
-        .submitted-info {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 0.85rem;
-            color: #15803d;
-        }
     </style>
 </head>
 <body>
@@ -284,14 +236,12 @@
         <div class="page-header">
             <div>
                 <h1 class="page-title">Internship Assignments</h1>
-                <p class="page-subtitle">Complete and upload assigned coursework tasks for review and evaluation.</p>
+                <p class="page-subtitle">View your assignment descriptions and instructions provided by your admin.</p>
             </div>
         </div>
 
-        <c:if test="${param.success == '1'}">
-            <div class="alert-success">
-                ✓ Assignment solution submitted successfully!
-            </div>
+        <c:if test="${not empty assignmentLoadError}">
+            <div class="alert-error"><c:out value="${assignmentLoadError}"/></div>
         </c:if>
 
         <div class="cards-grid">
@@ -299,42 +249,17 @@
                 <div class="card">
                     <div>
                         <div class="card-top">
-                            <span class="assign-num">${asn.assignmentNumber}</span>
-                            <span class="status-badge status-${asn.status.toLowerCase()}">${asn.status}</span>
+                            <span class="assign-num"><c:out value="${asn.assignmentNumber}"/></span>
                         </div>
-                        <h2 class="card-title">${asn.title}</h2>
-                        <div class="card-subject">${asn.subject}</div>
-                        <p class="card-desc">${asn.description}</p>
-                    </div>
-
-                    <div>
-                        <div class="card-meta">
-                            <span>Max Marks: <strong>${asn.totalMarks}</strong></span>
-                            <span class="meta-due">Due: <strong><fmt:formatDate value="${asn.dueDate}" pattern="dd MMM yyyy" /></strong></span>
-                        </div>
-
-                        <c:choose>
-                            <c:when test="${asn.status == 'Submitted' || asn.status == 'Evaluated'}">
-                                <div class="submitted-info">
-                                    ✓ Submitted on: <fmt:formatDate value="${asn.submissionDate}" pattern="dd-MM-yyyy HH:mm" /><br>
-                                    <c:if test="${asn.status == 'Evaluated'}">
-                                        <strong>Marks: ${asn.marksObtained} / ${asn.totalMarks}</strong><br>
-                                        <c:if test="${not empty asn.remarks}">Remarks: ${asn.remarks}</c:if>
-                                    </c:if>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <form action="${pageContext.request.contextPath}/assignments" method="post" enctype="multipart/form-data" class="form-upload">
-                                    <input type="hidden" name="action" value="submit">
-                                    <input type="hidden" name="assignmentId" value="${asn.assignmentId}">
-                                    <input type="file" name="submissionFile" accept=".pdf,.doc,.docx,.zip" required>
-                                    <button type="submit" class="btn-submit-task">Submit Assignment</button>
-                                </form>
-                            </c:otherwise>
-                        </c:choose>
+                        <h2 class="card-title"><c:out value="${asn.title}"/></h2>
+                        <div class="card-subject"><c:out value="${asn.subject}"/></div>
+                        <a class="view-assignment" href="${pageContext.request.contextPath}/assignment-details?assignmentId=${asn.assignmentId}">View Assignment</a>
                     </div>
                 </div>
             </c:forEach>
+            <c:if test="${empty assignmentList and empty assignmentLoadError}">
+                <div class="empty-state">No assignments are currently available. Please check back later.</div>
+            </c:if>
         </div>
     </div>
 

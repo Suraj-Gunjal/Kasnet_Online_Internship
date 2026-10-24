@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -45,6 +48,7 @@ import com.kasnet.util.SessionUtil;
 
 public class DashboardServlet extends HttpServlet {
 
+    private static final Logger LOGGER = Logger.getLogger(DashboardServlet.class.getName());
     private final UserDAO userDAO = new UserDAO();
     private final AssignmentDAO assignmentDAO = new AssignmentDAO();
     private final ProfileDAO profileDAO = new ProfileDAO();
@@ -63,6 +67,10 @@ public class DashboardServlet extends HttpServlet {
 
         // Check login
         if (!SessionUtil.requireLogin(req, resp)) {
+            return;
+        }
+        if (!SessionUtil.isStudent(req)) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 
@@ -88,7 +96,14 @@ public class DashboardServlet extends HttpServlet {
         List<Achievement> achievementList = achievementDAO.getAchievementsByUserId(userId);
         List<Hackathon> hackathonList = hackathonDAO.getHackathonsByUserId(userId);
         List<Competition> competitionList = competitionDAO.getCompetitionsByUserId(userId);
-        List<Assignment> assignmentList = assignmentDAO.getAssignmentsWithSubmissionStatus(userId);
+        List<Assignment> assignmentList;
+        try {
+            assignmentList = assignmentDAO.getActiveAssignments();
+        } catch (SQLException exception) {
+            LOGGER.log(Level.SEVERE, "Unable to load dashboard assignments for userId=" + userId, exception);
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        }
         int profileCompletion = profileDAO.calculateProfileCompletion(userId);
         profileDAO.updateProfileCompletion(userId, profileCompletion);
         if (profile != null) {
@@ -172,10 +187,9 @@ public class DashboardServlet extends HttpServlet {
 
         for (Assignment assignment : assignmentList) {
             rows.add(new String[]{"Assignment", assignment.getTitle(), joinValues(
-                    assignment.getSubject(), assignment.getStatus(),
+                    assignment.getSubject(), assignment.getDescription(),
                     assignment.getDueDate() == null ? "" : assignment.getDueDate().toString(),
-                    assignment.getTotalMarks() == 0 ? "" : "Total marks: " + assignment.getTotalMarks(),
-                    assignment.getRemarks())});
+                    assignment.getTotalMarks() == 0 ? "" : "Total marks: " + assignment.getTotalMarks())});
         }
         for (Education educationRecord : educationList) {
             rows.add(new String[]{"Education", educationRecord.getLevel(), joinValues(

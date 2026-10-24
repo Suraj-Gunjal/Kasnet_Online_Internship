@@ -462,8 +462,8 @@
                         <span class="module-badge">Section 2</span>
                     </div>
                     <h3 class="module-title">Assignments</h3>
-                    <p class="module-desc">Access practical internship assignments, view due dates, and upload your project submissions.</p>
-                    <div class="module-stats">Submitted: <strong>${stats.submittedAssignments}</strong> &bull; Pending: <strong>${stats.pendingAssignments}</strong></div>
+                    <p class="module-desc">View practical internship assignments, due dates, and instructions provided by your admin.</p>
+                    <div class="module-stats">Available assignments: <strong>${stats.totalAssignments}</strong></div>
                 </div>
                 <a href="${pageContext.request.contextPath}/assignments" class="btn-module">View Assignments &rarr;</a>
             </div>

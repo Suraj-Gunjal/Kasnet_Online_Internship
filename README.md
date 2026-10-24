@@ -57,7 +57,8 @@ cd "d:\My Workspace\Kasnet_Online_Internship"
 ```
 
 ### Step 2: Initialize MySQL Database
-Open your MySQL client (Command Line or MySQL Workbench) and run `database.sql`:
+For a brand-new installation only, open your MySQL client (Command Line or MySQL Workbench) and run `database.sql`.
+For an existing installation, do not run that full script; apply only the assignment-instruction migration below.
 
 ```powershell
 # Using MySQL Command Line:
@@ -71,13 +72,17 @@ This script automatically creates:
 - Seeded curriculum modules, sample assignments, and sample lectures.
 
 ### Step 3: Configure Database Password
-Open `src/main/java/com/kasnet/util/DBConnection.java` in any text editor or IDE:
+Do not store database credentials in source files. In PowerShell, set the database settings in the same
+terminal session used to launch the portal:
 
-```java
-// Line 34-41 in DBConnection.java:
-private static final String DB_USER = "root";
-private static final String DB_PASSWORD = "YOUR_MYSQL_PASSWORD"; // <-- Enter your local MySQL root password
+```powershell
+$env:KASNET_DB_USER = "root"
+$env:KASNET_DB_PASSWORD = "<your-local-MySQL-password>"
 ```
+
+You can also configure `KASNET_DB_URL`, or use the JVM properties `kasnet.db.url`,
+`kasnet.db.user`, and `kasnet.db.password`. For standalone Tomcat, configure these for the
+Tomcat service account before restarting the service.
 
 ### Step 4: Run Locally (One Single Command)
 We have included a configured embedded Tomcat runner in Maven. You do **not** need to install standalone Tomcat:
@@ -102,6 +107,20 @@ Open your browser and navigate to:
 👉 **`http://localhost:8080/internship/`**
 
 *(To stop the server at any time, press `Ctrl + C` in the terminal).*
+
+### Assignment instruction migration
+
+For an existing installation, apply `database/migrations/20261021_assignment_instructions.sql` to the selected `online_internship` database. Do **not** run `database.sql` against an existing database; it contains destructive reset statements. For example, from PowerShell:
+
+```powershell
+Get-Content -Raw .\database\migrations\20261021_assignment_instructions.sql | mysql -u root -p online_internship
+```
+
+Instruction PDFs are stored outside the deployed web application at `<catalina.base>/uploads/assignment-instructions`. Change the `assignmentInstructionsUploadDir` context parameter in `src/main/webapp/WEB-INF/web.xml` to another absolute or Tomcat-base-relative upload directory when needed; the application places its `assignment-instructions` subdirectory under that path.
+
+The assignment-instruction servlet allows a 5 MiB file in a 6 MiB multipart request. Student submission uploads
+allow 10 MiB files in an 11 MiB request. Multipart text fields are read from servlet parts directly so upload
+handling does not depend on Tomcat's URL-parameter parsing limit.
 
 ---
 
@@ -174,7 +193,9 @@ If you are deploying to a standalone **Apache Tomcat 8.5 / 9.0** installation:
 | `/login` | `LoginServlet` | Public | Split-panel login with CAPTCHA and BCrypt authentication. |
 | `/dashboard` | `DashboardServlet` | Student | Central student dashboard with 5 core feature cards and overview metrics. |
 | `/profile` | `ProfileServlet` | Student | 5-section profile management with dynamic completeness score in **IST**. |
-| `/assignments` | `AssignmentServlet` | Student | Assignment list, deadlines, submission uploads, and graded scores. |
+| `/assignments` | `AssignmentServlet` | Authenticated student | Assignment instructions, deadlines, submission uploads, and graded scores. |
+| `/admin/assignments` | `AdminAssignmentServlet` | Admin only | Create, edit, publish, deactivate, and republish assignments. |
+| `/assignment-instructions` | `AssignmentInstructionPdfServlet` | Authenticated student/admin | Serves an assignment's private instruction PDF. |
 | `/lectures` | `LectureServlet` | Student | Video curriculum, duration tracker, and module completion markers. |
 | `/question-bank` | `QuestionBankServlet` | Student | Subject Question Bank with dropdown (`Java`, `Python`, `Web`, `DBMS`, `Cloud`). |
 | `/resume-analysis` | `ResumeAnalysisServlet`| Student | Resume document upload dropzone and ATS analysis placeholder. |

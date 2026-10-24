@@ -230,16 +230,16 @@
             <c:if test="${selectedSection eq 'assignment'}">
             <section class="panel">
                 <h2>Assignment Details</h2>
-                <p class="intro">Summary of your active internship assignments and submission status.</p>
+                <p class="intro">Review your active internship assignments, descriptions, instructions, and due dates.</p>
                 <c:choose>
                     <c:when test="${not empty assignmentList}">
                         <div class="record-list">
                             <c:forEach var="assignment" items="${assignmentList}">
                                 <article class="record">
                                     <strong><c:out value="${assignment.title}"/></strong>
-                                    <p><c:if test="${not empty assignment.subject}"><c:out value="${assignment.subject}"/> · </c:if>Status: <c:out value="${assignment.status}" default="Pending"/></p>
+                                    <p><c:if test="${not empty assignment.subject}"><c:out value="${assignment.subject}"/> · </c:if><c:out value="${assignment.description}"/></p>
                                     <p><c:if test="${not empty assignment.dueDate}">Due: <c:out value="${assignment.dueDate}"/> · </c:if><c:if test="${assignment.totalMarks > 0}">Total marks: <c:out value="${assignment.totalMarks}"/></c:if></p>
-                                    <c:if test="${not empty assignment.remarks}"><p>Feedback: <c:out value="${assignment.remarks}"/></p></c:if>
+                                    <a href="${pageContext.request.contextPath}/assignment-details?assignmentId=${assignment.assignmentId}">View full assignment and instructions</a>
                                 </article>
                             </c:forEach>
                         </div>

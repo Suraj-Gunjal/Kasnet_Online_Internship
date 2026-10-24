@@ -1,10 +1,16 @@
 package com.kasnet.util;
 
+import com.kasnet.dao.UserDAO;
+import com.kasnet.model.User;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 /**
  * SessionUtil - HTTP Session Management Utility
@@ -28,6 +34,8 @@ public class SessionUtil {
 
     /** Session key for the logged-in user's display name. */
     public static final String ATTR_USER_NAME = "userName";
+    public static final String ATTR_USER_ROLE = "userRole";
+    public static final String ATTR_CSRF_TOKEN = "csrfToken";
 
     /** Context-relative path of the login page (used for redirect on 401). */
     private static final String LOGIN_PATH = "/login";
@@ -84,6 +92,70 @@ public class SessionUtil {
      */
     public static boolean isLoggedIn(HttpServletRequest request) {
         return getUserId(request) != null;
+    }
+
+    public static boolean isAdmin(HttpServletRequest request) {
+        return hasRole(request, "ADMIN");
+    }
+
+    public static boolean isStudent(HttpServletRequest request) {
+        return hasRole(request, "STUDENT");
+    }
+
+    private static boolean hasRole(HttpServletRequest request, String role) {
+        HttpSession session = request.getSession(false);
+        Object sessionRole = session == null ? null : session.getAttribute(ATTR_USER_ROLE);
+        if (sessionRole instanceof String && !((String) sessionRole).trim().isEmpty()) {
+            String normalizedSessionRole = ((String) sessionRole).trim();
+            if (role.equalsIgnoreCase(normalizedSessionRole)) {
+                return true;
+            }
+        }
+        Integer userId = getUserId(request);
+        if (userId == null || session == null) {
+            return false;
+        }
+
+        User user = new UserDAO().getUserById(userId);
+        String databaseRole = user == null ? null : user.getRole();
+        if (databaseRole == null || databaseRole.trim().isEmpty()) {
+            return false;
+        }
+
+        databaseRole = databaseRole.trim();
+        session.setAttribute(ATTR_USER_ROLE, databaseRole);
+        return role.equalsIgnoreCase(databaseRole);
+    }
+
+    public static boolean requireAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (!isLoggedIn(request)) {
+            response.sendRedirect(request.getContextPath() + LOGIN_PATH);
+            return false;
+        }
+        if (!isAdmin(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return false;
+        }
+        return true;
+    }
+
+    public static String getOrCreateCsrfToken(HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        Object existing = session.getAttribute(ATTR_CSRF_TOKEN);
+        if (existing instanceof String) {
+            return (String) existing;
+        }
+        String token = UUID.randomUUID().toString();
+        session.setAttribute(ATTR_CSRF_TOKEN, token);
+        return token;
+    }
+
+    public static boolean isValidCsrfToken(HttpServletRequest request, String submittedToken) {
+        HttpSession session = request.getSession(false);
+        Object expected = session == null ? null : session.getAttribute(ATTR_CSRF_TOKEN);
+        return expected instanceof String && submittedToken != null
+                && MessageDigest.isEqual(((String) expected).getBytes(StandardCharsets.UTF_8),
+                        submittedToken.getBytes(StandardCharsets.UTF_8));
     }
 
     // -------------------------------------------------------------------------

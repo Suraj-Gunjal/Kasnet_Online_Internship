@@ -859,6 +859,14 @@
                     </span>
                 </a>
             </li>
+            <li class="sidebar-menu-item">
+                <a href="${pageContext.request.contextPath}/admin/assignments" class="sidebar-link">
+                    <span class="sidebar-link-content">
+                        <span class="sidebar-link-icon">📝</span>
+                        <span>Assignment Management</span>
+                    </span>
+                </a>
+            </li>
             <!-- <li class="sidebar-menu-item">
                 <a href="javascript:void(0)" class="sidebar-link" id="tabNavCerts" onclick="switchAdminTab('certificates')">
                     <span class="sidebar-link-content">

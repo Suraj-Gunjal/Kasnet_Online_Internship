@@ -36,7 +36,8 @@ public class ResumeUploadServlet extends HttpServlet {
         try {
             Part filePart = req.getPart("resumeFile");
             if (filePart != null && filePart.getSize() > 0) {
-                String submittedName = filePart.getSubmittedFileName();
+                String submittedName = new com.kasnet.service.FileUploadService()
+                        .getContentDispositionFilename(filePart.getHeader("content-disposition"));
                 if (FileUtil.isAllowedResumeType(submittedName)) {
                     String safeName = FileUtil.generateSafeFileName(submittedName);
                     String uploadPath = req.getServletContext().getRealPath("/uploads/resumes");

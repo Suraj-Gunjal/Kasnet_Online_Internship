@@ -18,6 +18,8 @@ public class Assignment {
     private String    title;
     private String    subject;
     private String    description;
+    private String    instructionsText;
+    private String    instructionPdfPath;
     private String    assignmentNumber;
     private Date      dueDate;
     private int       totalMarks;
@@ -81,6 +83,12 @@ public class Assignment {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getInstructionsText() { return instructionsText; }
+    public void setInstructionsText(String instructionsText) { this.instructionsText = instructionsText; }
+
+    public String getInstructionPdfPath() { return instructionPdfPath; }
+    public void setInstructionPdfPath(String instructionPdfPath) { this.instructionPdfPath = instructionPdfPath; }
 
     public String getAssignmentNumber() { return assignmentNumber; }
     public void setAssignmentNumber(String assignmentNumber) { this.assignmentNumber = assignmentNumber; }
