@@ -590,7 +590,7 @@
                         </a>
                         <div class="navbar-menu">
                             <a href="${pageContext.request.contextPath}/home" class="nav-link">Home</a>
-                            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">Dashboard</a>
+                            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">My Dashboard</a>
                             <a href="${pageContext.request.contextPath}/profile" class="nav-link">Profile</a>
                             <a href="${pageContext.request.contextPath}/assignments" class="nav-link">Assignments</a>
                             <a href="${pageContext.request.contextPath}/lectures" class="nav-link">Lectures</a>
@@ -905,21 +905,6 @@
                                             </select>
                                         </div>
 
-                                        <div class="form-group">
-                                            <label class="form-label" for="proficiency">Proficiency Level <span
-                                                    class="required">*</span></label>
-                                            <select name="proficiency" id="proficiency" class="form-select" required>
-                                                <option value="Beginner" ${editSkill.proficiency=='Beginner'
-                                                    ? 'selected' : '' }>Beginner</option>
-                                                <option value="Intermediate" ${empty editSkill.proficiency ||
-                                                    editSkill.proficiency=='Intermediate' ? 'selected' : '' }>
-                                                    Intermediate</option>
-                                                <option value="Advanced" ${editSkill.proficiency=='Advanced'
-                                                    ? 'selected' : '' }>Advanced</option>
-                                                <option value="Expert" ${editSkill.proficiency=='Expert' ? 'selected'
-                                                    : '' }>Expert</option>
-                                            </select>
-                                        </div>
                                     </div>
 
                                     <div>
@@ -945,7 +930,6 @@
                                                 <tr>
                                                     <th>Skill Name</th>
                                                     <th>Category</th>
-                                                    <th>Proficiency</th>
                                                     <th style="width: 140px; text-align: center;">Actions</th>
                                                 </tr>
                                             </thead>
@@ -958,12 +942,6 @@
                                                         <td><span class="badge badge-info">
                                                                 <c:out value="${s.skillType}" />
                                                             </span></td>
-                                                        <td>
-                                                            <span
-                                                                class="badge ${s.proficiency == 'Expert' ? 'badge-primary' : (s.proficiency == 'Advanced' ? 'badge-success' : 'badge-warning')}">
-                                                                <c:out value="${s.proficiency}" />
-                                                            </span>
-                                                        </td>
                                                         <td style="text-align: center;">
                                                             <div style="display: inline-flex; gap: 8px;">
                                                                 <a href="${pageContext.request.contextPath}/resume-analysis?tab=skills&editSkillId=${s.skillId}"

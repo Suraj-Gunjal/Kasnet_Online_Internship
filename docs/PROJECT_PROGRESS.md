@@ -96,6 +96,8 @@
   5. **Resume Analysis** (`/resume-analysis`): Direct link to the resume ATS review section.
 - Student Account Details summary grid.
 - Dynamic recalculation of completion score upon every page visit.
+- **Project Report** (`/dashboard?section=projects`): Students can submit multiple detailed reports with project scope, domain, technology, application, duration, model, phase estimates, cost, testing results, issue counts, and phase-by-phase learning outcomes. Students can review and delete their reports; administrators can review all submissions in the admin console.
+- **Platform Certificates** (`/dashboard?section=certificates`): Platform exam results are stored separately from profile certifications and are visible to students and administrators.
 
 ### F. Subject Question Bank Module (`views/question-bank.jsp` & `QuestionBankServlet.java`)
 - Accessible at `/question-bank`.
@@ -162,12 +164,14 @@ The database name is `online_internship` (compatible with MySQL 5.7+ / 8.0 and M
 5. `skills`: Stores technical, soft, and domain skills.
 6. `certifications`: Stores verified certifications, providers, and verification URLs.
 7. `projects`: Stores portfolio projects, technologies, and GitHub links.
-8. `hackathons`: Stores hackathon participation and awards.
-9. `intercollege_competitions`: Stores project exhibition entries and prizes.
-10. `achievements`: Stores legacy achievements and extra-curricular highlights.
-11. `assignments` & `assignment_submissions`: Stores internship assignment briefs and student submissions.
-12. `lectures` & `lecture_progress`: Stores video lectures and student completion progress.
-13. `login_activity`: Audit log of user login sessions and timestamps.
+8. `platform_project_reports`: Stores detailed student dashboard project reports and makes them available to students and administrators.
+9. `platform_certificates`: Stores exam scores and achievement dates for certificates issued by the platform.
+10. `hackathons`: Stores hackathon participation and awards.
+11. `intercollege_competitions`: Stores project exhibition entries and prizes.
+12. `achievements`: Stores legacy achievements and extra-curricular highlights.
+13. `assignments` & `assignment_submissions`: Stores internship assignment briefs and student submissions.
+14. `lectures` & `lecture_progress`: Stores video lectures and student completion progress.
+15. `login_activity`: Audit log of user login sessions and timestamps.
 
 ---
 

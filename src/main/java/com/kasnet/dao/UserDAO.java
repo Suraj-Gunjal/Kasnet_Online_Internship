@@ -260,7 +260,7 @@ public class UserDAO {
      */
     public java.util.List<User> getAllStudents() {
         java.util.List<User> students = new java.util.ArrayList<>();
-        final String sql = "SELECT * FROM users WHERE role = 'STUDENT' ORDER BY user_id DESC";
+        final String sql = "SELECT * FROM users WHERE role = 'STUDENT' ORDER BY user_id ASC";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;

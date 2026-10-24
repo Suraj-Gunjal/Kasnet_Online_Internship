@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * Data Access Object for the {@code skills} table.
  *
  * <p>Supports individual CRUD operations as well as a bulk
- * {@link #saveSkillsOfType(int, String, List, String)} that atomically
+ * {@link #saveSkillsOfType(int, String, List)} that atomically
  * replaces all skills of a given type in a single transaction.
  */
 public class SkillDAO {
@@ -111,8 +111,8 @@ public class SkillDAO {
      */
     public boolean addSkill(Skill skill) {
         final String sql =
-                "INSERT INTO skills (user_id, skill_name, skill_type, proficiency, created_at) "
-                + "VALUES (?, ?, ?, ?, NOW())";
+                "INSERT INTO skills (user_id, skill_name, skill_type, created_at) "
+                + "VALUES (?, ?, ?, NOW())";
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -124,7 +124,6 @@ public class SkillDAO {
             ps.setInt(   1, skill.getUserId());
             ps.setString(2, skill.getSkillName());
             ps.setString(3, skill.getSkillType());
-            ps.setString(4, skill.getProficiency());
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
@@ -216,7 +215,7 @@ public class SkillDAO {
         if (skill == null || skill.getSkillId() <= 0 || skill.getUserId() <= 0) return false;
 
         final String sql =
-                "UPDATE skills SET skill_name = ?, skill_type = ?, proficiency = ? "
+                "UPDATE skills SET skill_name = ?, skill_type = ? "
                 + "WHERE skill_id = ? AND user_id = ?";
 
         Connection conn = null;
@@ -227,9 +226,8 @@ public class SkillDAO {
             ps   = conn.prepareStatement(sql);
             ps.setString(1, skill.getSkillName().trim());
             ps.setString(2, skill.getSkillType().trim());
-            ps.setString(3, skill.getProficiency().trim());
-            ps.setInt(   4, skill.getSkillId());
-            ps.setInt(   5, skill.getUserId());
+            ps.setInt(   3, skill.getSkillId());
+            ps.setInt(   4, skill.getUserId());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -315,8 +313,7 @@ public class SkillDAO {
 
     /**
      * Atomically replaces all skills of {@code skillType} for the given user
-     * with the supplied list of skill names, all sharing the same
-     * {@code proficiency} level.
+     * with the supplied list of skill names.
      *
      * <p>The operation runs inside a single transaction: the existing skills of
      * that type are deleted first, then the new batch is inserted.  If any
@@ -326,15 +323,14 @@ public class SkillDAO {
      * @param skillType   the skill-type category (Technical, Soft, Domain)
      * @param skillNames  the list of skill names to insert; may be empty
      *                    (which effectively clears the section)
-     * @param proficiency the proficiency label applied to every inserted skill
      * @return {@code true} if the transaction committed successfully
      */
     public boolean saveSkillsOfType(int userId, String skillType,
-                                    List<String> skillNames, String proficiency) {
+                                    List<String> skillNames) {
         final String deleteSql = "DELETE FROM skills WHERE user_id = ? AND skill_type = ?";
         final String insertSql =
-                "INSERT INTO skills (user_id, skill_name, skill_type, proficiency, created_at) "
-                + "VALUES (?, ?, ?, ?, NOW())";
+                "INSERT INTO skills (user_id, skill_name, skill_type, created_at) "
+                + "VALUES (?, ?, ?, NOW())";
 
         Connection conn = null;
         PreparedStatement deletePs = null;
@@ -358,7 +354,6 @@ public class SkillDAO {
                     insertPs.setInt(   1, userId);
                     insertPs.setString(2, name.trim());
                     insertPs.setString(3, skillType);
-                    insertPs.setString(4, proficiency);
                     insertPs.addBatch();
                 }
                 insertPs.executeBatch();
