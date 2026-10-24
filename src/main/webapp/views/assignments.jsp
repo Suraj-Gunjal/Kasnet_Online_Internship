@@ -25,12 +25,13 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
             background-color: #f0f2f5;
             color: #1a1a2e;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
         }
 
         .navbar {
@@ -40,14 +41,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
         }
 
         .navbar-brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 700;
             text-decoration: none;
             color: #fff;
@@ -67,13 +68,13 @@
         .navbar-menu {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 14px;
         }
 
         .nav-link {
             color: rgba(255,255,255,0.85);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             padding: 6px 12px;
             border-radius: 6px;
             transition: all 0.2s;
@@ -203,8 +204,8 @@
         .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; }
         .empty-state { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 32px; text-align: center; color: #6b7280; }
         @media (max-width: 560px) {
-            .navbar { align-items: flex-start; flex-direction: column; }
-            .navbar-menu { flex-wrap: wrap; gap: 8px; }
+            .navbar { align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+            .navbar-menu { flex-wrap: wrap; gap: 4px; }
             .cards-grid { grid-template-columns: 1fr; }
             .card { padding: 18px; }
         }

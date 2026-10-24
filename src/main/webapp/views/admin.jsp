@@ -982,7 +982,6 @@
                         <span class="sidebar-link-icon">📜</span>
                         <span>Global Certification</span>
                     </span>
-                    <span class="selected-counter-badge" style="display:inline-block; margin-left:auto; background:#1976d2;"><c:out value="${platformCertificateCount}"/></span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
@@ -990,15 +989,6 @@
                     <span class="sidebar-link-content">
                         <span class="sidebar-link-icon">📁</span>
                         <span>Project</span>
-                    </span>
-                    <span class="selected-counter-badge" style="display:inline-block; margin-left:auto; background:#1976d2;"><c:out value="${platformProjectReportCount}"/></span>
-                </a>
-            </li>
-            <li class="sidebar-menu-item" style="margin-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px;">
-                <a href="javascript:void(0)" class="sidebar-link" onclick="handleAdminLogout()">
-                    <span class="sidebar-link-content">
-                        <span class="sidebar-link-icon">🚪</span>
-                        <span>Logout Console</span>
                     </span>
                 </a>
             </li>

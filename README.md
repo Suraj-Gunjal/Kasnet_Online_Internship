@@ -57,8 +57,9 @@ cd "d:\My Workspace\Kasnet_Online_Internship"
 ```
 
 ### Step 2: Initialize MySQL Database
-For a brand-new installation only, open your MySQL client (Command Line or MySQL Workbench) and run `database.sql`.
-For an existing installation, do not run that full script; apply only the assignment-instruction migration below.
+For a brand-new installation, open your MySQL client (Command Line or MySQL Workbench) and run `database.sql`. The schema already includes the assignment instruction columns used by the application.
+
+`database.sql` drops and recreates the tables. Do not run it against a database with data you need to keep.
 
 ```powershell
 # Using MySQL Command Line:
@@ -108,13 +109,9 @@ Open your browser and navigate to:
 
 *(To stop the server at any time, press `Ctrl + C` in the terminal).*
 
-### Assignment instruction migration
+### Assignment errors or student dashboard HTTP 500
 
-For an existing installation, apply `database/migrations/20261021_assignment_instructions.sql` to the selected `online_internship` database. Do **not** run `database.sql` against an existing database; it contains destructive reset statements. For example, from PowerShell:
-
-```powershell
-Get-Content -Raw .\database\migrations\20261021_assignment_instructions.sql | mysql -u root -p online_internship
-```
+The current `database.sql` schema includes the assignment instruction columns. If your existing database was created from an older schema, back it up before rebuilding the database from the current schema. Rebuilding drops existing tables and data; do not do this if you need to preserve them.
 
 Instruction PDFs are stored outside the deployed web application at `<catalina.base>/uploads/assignment-instructions`. Change the `assignmentInstructionsUploadDir` context parameter in `src/main/webapp/WEB-INF/web.xml` to another absolute or Tomcat-base-relative upload directory when needed; the application places its `assignment-instructions` subdirectory under that path.
 

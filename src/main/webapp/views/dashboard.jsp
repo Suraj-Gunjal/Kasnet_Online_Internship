@@ -101,6 +101,8 @@
         .skill-tag { display: inline-flex; width: fit-content; max-width: 100%; padding: 8px 12px; border: 1px solid #cbd8ed; border-radius: 8px; color: #26364f; background: #fff; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
         .button { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 16px; border: 0; border-radius: 7px; color: #fff; background: #1d4ed8; font-weight: 700; text-decoration: none; cursor: pointer; }
         .button:hover { background: #1e40af; }
+        .assignment-view-button { gap: 8px; margin-top: 8px; }
+        .assignment-view-button:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
         .button-secondary { margin-left: 8px; border: 1px solid #cbd5e1; color: #1e3a8a; background: #fff; }
         .empty { padding: 14px 16px; border: 1px solid #d9e3f2; border-radius: 10px; color: #334155; background: #f5f8ff; font-size: 15px; line-height: 1.6; }
         .report-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
@@ -326,7 +328,9 @@
                                     <strong><c:out value="${assignment.title}"/></strong>
                                     <p><c:if test="${not empty assignment.subject}"><c:out value="${assignment.subject}"/> · </c:if><c:out value="${assignment.description}"/></p>
                                     <p><c:if test="${not empty assignment.dueDate}">Due: <c:out value="${assignment.dueDate}"/> · </c:if><c:if test="${assignment.totalMarks > 0}">Total marks: <c:out value="${assignment.totalMarks}"/></c:if></p>
-                                    <a href="${pageContext.request.contextPath}/assignment-details?assignmentId=${assignment.assignmentId}">View full assignment and instructions</a>
+                                    <a class="button assignment-view-button" href="${pageContext.request.contextPath}/assignment-details?assignmentId=${assignment.assignmentId}">
+                                        View full assignment and instructions <span aria-hidden="true">&rarr;</span>
+                                    </a>
                                 </article>
                             </c:forEach>
                         </div>

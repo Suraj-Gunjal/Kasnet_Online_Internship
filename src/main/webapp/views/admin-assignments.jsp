@@ -12,14 +12,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Assignment Management - Kasnet Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f3f6fb; color: #172033; }
-        nav { background: #1e3a8a; color: #fff; padding: 15px 5%; display: flex; justify-content: space-between; gap: 16px; }
-        nav a { color: #fff; text-decoration: none; font-weight: 600; }
-        main { width: min(1180px, 94%); margin: 28px auto; }
-        h1 { margin: 0 0 8px; color: #1e3a8a; }
-        .muted { color: #64748b; margin: 0 0 22px; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --sidebar-bg: #263238;
+            --sidebar-text: #cfd8dc;
+            --sidebar-header: #c62828;
+            --accent: #1976d2;
+            --danger: #d32f2f;
+            --danger-hover: #c62828;
+            --bg-page: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+        body { min-height: 100vh; display: flex; overflow-x: hidden; font-family: var(--font); line-height: 1.5; background: var(--bg-page); color: var(--text-main); }
+        .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; display: flex; width: 260px; min-height: 100vh; flex-direction: column; background: var(--sidebar-bg); color: var(--sidebar-text); box-shadow: 2px 0 10px rgba(0,0,0,.15); transition: all .28s ease; }
+        .sidebar.collapsed { transform: translateX(-260px); }
+        .sidebar-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid rgba(0,0,0,.12); color: #fff; background: var(--sidebar-header); }
+        .sidebar-header img { width: auto; max-width: 44px; height: 38px; padding: 3px; border-radius: 6px; background: #fff; object-fit: contain; }
+        .sidebar-header-text h2 { font-size: 1.05rem; font-weight: 700; line-height: 1.2; letter-spacing: -.2px; }
+        .sidebar-header-text span { font-size: .75rem; letter-spacing: .5px; text-transform: uppercase; opacity: .85; }
+        .sidebar-menu { flex: 1; padding: 14px 0; list-style: none; }
+        .sidebar-menu-item { margin-bottom: 2px; }
+        .sidebar-link { display: flex; align-items: center; justify-content: space-between; padding: 13px 22px; border-left: 4px solid transparent; color: var(--sidebar-text); font-size: .92rem; font-weight: 500; text-decoration: none; transition: all .2s ease; }
+        .sidebar-link-content { display: flex; align-items: center; gap: 12px; }
+        .sidebar-link-icon { display: inline-block; width: 22px; font-size: 1.15rem; text-align: center; }
+        .sidebar-link:hover { color: #fff; background: rgba(255,255,255,.06); }
+        .sidebar-link.active { border-left-color: #ef4444; color: #fff; background: rgba(0,0,0,.28); font-weight: 600; }
+        .main-wrapper { display: flex; min-width: 0; flex: 1; flex-direction: column; margin-left: 260px; transition: margin-left .28s ease; }
+        .main-wrapper.full-width { margin-left: 0; }
+        .topbar { position: sticky; top: 0; z-index: 90; display: flex; height: 56px; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 1px solid var(--border-color); background: #fff; box-shadow: var(--shadow-sm); }
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        .topbar-right { display: flex; align-items: center; gap: 16px; }
+        .btn-toggle-sidebar { display: flex; align-items: center; justify-content: center; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); background: none; font-size: 1.2rem; cursor: pointer; transition: all .15s; }
+        .btn-toggle-sidebar:hover { color: var(--accent); background: #f1f5f9; }
+        .portal-breadcrumb { color: var(--text-main); font-size: .95rem; font-weight: 600; }
+        .user-pill { display: flex; align-items: center; gap: 8px; color: var(--text-main); font-size: .88rem; font-weight: 600; }
+        .user-avatar { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 50%; color: #475569; background: #e2e8f0; font-size: .85rem; font-weight: 700; }
+        .nav-btn { padding: 6px 14px; border-radius: 6px; font-size: .84rem; font-weight: 600; text-decoration: none; transition: all .2s; }
+        .nav-btn-outline { border: 1px solid #bfdbfe; color: var(--accent); background: #eff6ff; }
+        .nav-btn-outline:hover { background: #dbeafe; }
+        .nav-btn-danger { color: #fff; background: var(--danger); }
+        .nav-btn-danger:hover { background: var(--danger-hover); }
+        button.nav-btn { display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; border-radius: 6px; font-family: inherit; font-size: .84rem; font-weight: 600; line-height: 1.5; cursor: pointer; }
+        .page-content { flex: 1; padding: 24px 28px; }
+        .page-main { width: min(1180px, 100%); margin: 0 auto; }
+        h1 { margin: 0 0 4px; color: #1e293b; font-size: 1.55rem; }
+        .muted { margin: 0 0 22px; color: #64748b; }
         .panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 14px #0f172a0a; }
         .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
         label { display: block; font-size: .9rem; font-weight: 650; margin-bottom: 6px; }
@@ -44,26 +89,77 @@
         th { color: #475569; font-size: .82rem; background: #f8fafc; }
         td { font-size: .9rem; }
         .status { font-weight: 700; }
-        .active { color: #15803d; }
-        .inactive { color: #b91c1c; }
+        .status.active { color: #15803d; }
+        .status.inactive { color: #b91c1c; }
         @media (max-width: 680px) {
-            nav { flex-direction: column; }
-            main { width: 94%; margin-top: 18px; }
             .panel { padding: 17px; }
             .form-grid { grid-template-columns: 1fr; }
             .full { grid-column: auto; }
         }
+        .sidebar-backdrop { display: none; }
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-260px); }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .main-wrapper { margin-left: 0; }
+            .sidebar-backdrop { position: fixed; inset: 0; z-index: 99; display: none; background: rgba(0,0,0,.5); }
+            .sidebar-backdrop.show { display: block; }
+        }
+        @media (max-width: 620px) {
+            .topbar { padding: 0 14px; }
+            .topbar-right { gap: 8px; }
+            .portal-breadcrumb { font-size: .82rem; }
+            .user-pill { display: none; }
+            .page-content { padding: 18px 14px; }
+        }
     </style>
 </head>
 <body>
-<nav>
-    <a href="${pageContext.request.contextPath}/admin">Kasnet Administration</a>
-    <div class="actions">
-        <a href="${pageContext.request.contextPath}/admin">Admin dashboard</a>
-        <a href="${pageContext.request.contextPath}/logout">Logout</a>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <img src="${pageContext.request.contextPath}/assets/images/logo.png" alt="My Internship Technologies Logo">
+        <div class="sidebar-header-text">
+            <h2>My Internship</h2>
+            <span>Technologies</span>
+        </div>
     </div>
-</nav>
-<main>
+    <ul class="sidebar-menu">
+        <li class="sidebar-menu-item">
+            <a href="${pageContext.request.contextPath}/admin" class="sidebar-link">
+                <span class="sidebar-link-content"><span class="sidebar-link-icon">🎓</span><span>Student Details</span></span>
+            </a>
+        </li>
+        <li class="sidebar-menu-item">
+            <a href="${pageContext.request.contextPath}/admin/assignments" class="sidebar-link active" aria-current="page">
+                <span class="sidebar-link-content"><span class="sidebar-link-icon">📝</span><span>Assignment Management</span></span>
+            </a>
+        </li>
+        <li class="sidebar-menu-item">
+            <a href="${pageContext.request.contextPath}/admin?tab=certificates" class="sidebar-link">
+                <span class="sidebar-link-content"><span class="sidebar-link-icon">📜</span><span>Global Certification</span></span>
+            </a>
+        </li>
+        <li class="sidebar-menu-item">
+            <a href="${pageContext.request.contextPath}/admin?tab=projects" class="sidebar-link">
+                <span class="sidebar-link-content"><span class="sidebar-link-icon">📁</span><span>Project</span></span>
+            </a>
+        </li>
+    </ul>
+</aside>
+<div class="main-wrapper" id="mainWrapper">
+<header class="topbar">
+    <div class="topbar-left">
+        <button type="button" class="btn-toggle-sidebar" onclick="toggleSidebar()" title="Toggle Sidebar" aria-label="Toggle Sidebar">☰</button>
+        <div class="portal-breadcrumb">Online Internship Administration / Assignment Management</div>
+    </div>
+    <div class="topbar-right">
+        <div class="user-pill"><span class="user-avatar">${not empty sessionScope.userName ? sessionScope.userName.substring(0, 1).toUpperCase() : 'A'}</span><span>${not empty sessionScope.userName ? sessionScope.userName : 'Admin'}</span></div>
+        <a href="${pageContext.request.contextPath}/" class="nav-btn nav-btn-outline" target="_blank">Public Site</a>
+        <button type="button" class="nav-btn nav-btn-danger" onclick="handleAdminLogout()">Logout</button>
+    </div>
+</header>
+<main class="page-content">
+<div class="page-main">
     <h1>Assignment management</h1>
     <p class="muted">Create, edit, publish, deactivate, and republish student assignments.</p>
 
@@ -177,6 +273,27 @@
             </c:otherwise>
         </c:choose>
     </section>
+</div>
 </main>
+</div>
+<script>
+    function handleAdminLogout() {
+        if (window.confirm("Are you sure you want to log out from the Administrator Console?")) {
+            window.location.href = '${pageContext.request.contextPath}/logout';
+        }
+    }
+
+    function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        var backdrop = document.getElementById("sidebarBackdrop");
+        if (window.innerWidth <= 992) {
+            sidebar.classList.toggle("mobile-open");
+            backdrop.classList.toggle("show");
+        } else {
+            sidebar.classList.toggle("collapsed");
+            document.getElementById("mainWrapper").classList.toggle("full-width");
+        }
+    }
+</script>
 </body>
 </html>

@@ -18,12 +18,13 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
             background-color: #f0f2f5;
             color: #1a1a2e;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
         }
 
         .navbar {
@@ -33,14 +34,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
         }
 
         .navbar-brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 700;
             text-decoration: none;
             color: #fff;
@@ -60,13 +61,13 @@
         .navbar-menu {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 14px;
         }
 
         .nav-link {
             color: rgba(255,255,255,0.85);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             padding: 6px 12px;
             border-radius: 6px;
             transition: all 0.2s;
