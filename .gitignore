@@ -1,6 +1,6 @@
-
-# Maven build output
+# Build outputs
 target/
+build/
 
 # Maven release files
 pom.xml.tag
@@ -30,9 +30,6 @@ uploads/
 .idea/
 .vscode/
 *.iml
-.project
-.classpath
-.settings/
 
 # Operating system files
 .DS_Store

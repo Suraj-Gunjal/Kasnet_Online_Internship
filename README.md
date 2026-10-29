@@ -25,7 +25,7 @@
 
 | Layer | Technology | Details |
 |---|---|---|
-| **Language** | Java 11 / Java 17 / Java 21 | Compatible with Java 11+ LTS bytecode |
+| **Language** | Java 8 (JDK 1.8) | Compiled for Java 8 (JDK 1.8) bytecode; compatible with Java 8+ |
 | **Framework** | Java Servlets 3.1 & JSP 2.3 | Standard Java EE (`javax.servlet`) specification |
 | **Architecture** | MVC Pattern | Strict Model-View-Controller separation |
 | **Database** | MySQL 5.7+ / 8.0+ | Compatible with MySQL Workbench 6.3+ (InnoDB, UTF-8) |
@@ -113,7 +113,7 @@ Open your browser and navigate to:
 
 The current `database.sql` schema includes the assignment instruction columns. If your existing database was created from an older schema, back it up before rebuilding the database from the current schema. Rebuilding drops existing tables and data; do not do this if you need to preserve them.
 
-Instruction PDFs are stored outside the deployed web application at `<catalina.base>/uploads/assignment-instructions`. Change the `assignmentInstructionsUploadDir` context parameter in `src/main/webapp/WEB-INF/web.xml` to another absolute or Tomcat-base-relative upload directory when needed; the application places its `assignment-instructions` subdirectory under that path.
+Instruction PDFs are stored outside the deployed web application at `<catalina.base>/uploads/assignment-instructions`. Change the `assignmentInstructionsUploadDir` context parameter in `WebContent/WEB-INF/web.xml` to another absolute or Tomcat-base-relative upload directory when needed; the application places its `assignment-instructions` subdirectory under that path.
 
 The assignment-instruction servlet allows a 5 MiB file in a 6 MiB multipart request. Student submission uploads
 allow 10 MiB files in an 11 MiB request. Multipart text fields are read from servlet parts directly so upload
@@ -158,6 +158,38 @@ Output:
  ALL VERIFICATION TESTS PASSED SUCCESSFULLY!
 ==================================================
 ```
+
+---
+
+## Importing & Running in Eclipse Oxygen (Dynamic Web Project)
+
+This project is configured out-of-the-box as an **Eclipse Dynamic Web Project** (Dynamic Web Module 3.1, JDK 1.8, Apache Tomcat 8.0).
+
+### Step 1: Open Eclipse Oxygen
+1. Launch **Eclipse Oxygen (or any Eclipse for Java EE)** with **JDK 1.8**.
+2. Click **File** -> **Import...** -> **General** -> **Existing Projects into Workspace** -> **Next**.
+3. In **Select root directory**, browse to this project directory:
+   d:\My Workspace\Kasnet_Online_Internship
+4. Ensure kasnet-internship-portal is checked, and click **Finish**.
+5. Eclipse will automatically recognize the project structure:
+   - **Java Source:** src
+   - **Web Content:** WebContent
+   - **Libraries:** WebContent/WEB-INF/lib (via *Web App Libraries*)
+   - **Runtime:** Apache Tomcat v8.0 (Dynamic Web Module 3.1, JavaSE-1.8)
+
+### Step 2: Configure Tomcat 8.0 Server in Eclipse
+1. If you haven't added Tomcat 8.0 yet:
+   - In the **Servers** tab, right-click -> **New** -> **Server**.
+   - Select **Apache** -> **Tomcat v8.0 Server** -> click **Next**.
+   - Point to your Apache Tomcat 8.0 directory and select **JavaSE-1.8** -> click **Finish**.
+2. Right-click the configured **Tomcat v8.0 Server** -> **Add and Remove...**.
+3. Select kasnet-internship-portal -> click **Add >** -> **Finish**.
+
+### Step 3: Run the Application
+1. Right-click kasnet-internship-portal in the Project Explorer.
+2. Select **Run As** -> **Run on Server** -> Choose **Tomcat v8.0 Server** -> **Finish**.
+3. Access the portal in Eclipse's internal browser or your external browser:
+   👉 **http://localhost:8080/kasnet-internship-portal/**
 
 ---
 
@@ -211,80 +243,90 @@ Kasnet_Online_Internship/
 ├── docs/
 │   ├── PROJECT_PROGRESS.md                  # Comprehensive technical progress & handover guide
 │   └── screenshots/                         # Reference mockups & logo_final.png
-└── src/main/
-    ├── java/com/kasnet/
-    │   ├── controller/                      # Servlets (Controllers)
-    │   │   ├── LoginServlet.java
-    │   │   ├── RegisterServlet.java
-    │   │   ├── LogoutServlet.java
-    │   │   ├── DashboardServlet.java
-    │   │   ├── ProfileServlet.java
-    │   │   ├── PersonalDetailsServlet.java
-    │   │   ├── EducationServlet.java
-    │   │   ├── SkillsServlet.java
-    │   │   ├── CertificationServlet.java
-    │   │   ├── ProjectServlet.java
-    │   │   ├── HackathonServlet.java
-    │   │   ├── CompetitionServlet.java
-    │   │   ├── AssignmentServlet.java
-    │   │   ├── LectureServlet.java
-    │   │   ├── QuestionBankServlet.java
-    │   │   ├── ResumeAnalysisServlet.java
-    │   │   └── AdminServlet.java
-    │   ├── model/                           # JavaBeans / POJOs (Models)
-    │   │   ├── User.java
-    │   │   ├── StudentProfile.java
-    │   │   ├── Education.java
-    │   │   ├── Skill.java
-    │   │   ├── Certification.java
-    │   │   ├── Project.java
-    │   │   ├── Hackathon.java
-    │   │   ├── Competition.java
-    │   │   ├── Assignment.java
-    │   │   ├── Lecture.java
-    │   │   └── DashboardStats.java
-    │   ├── dao/                             # JDBC Data Access Objects
-    │   │   ├── UserDAO.java
-    │   │   ├── ProfileDAO.java
-    │   │   ├── EducationDAO.java
-    │   │   ├── SkillDAO.java
-    │   │   ├── CertificationDAO.java
-    │   │   ├── ProjectDAO.java
-    │   │   ├── HackathonDAO.java
-    │   │   ├── CompetitionDAO.java
-    │   │   ├── AssignmentDAO.java
-    │   │   ├── LectureDAO.java
-    │   │   └── DashboardDAO.java
-    │   ├── service/                         # Application Services
-    │   │   ├── AuthenticationService.java
-    │   │   ├── ProfileService.java
-    │   │   └── FileUploadService.java
-    │   └── util/                            # Utilities
-    │       ├── DBConnection.java            # JDBC connection pool manager (Asia/Kolkata timezone)
-    │       ├── PasswordUtil.java            # BCrypt hashing & verification
-    │       ├── ValidationUtil.java          # 10-digit phone, regex email, date validation
-    │       ├── SessionUtil.java             # Session auth verification
-    │       └── SystemVerifier.java          # Offline automated test suite
-    └── webapp/
-        ├── index.jsp                        # Public landing page
-        ├── login.jsp                        # Login view
-        ├── register.jsp                     # Registration view
-        ├── assets/
-        │   └── images/
-        │       └── logo.png                 # Official brand logo
-        ├── views/
-        │   ├── dashboard.jsp                # Student logged-in homepage
-        │   ├── profile.jsp                  # 5-section profile view
-        │   ├── assignments.jsp              # Assignments module
-        │   ├── lectures.jsp                 # Lectures module
-        │   ├── question-bank.jsp            # Question bank with subject selector
-        │   ├── resume-analysis.jsp          # Resume analysis interface
-        │   ├── admin.jsp                    # Admin monitoring console
-        │   ├── error-404.jsp                # 404 handler
-        │   ├── error-500.jsp                # 500 handler
-        │   └── unauthorized.jsp             # Session expired handler
-        └── WEB-INF/
-            └── web.xml                      # Deployment descriptor (servlets, filters, IST timezone)
+├── .project                                  # Eclipse project description (Dynamic Web Project)
+├── .classpath                                # Eclipse classpath (JDK 1.8, Tomcat 8.0, Web App Libs)
+├── .settings/                                # Eclipse facet settings (Java 1.8, Dynamic Web 3.1)
+├── src/                                     # Java source directory (root package: com.kasnet)
+│   └── com/kasnet/
+│       ├── controller/                      # Servlets (Controllers)
+│       │   ├── LoginServlet.java
+│       │   ├── RegisterServlet.java
+│       │   ├── LogoutServlet.java
+│       │   ├── DashboardServlet.java
+│       │   ├── ProfileServlet.java
+│       │   ├── PersonalDetailsServlet.java
+│       │   ├── EducationServlet.java
+│       │   ├── SkillsServlet.java
+│       │   ├── CertificationServlet.java
+│       │   ├── ProjectServlet.java
+│       │   ├── HackathonServlet.java
+│       │   ├── CompetitionServlet.java
+│       │   ├── AssignmentServlet.java
+│       │   ├── LectureServlet.java
+│       │   ├── QuestionBankServlet.java
+│       │   ├── ResumeAnalysisServlet.java
+│       │   └── AdminServlet.java
+│       ├── model/                           # JavaBeans / POJOs (Models)
+│       │   ├── User.java
+│       │   ├── StudentProfile.java
+│       │   ├── Education.java
+│       │   ├── Skill.java
+│       │   ├── Certification.java
+│       │   ├── Project.java
+│       │   ├── Hackathon.java
+│       │   ├── Competition.java
+│       │   ├── Assignment.java
+│       │   ├── Lecture.java
+│       │   └── DashboardStats.java
+│       ├── dao/                             # JDBC Data Access Objects
+│       │   ├── UserDAO.java
+│       │   ├── ProfileDAO.java
+│       │   ├── EducationDAO.java
+│       │   ├── SkillDAO.java
+│       │   ├── CertificationDAO.java
+│       │   ├── ProjectDAO.java
+│       │   ├── HackathonDAO.java
+│       │   ├── CompetitionDAO.java
+│       │   ├── AssignmentDAO.java
+│       │   ├── LectureDAO.java
+│       │   └── DashboardDAO.java
+│       ├── service/                         # Application Services
+│       │   ├── AuthenticationService.java
+│       │   ├── ProfileService.java
+│       │   └── FileUploadService.java
+│       └── util/                            # Utilities
+│           ├── DBConnection.java            # JDBC connection manager (Asia/Kolkata timezone)
+│           ├── PasswordUtil.java            # BCrypt hashing & verification
+│           ├── ValidationUtil.java          # 10-digit phone, regex email, date validation
+│           ├── SessionUtil.java             # Session auth verification
+│           └── SystemVerifier.java          # Offline automated test suite
+└── WebContent/                              # Web Content root (Dynamic Web Module 3.1)
+    ├── META-INF/
+    │   └── MANIFEST.MF
+    ├── assets/
+    │   └── images/
+    │       ├── logo.png                     # Official brand logo
+    │       └── logo_final.png
+    ├── images/
+    │   └── logo_final.png
+    ├── views/
+    │   ├── dashboard.jsp                    # Student logged-in homepage
+    │   ├── profile.jsp                      # 5-section profile view
+    │   ├── assignments.jsp                  # Assignments module
+    │   ├── lectures.jsp                     # Lectures module
+    │   ├── question-bank.jsp                # Question bank with subject selector
+    │   ├── resume-analysis.jsp              # Resume analysis interface
+    │   ├── admin.jsp                        # Admin monitoring console
+    │   ├── error-404.jsp                    # 404 handler
+    │   ├── error-500.jsp                    # 500 handler
+    │   └── unauthorized.jsp                 # Session expired handler
+    ├── index.jsp                            # Public landing page
+    ├── login.jsp                            # Login view
+    ├── register.jsp                         # Registration view
+    └── WEB-INF/
+        ├── lib/                             # All runtime dependency JARs (21 libraries)
+        ├── tld/                             # JSTL tag library definitions (c.tld, fmt.tld, fn.tld)
+        └── web.xml                          # Deployment descriptor (servlets, filters, IST timezone)
 ```
 
 ---
@@ -327,7 +369,7 @@ If port 8080 is used by another application (e.g., Oracle, Jenkins, another Tomc
 - Access via `http://localhost:8085/internship/`.
 
 ### 2. `Access denied for user 'root'@'localhost'`
-- Check the password in `src/main/java/com/kasnet/util/DBConnection.java`.
+- Check the password in `src/com/kasnet/util/DBConnection.java`.
 - Test connecting in terminal: `mysql -u root -p`.
 
 ### 3. `Public Key Retrieval is not allowed`
