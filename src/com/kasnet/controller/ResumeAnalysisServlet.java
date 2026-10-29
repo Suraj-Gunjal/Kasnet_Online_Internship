@@ -101,6 +101,10 @@ public class ResumeAnalysisServlet extends HttpServlet {
             } catch (NumberFormatException ignored) {}
         }
 
+        AIAnalysisResult    analysis       = analysisService.getLatestAIAnalysis(userId);
+        boolean             isGroqReady    = analysisService.isGroqConfigured();
+        String              maskedGroqKey  = analysisService.getMaskedGroqKey();
+
         // Pass models to view
         req.setAttribute("user", user);
         req.setAttribute("activeTab", tab);
@@ -111,6 +115,9 @@ public class ResumeAnalysisServlet extends HttpServlet {
         req.setAttribute("certifications", certifications);
         req.setAttribute("educations", educations);
         req.setAttribute("readiness", readiness);
+        req.setAttribute("analysis", analysis);
+        req.setAttribute("isGroqConfigured", isGroqReady);
+        req.setAttribute("maskedGroqKey", maskedGroqKey);
 
         req.getRequestDispatcher("/views/resume-analysis.jsp").forward(req, resp);
     }
@@ -270,6 +277,25 @@ public class ResumeAnalysisServlet extends HttpServlet {
                     return;
                 }
 
+                // -------------------------------------------------------------
+                // AI RESUME & SKILL ANALYSIS (GROQ LLM)
+                // -------------------------------------------------------------
+                case "run_ai_analysis": {
+                    String customApiKey = req.getParameter("customApiKey");
+                    analysisService.runAIAnalysis(userId, customApiKey);
+                    resp.sendRedirect(req.getContextPath() + "/resume-analysis?tab=analyze&success=analyzed");
+                    return;
+                }
+
+                case "save_groq_key": {
+                    String apiKey = req.getParameter("groqApiKey");
+                    if (apiKey != null && !apiKey.trim().isEmpty()) {
+                        analysisService.saveGroqApiKey(apiKey.trim());
+                    }
+                    resp.sendRedirect(req.getContextPath() + "/resume-analysis?tab=analyze&success=key_saved");
+                    return;
+                }
+
                 default:
                     resp.sendRedirect(req.getContextPath() + "/resume-analysis");
             }
@@ -280,7 +306,7 @@ public class ResumeAnalysisServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/resume-analysis?tab=" + tab + "&error=" + encodedMsg);
         } catch (Exception e) {
             String tab = resolveTabFromAction(action);
-            String encodedMsg = URLEncoder.encode("An error occurred while saving. Please check your input.", StandardCharsets.UTF_8.toString());
+            String encodedMsg = URLEncoder.encode("Analysis process: " + e.getMessage(), StandardCharsets.UTF_8.toString());
             resp.sendRedirect(req.getContextPath() + "/resume-analysis?tab=" + tab + "&error=" + encodedMsg);
         }
     }
@@ -301,6 +327,7 @@ public class ResumeAnalysisServlet extends HttpServlet {
         if (action.contains("experience")) return "experience";
         if (action.contains("certification")) return "certifications";
         if (action.contains("education")) return "education";
+        if (action.contains("analysis") || action.contains("groq")) return "analyze";
         return "career";
     }
 }

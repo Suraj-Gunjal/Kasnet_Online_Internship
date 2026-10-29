@@ -18,29 +18,33 @@ import java.sql.SQLException;
 public class DBConnection {
 
     // -------------------------------------------------------------------------
-    // DATABASE CONFIGURATION — Change these values for your environment
+    // DATABASE CONFIGURATION — Dynamically loaded from .env and environment
     // -------------------------------------------------------------------------
 
-    /** JDBC URL for the MySQL database.
-     *  Parameters: useSSL=false        — disable SSL for local dev
-     *              serverTimezone=UTC  — avoid timezone mismatch errors
-     *              allowPublicKeyRetrieval=true — required for MySQL 8+ caching_sha2 auth
-     */
-    private static final String DB_URL =
+    private static final String DEFAULT_DB_URL =
             "jdbc:mysql://localhost:3306/online_internship"
             + "?useSSL=false&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true";
-
-    /** Database username. Change for production. */
-    private static final String DB_USER = "root";
-
-    /**
-     * Database password.
-     * Change the placeholder to your local MySQL password before running the application.
-     */
-    private static final String DB_PASSWORD = "Sur4j@23sg8"; // active root password
+    private static final String DEFAULT_DB_USER = "root";
+    private static final String DEFAULT_DB_PASSWORD = "";
 
     /** Fully-qualified MySQL JDBC driver class name. */
     private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
+
+    public static String getDbUrl() {
+        return EnvUtil.get("DB_URL", DEFAULT_DB_URL);
+    }
+
+    public static String getDbUser() {
+        return EnvUtil.get("DB_USER", DEFAULT_DB_USER);
+    }
+
+    public static String getDbPassword() {
+        return EnvUtil.get("DB_PASSWORD", DEFAULT_DB_PASSWORD);
+    }
+
+    public static String getMaskedConnectionInfo() {
+        return "URL=" + getDbUrl() + ", User=" + getDbUser() + ", EnvSource=" + EnvUtil.getSource();
+    }
 
     // -------------------------------------------------------------------------
     // Static initialiser — loads the JDBC driver once when the class is loaded
@@ -98,7 +102,7 @@ public class DBConnection {
      * @throws SQLException if the connection cannot be established
      */
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        return DriverManager.getConnection(getDbUrl(), getDbUser(), getDbPassword());
     }
 
     /**

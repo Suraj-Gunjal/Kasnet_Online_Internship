@@ -72,18 +72,26 @@ This script automatically creates:
 - All 15 relational tables with foreign keys and indexes
 - Seeded curriculum modules, sample assignments, and sample lectures.
 
-### Step 3: Configure Database Password
-Do not store database credentials in source files. In PowerShell, set the database settings in the same
-terminal session used to launch the portal:
+### Step 3: Configure Environment Variables (.env)
+Credentials are never hardcoded in the codebase. All configuration is loaded dynamically from `.env` in the project root (or OS environment variables in cloud/production deployments).
 
-```powershell
-$env:KASNET_DB_USER = "root"
-$env:KASNET_DB_PASSWORD = "<your-local-MySQL-password>"
-```
+1. Copy `.env.example` to `.env`:
+   ```powershell
+   copy .env.example .env
+   ```
+2. Open `.env` and fill in your MySQL credentials and Groq API key:
+   ```env
+   # Database Configuration
+   DB_URL=jdbc:mysql://localhost:3306/online_internship?useSSL=false&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true
+   DB_USER=root
+   DB_PASSWORD=your_mysql_password
 
-You can also configure `KASNET_DB_URL`, or use the JVM properties `kasnet.db.url`,
-`kasnet.db.user`, and `kasnet.db.password`. For standalone Tomcat, configure these for the
-Tomcat service account before restarting the service.
+   # Groq AI Cloud Configuration (Resume & Skill Gap Engine)
+   GROQ_API_KEY=your_groq_api_key_here
+   GROQ_MODEL=openai/gpt-oss-120b
+   ```
+
+*For Docker / Container / Cloud deployments (AWS, Render, Heroku), you can also pass standard OS environment variables (`DB_URL`, `DB_USER`, `DB_PASSWORD`, `GROQ_API_KEY`) directly.*
 
 ### Step 4: Run Locally (One Single Command)
 We have included a configured embedded Tomcat runner in Maven. You do **not** need to install standalone Tomcat:

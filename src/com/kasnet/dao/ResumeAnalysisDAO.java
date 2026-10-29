@@ -81,6 +81,7 @@ public class ResumeAnalysisDAO {
             }
 
             schemaInitialized = true;
+            ProfileAnalysisDAO.ensureSchema();
             LOGGER.info("ResumeAnalysis schema verified successfully.");
 
         } catch (SQLException e) {

@@ -20,25 +20,31 @@ public class ResumeAnalysisService {
 
     private static final Logger LOGGER = Logger.getLogger(ResumeAnalysisService.class.getName());
 
-    private final CareerGoalDAO    careerGoalDAO;
-    private final SkillDAO         skillDAO;
-    private final ProjectDAO       projectDAO;
-    private final ExperienceDAO    experienceDAO;
-    private final CertificationDAO certificationDAO;
-    private final EducationDAO     educationDAO;
-    private final ProfileDAO       profileDAO;
+    private final CareerGoalDAO      careerGoalDAO;
+    private final SkillDAO           skillDAO;
+    private final ProjectDAO         projectDAO;
+    private final ExperienceDAO      experienceDAO;
+    private final CertificationDAO   certificationDAO;
+    private final EducationDAO       educationDAO;
+    private final ProfileDAO         profileDAO;
+    private final ProfileAnalysisDAO profileAnalysisDAO;
+    private final GroqAIService      groqAIService;
+    private final UserDAO            userDAO;
 
     public ResumeAnalysisService() {
         // Ensure required tables exist
         ResumeAnalysisDAO.ensureSchema();
 
-        this.careerGoalDAO    = new CareerGoalDAO();
-        this.skillDAO         = new SkillDAO();
-        this.projectDAO       = new ProjectDAO();
-        this.experienceDAO    = new ExperienceDAO();
-        this.certificationDAO = new CertificationDAO();
-        this.educationDAO     = new EducationDAO();
-        this.profileDAO       = new ProfileDAO();
+        this.careerGoalDAO      = new CareerGoalDAO();
+        this.skillDAO           = new SkillDAO();
+        this.projectDAO         = new ProjectDAO();
+        this.experienceDAO      = new ExperienceDAO();
+        this.certificationDAO   = new CertificationDAO();
+        this.educationDAO       = new EducationDAO();
+        this.profileDAO         = new ProfileDAO();
+        this.profileAnalysisDAO = new ProfileAnalysisDAO();
+        this.groqAIService      = new GroqAIService();
+        this.userDAO            = new UserDAO();
     }
 
     // -------------------------------------------------------------------------
@@ -487,6 +493,82 @@ public class ResumeAnalysisService {
         r.setReadyForAnalysis(coreReady);
 
         return r;
+    }
+
+    // -------------------------------------------------------------------------
+    // 8. AI RESUME & SKILL GAP ANALYSIS ENGINE (GROQ LLM)
+    // -------------------------------------------------------------------------
+
+    public AIAnalysisResult getLatestAIAnalysis(int userId) {
+        if (userId <= 0) return null;
+        return profileAnalysisDAO.getLatestAnalysisByUserId(userId);
+    }
+
+    public List<AIAnalysisResult> getAIAnalysisHistory(int userId) {
+        if (userId <= 0) return new ArrayList<>();
+        return profileAnalysisDAO.getAnalysisHistory(userId);
+    }
+
+    public boolean isGroqConfigured() {
+        return groqAIService.isConfigured();
+    }
+
+    public String getMaskedGroqKey() {
+        return groqAIService.getMaskedApiKey();
+    }
+
+    public boolean saveGroqApiKey(String apiKey) {
+        return groqAIService.saveApiKey(apiKey);
+    }
+
+    /**
+     * Evaluates whether required info is filled, gathers candidate profile facts,
+     * invokes Groq LLM intelligence engine, and persists the analysis history.
+     */
+    public AIAnalysisResult runAIAnalysis(int userId, String customApiKey) throws Exception {
+        if (userId <= 0) {
+            throw new IllegalArgumentException("Invalid user session.");
+        }
+
+        // 1. Check readiness (whether user has filled required info)
+        ProfileReadiness readiness = evaluateReadiness(userId);
+        if (!readiness.isReadyForAnalysis()) {
+            StringBuilder missingMsg = new StringBuilder("Cannot analyze profile yet. Please complete required information: ");
+            if (!readiness.isHasCareerGoal()) missingMsg.append("Target Role (Career Goal), ");
+            if (readiness.getSkillCount() == 0) missingMsg.append("Technical Skills, ");
+            if (readiness.getEducationCount() == 0) missingMsg.append("Academic Education, ");
+            String msg = missingMsg.toString();
+            if (msg.endsWith(", ")) msg = msg.substring(0, msg.length() - 2);
+            throw new IllegalArgumentException(msg + ".");
+        }
+
+        // 2. Load full user profile artifacts
+        User user = userDAO.getUserById(userId);
+        CareerGoal goal = careerGoalDAO.getCareerGoalByUserId(userId);
+        List<Skill> skills = skillDAO.getSkillsByUserId(userId);
+        List<Project> projects = projectDAO.getProjectsByUserId(userId);
+        List<Experience> experiences = experienceDAO.getExperienceByUserId(userId);
+        List<Certification> certifications = certificationDAO.getCertificationsByUserId(userId);
+        List<Education> educations = educationDAO.getEducationByUserId(userId);
+
+        // 3. Invoke Groq AI Service
+        AIAnalysisResult result = groqAIService.analyzeProfile(
+            user, goal, skills, projects, experiences, certifications, educations, customApiKey
+        );
+
+        // 4. Persist analysis report in MySQL profile_analysis_history
+        if (result != null) {
+            String role = (goal != null) ? goal.getEffectiveTargetRole() : "Software Developer";
+            String rawJson = result.getRawJson();
+            if (rawJson == null || rawJson.trim().isEmpty()) {
+                rawJson = "{}";
+            }
+            int savedId = profileAnalysisDAO.saveAnalysis(userId, role, rawJson, result.getModelUsed());
+            result.setAnalysisId(savedId);
+            result.setCreatedAt(new java.sql.Timestamp(System.currentTimeMillis()));
+        }
+
+        return result;
     }
 
     private void syncProfileCompletion(int userId) {

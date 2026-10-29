@@ -564,6 +564,457 @@
                             margin-bottom: 4px;
                         }
 
+                        /* AI Analysis Module Styles */
+                        .ai-hero-card {
+                            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #1e293b 100%);
+                            color: #ffffff;
+                            border-radius: 12px;
+                            padding: 28px;
+                            margin-bottom: 28px;
+                            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3), 0 8px 10px -6px rgba(15, 23, 42, 0.2);
+                            position: relative;
+                            overflow: hidden;
+                        }
+
+                        .ai-hero-card::after {
+                            content: "";
+                            position: absolute;
+                            top: -50%;
+                            right: -20%;
+                            width: 380px;
+                            height: 380px;
+                            background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, rgba(99, 102, 241, 0) 70%);
+                            border-radius: 50%;
+                            pointer-events: none;
+                        }
+
+                        .ai-hero-header {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: flex-start;
+                            flex-wrap: wrap;
+                            gap: 16px;
+                            margin-bottom: 20px;
+                        }
+
+                        .ai-hero-badge {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 6px;
+                            background: rgba(99, 102, 241, 0.2);
+                            border: 1px solid rgba(129, 140, 248, 0.4);
+                            color: #c7d2fe;
+                            padding: 4px 12px;
+                            border-radius: 9999px;
+                            font-size: 0.82rem;
+                            font-weight: 600;
+                            letter-spacing: 0.02em;
+                        }
+
+                        .ai-hero-scores {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                            gap: 16px;
+                            margin-top: 20px;
+                        }
+
+                        .ai-score-box {
+                            background: rgba(255, 255, 255, 0.06);
+                            border: 1px solid rgba(255, 255, 255, 0.12);
+                            backdrop-filter: blur(8px);
+                            border-radius: 10px;
+                            padding: 16px 20px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 6px;
+                        }
+
+                        .ai-score-title {
+                            font-size: 0.8rem;
+                            text-transform: uppercase;
+                            letter-spacing: 0.06em;
+                            color: #94a3b8;
+                            font-weight: 600;
+                        }
+
+                        .ai-score-num {
+                            font-size: 2.2rem;
+                            font-weight: 800;
+                            line-height: 1;
+                            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+
+                        .ai-score-num.highlight {
+                            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+
+                        .ai-score-num.market {
+                            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+
+                        .ai-summary-card {
+                            background: #ffffff;
+                            border: 1px solid var(--border);
+                            border-radius: 10px;
+                            padding: 22px;
+                            margin-bottom: 24px;
+                            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                        }
+
+                        .ai-summary-text {
+                            font-size: 0.96rem;
+                            line-height: 1.65;
+                            color: #334155;
+                            border-left: 3px solid #3b82f6;
+                            padding-left: 14px;
+                            margin-top: 10px;
+                        }
+
+                        .ai-grid-3 {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                            gap: 20px;
+                            margin-bottom: 28px;
+                        }
+
+                        .ai-col-card {
+                            background: #ffffff;
+                            border: 1px solid var(--border);
+                            border-radius: 10px;
+                            overflow: hidden;
+                            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+                            display: flex;
+                            flex-direction: column;
+                        }
+
+                        .ai-col-header {
+                            padding: 16px 20px;
+                            font-weight: 700;
+                            font-size: 1rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            border-bottom: 1px solid var(--border);
+                        }
+
+                        .ai-col-header.matching {
+                            background: #f0fdf4;
+                            color: #166534;
+                            border-color: #bbf7d0;
+                        }
+
+                        .ai-col-header.missing {
+                            background: #fef2f2;
+                            color: #991b1b;
+                            border-color: #fecaca;
+                        }
+
+                        .ai-col-header.trending {
+                            background: #faf5ff;
+                            color: #6b21a8;
+                            border-color: #f3e8ff;
+                        }
+
+                        .ai-col-body {
+                            padding: 16px 20px;
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 14px;
+                        }
+
+                        .skill-chip-item {
+                            padding: 12px;
+                            border-radius: 8px;
+                            border: 1px solid var(--border);
+                            background: #f8fafc;
+                            transition: transform 0.15s, box-shadow 0.15s;
+                        }
+
+                        .skill-chip-item:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+                        }
+
+                        .skill-chip-item.matching-item {
+                            background: #ffffff;
+                            border-color: #dcfce7;
+                        }
+
+                        .skill-chip-item.missing-item {
+                            background: #ffffff;
+                            border-color: #fee2e2;
+                        }
+
+                        .skill-chip-item.trending-item {
+                            background: #ffffff;
+                            border-color: #f3e8ff;
+                        }
+
+                        .skill-chip-title {
+                            font-weight: 700;
+                            font-size: 0.92rem;
+                            color: #0f172a;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 4px;
+                        }
+
+                        .skill-chip-desc {
+                            font-size: 0.84rem;
+                            color: #475569;
+                            line-height: 1.45;
+                        }
+
+                        .skill-chip-action {
+                            margin-top: 6px;
+                            font-size: 0.8rem;
+                            color: #0284c7;
+                            font-weight: 600;
+                        }
+
+                        .badge-crit {
+                            background: #fee2e2;
+                            color: #b91c1c;
+                            padding: 2px 7px;
+                            border-radius: 4px;
+                            font-size: 0.72rem;
+                            font-weight: 700;
+                            text-transform: uppercase;
+                        }
+
+                        .badge-high {
+                            background: #fef3c7;
+                            color: #b45309;
+                            padding: 2px 7px;
+                            border-radius: 4px;
+                            font-size: 0.72rem;
+                            font-weight: 700;
+                            text-transform: uppercase;
+                        }
+
+                        .badge-trend {
+                            background: #ede9fe;
+                            color: #6d28d9;
+                            padding: 2px 7px;
+                            border-radius: 4px;
+                            font-size: 0.72rem;
+                            font-weight: 700;
+                        }
+
+                        .badge-match {
+                            background: #dcfce7;
+                            color: #15803d;
+                            padding: 2px 7px;
+                            border-radius: 4px;
+                            font-size: 0.72rem;
+                            font-weight: 700;
+                        }
+
+                        /* Project suggestion card */
+                        .project-intel-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+                            gap: 18px;
+                            margin-top: 14px;
+                        }
+
+                        .project-intel-card {
+                            background: #ffffff;
+                            border: 1px solid var(--border);
+                            border-radius: 8px;
+                            padding: 18px 20px;
+                            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+                        }
+
+                        .project-intel-title {
+                            font-size: 1.05rem;
+                            font-weight: 700;
+                            color: #0f172a;
+                        }
+
+                        .project-intel-tech {
+                            display: inline-block;
+                            background: #f1f5f9;
+                            color: #1e293b;
+                            font-size: 0.8rem;
+                            font-weight: 600;
+                            padding: 4px 10px;
+                            border-radius: 6px;
+                            border: 1px solid #e2e8f0;
+                        }
+
+                        .project-intel-impact {
+                            background: #f0fdf4;
+                            border: 1px solid #bbf7d0;
+                            color: #166534;
+                            font-size: 0.84rem;
+                            padding: 8px 12px;
+                            border-radius: 6px;
+                            line-height: 1.4;
+                        }
+
+                        /* ATS Bullet Card */
+                        .bullet-intel-card {
+                            background: #ffffff;
+                            border: 1px solid var(--border);
+                            border-radius: 8px;
+                            padding: 16px 20px;
+                            margin-bottom: 12px;
+                        }
+
+                        .bullet-intel-issue {
+                            color: #b91c1c;
+                            font-size: 0.88rem;
+                            font-weight: 600;
+                            margin-bottom: 6px;
+                        }
+
+                        .bullet-intel-sol {
+                            background: #f8fafc;
+                            border-left: 3px solid #22c55e;
+                            padding: 10px 14px;
+                            font-size: 0.88rem;
+                            color: #0f172a;
+                            line-height: 1.5;
+                        }
+
+                        /* Action Roadmap Timeline */
+                        .roadmap-strip {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                            gap: 16px;
+                            margin-top: 14px;
+                        }
+
+                        .roadmap-box {
+                            background: #f8fafc;
+                            border: 1px solid var(--border);
+                            border-radius: 8px;
+                            padding: 18px;
+                        }
+
+                        .roadmap-period {
+                            font-size: 0.78rem;
+                            text-transform: uppercase;
+                            letter-spacing: 0.06em;
+                            color: #2563eb;
+                            font-weight: 800;
+                        }
+
+                        .roadmap-focus {
+                            font-size: 0.98rem;
+                            font-weight: 700;
+                            color: #0f172a;
+                            margin: 4px 0 10px 0;
+                        }
+
+                        .roadmap-task-list {
+                            list-style: none;
+                            padding-left: 0;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 8px;
+                        }
+
+                        .roadmap-task-list li {
+                            font-size: 0.85rem;
+                            color: #475569;
+                            position: relative;
+                            padding-left: 18px;
+                            line-height: 1.4;
+                        }
+
+                        .roadmap-task-list li::before {
+                            content: "•";
+                            position: absolute;
+                            left: 4px;
+                            color: #3b82f6;
+                            font-weight: bold;
+                        }
+
+                        /* Button & Spinner states */
+                        .btn-run-ai {
+                            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4338ca 100%);
+                            color: #ffffff;
+                            border: none;
+                            padding: 14px 28px;
+                            border-radius: 8px;
+                            font-size: 1.02rem;
+                            font-weight: 700;
+                            cursor: pointer;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 10px;
+                            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+                            transition: all 0.2s ease;
+                        }
+
+                        .btn-run-ai:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+                            background: linear-gradient(135deg, #172554 0%, #1d4ed8 50%, #3730a3 100%);
+                        }
+
+                        .btn-re-run {
+                            background: rgba(255, 255, 255, 0.15);
+                            color: #ffffff;
+                            border: 1px solid rgba(255, 255, 255, 0.3);
+                            padding: 8px 16px;
+                            border-radius: 6px;
+                            font-size: 0.86rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 8px;
+                            transition: background 0.2s;
+                        }
+
+                        .btn-re-run:hover {
+                            background: rgba(255, 255, 255, 0.25);
+                        }
+
+                        .ai-overlay-spinner {
+                            display: none;
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            background: rgba(15, 23, 42, 0.7);
+                            backdrop-filter: blur(4px);
+                            z-index: 9999;
+                            justify-content: center;
+                            align-items: center;
+                            flex-direction: column;
+                            color: #ffffff;
+                            gap: 16px;
+                        }
+
+                        .spinner {
+                            width: 50px;
+                            height: 50px;
+                            border: 4px solid rgba(255, 255, 255, 0.2);
+                            border-top-color: #60a5fa;
+                            border-radius: 50%;
+                            animation: spin 0.8s linear infinite;
+                        }
+
+                        @keyframes spin {
+                            to { transform: rotate(360deg); }
+                        }
+
                         @media (max-width: 768px) {
 
                             .form-grid-2,
@@ -574,6 +1025,10 @@
                             .summary-bar {
                                 flex-direction: column;
                                 align-items: flex-start;
+                            }
+
+                            .ai-grid-3 {
+                                grid-template-columns: 1fr;
                             }
                         }
                     </style>
@@ -631,6 +1086,18 @@
                             <div class="alert-success" role="alert">
                                 <span>&#10003;</span>
                                 <div>Information saved and updated successfully in your profile!</div>
+                            </div>
+                        </c:if>
+                        <c:if test="${param.success == 'analyzed'}">
+                            <div class="alert-success" role="alert" style="background: #f0fdf4; border-color: #86efac; color: #166534;">
+                                <span style="font-size: 1.15rem;">&#128640;</span>
+                                <div><strong>Analysis Completed!</strong> Your profile has been analyzed against live tech industry market requirements for your target role.</div>
+                            </div>
+                        </c:if>
+                        <c:if test="${param.success == 'key_saved'}">
+                            <div class="alert-success" role="alert">
+                                <span>&#10003;</span>
+                                <div>Groq API Key saved successfully in system settings! You can now run AI analyses anytime.</div>
                             </div>
                         </c:if>
                         <c:if test="${not empty param.error}">
@@ -1922,43 +2389,318 @@
                                     </div>
                                 </div>
 
-                                <!-- Phase 2 Entry Point Placeholder Action Box -->
-                                <div
-                                    style="margin-top: 28px; padding: 22px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; text-align: center;">
-                                    <h4
-                                        style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
-                                        AI Skill-Gap &amp; Recommendation Engine </h4>
-                                    <p
-                                        style="font-size: 0.88rem; color: var(--text-muted); max-width: 680px; margin: 0 auto 16px auto;">
-                                        Phase 1 profile information collection and MySQL storage is complete.
-                                        In Phase 2, the intelligent analyzer will evaluate your declared skills against
-                                        project and experience evidence, compare against market demand for <strong>${not
-                                            empty careerGoal.targetRole ? careerGoal.effectiveTargetRole : 'your target
-                                            career'}</strong>, and synthesize personalized project recommendations.
-                                    </p>
+                                <!-- AI Resume Analysis Trigger & Production Engine -->
+                                <div style="margin-top: 28px; padding: 26px; background: #ffffff; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
+                                        <div>
+                                            <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                                <span>&#129302;</span> AI Resume &amp; Skill-Gap Intelligence Engine
+                                            </h4>
+                                            <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 680px;">
+                                                Evaluates your declared skills against empirical project and experience proof, benchmarks your profile against current 2025-2026 tech market demands for <strong>${not empty careerGoal.targetRole ? careerGoal.effectiveTargetRole : 'your target career'}</strong>, identifies critical missing skills, and synthesizes tailored portfolio recommendations.
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <span class="badge badge-success" style="padding: 6px 14px; font-size: 0.82rem; letter-spacing: 0.02em;">
+                                                &#10003; AI Engine Online &bull; Ready
+                                            </span>
+                                        </div>
+                                    </div>
 
+                                    <!-- Primary Analysis Action Trigger -->
                                     <c:choose>
                                         <c:when test="${readiness.readyForAnalysis}">
-                                            <button type="button" class="btn-primary"
-                                                style="opacity: 0.85; cursor: default;"
-                                                title="Phase 2 Integration Endpoint">
-                                                &#9654; Ready for Intelligence Engine
-                                            </button>
+                                            <form action="${pageContext.request.contextPath}/resume-analysis" method="post" onsubmit="showAiLoading()">
+                                                <input type="hidden" name="action" value="run_ai_analysis">
+                                                <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                                                    <button type="submit" class="btn-run-ai" id="runAiBtn">
+                                                        <span>&#128640;</span> ${not empty analysis ? 'Re-Analyze My Profile &amp; Skills' : 'Analyze My Resume &amp; Skills'}
+                                                    </button>
+                                                    <span style="font-size: 0.85rem; color: #64748b;">
+                                                        Powered by Groq Llama 3.3 70B &amp; Market Intelligence Engine
+                                                    </span>
+                                                </div>
+                                            </form>
                                         </c:when>
                                         <c:otherwise>
-                                            <button type="button" class="btn-secondary" disabled
-                                                style="opacity: 0.6; cursor: not-allowed;">
-                                                Complete Core Sections First to Unlock Analysis
-                                            </button>
+                                            <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 14px 18px; color: #92400e; font-size: 0.88rem;">
+                                                <strong>Cannot run analysis yet:</strong> Complete required core sections (Career Goal, Skills, and Education) shown above to unlock AI evaluation.
+                                            </div>
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
+
+                                <!-- =========================================================
+                                     AI ANALYSIS RESULTS DASHBOARD (PRESENTATION)
+                                     ========================================================= -->
+                                <c:if test="${not empty analysis}">
+                                    <div style="margin-top: 36px;">
+                                        <!-- Section Anchor Title -->
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                                            <div>
+                                                <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                                                    <span>&#9733;</span> AI Profile &amp; Skill-Gap Intelligence Report
+                                                </h3>
+                                                <p style="font-size: 0.88rem; color: var(--text-muted);">
+                                                    Benchmarked for <strong>${analysis.targetRole}</strong> &bull; Generated <fmt:formatDate value="${analysis.createdAt}" pattern="dd MMM yyyy, hh:mm a" />
+                                                </p>
+                                            </div>
+                                            <form action="${pageContext.request.contextPath}/resume-analysis" method="post" onsubmit="showAiLoading()">
+                                                <input type="hidden" name="action" value="run_ai_analysis">
+                                                <button type="submit" class="btn-secondary" style="font-size: 0.85rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px;">
+                                                    <span>&#8635;</span> Refresh Analysis
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        <!-- Hero Metrics Card -->
+                                        <div class="ai-hero-card">
+                                            <div class="ai-hero-header">
+                                                <div>
+                                                    <span class="ai-hero-badge">&#9679; Target Career Track: ${analysis.targetRole}</span>
+                                                    <h3 style="font-size: 1.45rem; font-weight: 800; margin-top: 10px; color: #ffffff;">
+                                                        Profile Suitability &amp; Market Readiness Score
+                                                    </h3>
+                                                </div>
+                                                <div style="font-size: 0.8rem; color: #94a3b8; text-align: right;">
+                                                    Engine: <span style="color: #cbd5e1; font-weight: 600;">${analysis.modelUsed}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="ai-hero-scores">
+                                                <div class="ai-score-box">
+                                                    <span class="ai-score-title">Overall Readiness</span>
+                                                    <span class="ai-score-num highlight">${analysis.overallScore}%</span>
+                                                    <small style="color: #94a3b8; font-size: 0.78rem;">Profile strength vs industry expectations</small>
+                                                </div>
+                                                <div class="ai-score-box">
+                                                    <span class="ai-score-title">Market Demand Fit</span>
+                                                    <span class="ai-score-num market">${analysis.marketFitScore}%</span>
+                                                    <small style="color: #94a3b8; font-size: 0.78rem;">Alignment with current 2025 hiring demand</small>
+                                                </div>
+                                                <div class="ai-score-box">
+                                                    <span class="ai-score-title">Declared Skills</span>
+                                                    <span class="ai-score-num">${skills.size()}</span>
+                                                    <small style="color: #94a3b8; font-size: 0.78rem;">${analysis.matchingSkills.size()} validated market matches</small>
+                                                </div>
+                                                <div class="ai-score-box">
+                                                    <span class="ai-score-title">Critical Missing Skills</span>
+                                                    <span class="ai-score-num" style="color: #f87171;">${analysis.missingRequiredSkills.size()}</span>
+                                                    <small style="color: #94a3b8; font-size: 0.78rem;">Priority competencies to bridge</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Executive Summary & Standout Strengths -->
+                                        <div class="ai-summary-card">
+                                            <h4 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
+                                                Executive Recruiter Summary
+                                            </h4>
+                                            <div class="ai-summary-text">
+                                                ${analysis.roleFitSummary}
+                                            </div>
+
+                                            <c:if test="${not empty analysis.topStrengths}">
+                                                <div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid #f1f5f9;">
+                                                    <strong style="font-size: 0.88rem; color: #0f172a; display: block; margin-bottom: 8px;">
+                                                        &#10004; Verified Standout Strengths:
+                                                    </strong>
+                                                    <ul style="padding-left: 20px; font-size: 0.88rem; color: #475569; display: flex; flex-direction: column; gap: 6px;">
+                                                        <c:forEach var="str" items="${analysis.topStrengths}">
+                                                            <li>${str}</li>
+                                                        </c:forEach>
+                                                    </ul>
+                                                </div>
+                                            </c:if>
+                                        </div>
+
+                                        <!-- 3-Column Skills Intelligence Grid -->
+                                        <h4 style="font-size: 1.12rem; font-weight: 800; color: #0f172a; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                                            <span>&#9878;</span> In-Depth Skills Market Alignment &amp; Recommendations
+                                        </h4>
+                                        <div class="ai-grid-3">
+                                            <!-- Column 1: Matching / Possessed Skills -->
+                                            <div class="ai-col-card">
+                                                <div class="ai-col-header matching">
+                                                    <span>&#10003; Skills You Have (Market-Aligned)</span>
+                                                    <span class="badge badge-match">${analysis.matchingSkills.size()} Verified</span>
+                                                </div>
+                                                <div class="ai-col-body">
+                                                    <c:choose>
+                                                        <c:when test="${not empty analysis.matchingSkills}">
+                                                            <c:forEach var="ms" items="${analysis.matchingSkills}">
+                                                                <div class="skill-chip-item matching-item">
+                                                                    <div class="skill-chip-title">
+                                                                        <span>${ms.name}</span>
+                                                                        <span class="badge-match">${ms.matchLevel}</span>
+                                                                    </div>
+                                                                    <div class="skill-chip-desc">${ms.comment}</div>
+                                                                </div>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div style="font-size: 0.85rem; color: #64748b; text-align: center; padding: 20px 0;">
+                                                                No direct market-aligned skills cataloged. Add technical skills in Tab 2.
+                                                            </div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+
+                                            <!-- Column 2: Missing Required Skills -->
+                                            <div class="ai-col-card">
+                                                <div class="ai-col-header missing">
+                                                    <span>&#9888; Missing Required Skills for ${analysis.targetRole}</span>
+                                                    <span class="badge-crit">${analysis.missingRequiredSkills.size()} Critical Gaps</span>
+                                                </div>
+                                                <div class="ai-col-body">
+                                                    <c:choose>
+                                                        <c:when test="${not empty analysis.missingRequiredSkills}">
+                                                            <c:forEach var="mis" items="${analysis.missingRequiredSkills}">
+                                                                <div class="skill-chip-item missing-item">
+                                                                    <div class="skill-chip-title">
+                                                                        <span>${mis.name}</span>
+                                                                        <span class="${mis.importance == 'Critical' ? 'badge-crit' : 'badge-high'}">${mis.importance}</span>
+                                                                    </div>
+                                                                    <div class="skill-chip-desc">${mis.reason}</div>
+                                                                    <div class="skill-chip-action">&#8594; Action: ${mis.recommendedAction}</div>
+                                                                </div>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div style="font-size: 0.85rem; color: #166534; text-align: center; padding: 20px 0;">
+                                                                &#10003; Outstanding! No critical core skills are missing for your target role.
+                                                            </div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+
+                                            <!-- Column 3: Recommended Good & Trending Skills -->
+                                            <div class="ai-col-card">
+                                                <div class="ai-col-header trending">
+                                                    <span>&#10024; Recommended Modern &amp; Trending Skills</span>
+                                                    <span class="badge-trend">${analysis.recommendedTrendingSkills.size()} Competitive</span>
+                                                </div>
+                                                <div class="ai-col-body">
+                                                    <c:choose>
+                                                        <c:when test="${not empty analysis.recommendedTrendingSkills}">
+                                                            <c:forEach var="ts" items="${analysis.recommendedTrendingSkills}">
+                                                                <div class="skill-chip-item trending-item">
+                                                                    <div class="skill-chip-title">
+                                                                        <span>${ts.name}</span>
+                                                                        <span class="badge-trend">${ts.priority}</span>
+                                                                    </div>
+                                                                    <div class="skill-chip-desc">${ts.trendingReason}</div>
+                                                                </div>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div style="font-size: 0.85rem; color: #64748b; text-align: center; padding: 20px 0;">
+                                                                No additional trending skills suggested at this time.
+                                                            </div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Empirical Portfolio Project Recommendations -->
+                                        <c:if test="${not empty analysis.projectSuggestions}">
+                                            <div style="margin-top: 32px;">
+                                                <h4 style="font-size: 1.12rem; font-weight: 800; color: #0f172a; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                                    <span>&#128187;</span> Recommended Portfolio Projects to Prove Missing Skills
+                                                </h4>
+                                                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+                                                    Building these concrete projects will provide verifiable empirical proof of the missing required skills and elevate your GitHub portfolio.
+                                                </p>
+                                                <div class="project-intel-grid">
+                                                    <c:forEach var="proj" items="${analysis.projectSuggestions}">
+                                                        <div class="project-intel-card">
+                                                            <div class="project-intel-title">${proj.title}</div>
+                                                            <div style="font-size: 0.88rem; color: #475569; line-height: 1.5;">${proj.description}</div>
+                                                            <div>
+                                                                <span class="project-intel-tech">&#128736; Stack: ${proj.techStack}</span>
+                                                            </div>
+                                                            <div class="project-intel-impact">
+                                                                <strong>Resume Impact:</strong> ${proj.resumeImpact}
+                                                            </div>
+                                                        </div>
+                                                    </c:forEach>
+                                                </div>
+                                            </div>
+                                        </c:if>
+
+                                        <!-- ATS & Resume Bullet Point Improvements -->
+                                        <c:if test="${not empty analysis.resumeBulletImprovements}">
+                                            <div style="margin-top: 32px;">
+                                                <h4 style="font-size: 1.12rem; font-weight: 800; color: #0f172a; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                                    <span>&#128221;</span> ATS Resume Optimization &amp; Bullet Improvements
+                                                </h4>
+                                                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+                                                    Recruiters and automated ATS parsers filter resumes based on quantifiable metrics. Use these Google XYZ improvements:
+                                                </p>
+                                                <c:forEach var="tip" items="${analysis.resumeBulletImprovements}">
+                                                    <div class="bullet-intel-card">
+                                                        <div class="bullet-intel-issue">&#9888; <strong>Issue in ${tip.section}:</strong> ${tip.issue}</div>
+                                                        <div class="bullet-intel-sol">&#10004; <strong>Recommended High-Impact Formula:</strong> ${tip.recommendedImprovement}</div>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
+                                        </c:if>
+
+                                        <!-- 30-Day Step-by-Step Action Roadmap -->
+                                        <c:if test="${not empty analysis.actionPlan}">
+                                            <div style="margin-top: 32px;">
+                                                <h4 style="font-size: 1.12rem; font-weight: 800; color: #0f172a; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                                    <span>&#128197;</span> 30-Day Step-by-Step Interview Readiness Roadmap
+                                                </h4>
+                                                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+                                                    A phased timeline to systematically close your skill gaps and become interview-ready for <strong>${analysis.targetRole}</strong>.
+                                                </p>
+                                                <div class="roadmap-strip">
+                                                    <c:forEach var="milestone" items="${analysis.actionPlan}">
+                                                        <div class="roadmap-box">
+                                                            <div class="roadmap-period">${milestone.dayRange}</div>
+                                                            <div class="roadmap-focus">${milestone.focus}</div>
+                                                            <ul class="roadmap-task-list">
+                                                                <c:forEach var="t" items="${milestone.tasks}">
+                                                                    <li>${t}</li>
+                                                                </c:forEach>
+                                                            </ul>
+                                                        </div>
+                                                    </c:forEach>
+                                                </div>
+                                            </div>
+                                        </c:if>
+
+                                    </div>
+                                </c:if>
                             </div>
                         </c:if>
 
                     </main>
 
+                    <!-- AI Loading Spinner Overlay -->
+                    <div class="ai-overlay-spinner" id="aiOverlaySpinner">
+                        <div class="spinner"></div>
+                        <div style="font-size: 1.25rem; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Evaluating Profile with Groq AI...</div>
+                        <div style="font-size: 0.92rem; color: #cbd5e1; max-width: 500px; text-align: center; line-height: 1.5;">
+                            Comparing your declared skills, projects, and credentials against current 2025-2026 tech market demands.
+                        </div>
+                    </div>
+
                     <script>
+                        function showAiLoading() {
+                            var spinner = document.getElementById('aiOverlaySpinner');
+                            if (spinner) spinner.style.display = 'flex';
+                            var btn = document.getElementById('runAiBtn');
+                            if (btn) {
+                                btn.disabled = true;
+                                btn.innerHTML = '<span>&#8987;</span> Analyzing Profile...';
+                            }
+                        }
+
                         function toggleRoleOther(val) {
                             var group = document.getElementById('targetRoleOtherGroup');
                             var input = document.getElementById('targetRoleOther');

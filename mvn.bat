@@ -1,6 +1,6 @@
 @echo off
 rem Robust Maven wrapper script for Kasnet Online Internship Portal
-if not defined JAVA_HOME (
+if not exist "%JAVA_HOME%\bin\javac.exe" (
     if exist "C:\Program Files\Java\jdk-21" set "JAVA_HOME=C:\Program Files\Java\jdk-21"
 )
 

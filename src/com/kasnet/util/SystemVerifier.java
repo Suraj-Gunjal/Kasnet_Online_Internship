@@ -23,11 +23,24 @@ public class SystemVerifier {
 
         boolean allPassed = true;
 
+        // 0. Environment & .env Loading
+        System.out.println("[CONFIG] .env source: " + EnvUtil.getSource());
+        System.out.println("[CONFIG] Database info: " + DBConnection.getMaskedConnectionInfo());
+        System.out.print("[TEST 0] Verifying .env Configuration & Groq API Key... ");
+        com.kasnet.service.GroqAIService groqService = new com.kasnet.service.GroqAIService();
+        String groqKey = groqService.resolveApiKey(null);
+        if (groqKey != null && groqKey.startsWith("gsk_")) {
+            System.out.println("PASSED (Key masked: " + groqService.getMaskedApiKey() + ")");
+        } else {
+            System.out.println("FAILED (Could not resolve Groq API key from .env)");
+            allPassed = false;
+        }
+
         // 1. MySQL Connection
-        System.out.print("[TEST 1] Verifying MySQL connection... ");
+        System.out.print("[TEST 1] Verifying MySQL connection via EnvUtil credentials... ");
         try (Connection conn = DBConnection.getConnection()) {
             if (conn != null && !conn.isClosed()) {
-                System.out.println("PASSED (Connected to online_internship)");
+                System.out.println("PASSED (Connected to online_internship with user '" + DBConnection.getDbUser() + "')");
             } else {
                 System.out.println("FAILED (Connection is null or closed)");
                 allPassed = false;
