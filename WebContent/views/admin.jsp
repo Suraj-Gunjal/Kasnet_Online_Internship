@@ -985,6 +985,14 @@
                 </a>
             </li>
             <li class="sidebar-menu-item">
+                <a href="javascript:void(0)" class="sidebar-link" id="tabNavOfferLetter" onclick="switchAdminTab('offer-letter')">
+                    <span class="sidebar-link-content">
+                        <span class="sidebar-link-icon">📄</span>
+                        <span>Certification</span>
+                    </span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
                 <a href="javascript:void(0)" class="sidebar-link" id="tabNavProjects" onclick="switchAdminTab('projects')">
                     <span class="sidebar-link-content">
                         <span class="sidebar-link-icon">📁</span>
@@ -1169,6 +1177,64 @@
                     <div class="pagination-container" id="paginationControls">
                         <!-- Dynamic page buttons injected by JS -->
                     </div>
+                </div>
+            </div>
+
+            <!-- ================= OFFER LETTER CERTIFICATION TAB PANE ================= -->
+            <div id="sectionOfferLetter" class="admin-tab-pane" style="display:none;">
+                <div class="content-header">
+                    <h1 class="page-title">Student Offer Letter</h1>
+                </div>
+                <div class="table-card" style="max-width:1100px;padding:24px;">
+                    <form id="offerLetterForm" method="post" action="${pageContext.request.contextPath}/admin/offer-letter" target="_blank" accept-charset="UTF-8"
+                          style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;">
+                        <div>
+                            <label for="offerName" style="display:block;font-weight:600;margin-bottom:7px;">Name</label>
+                            <input id="offerName" name="name" type="text" maxlength="100" required autocomplete="name"
+                                   style="width:100%;height:42px;padding:0 12px;border:1px solid #d5d9e2;border-radius:4px;">
+                        </div>
+                        <div>
+                            <label for="offerCollege" style="display:block;font-weight:600;margin-bottom:7px;">College</label>
+                            <input id="offerCollege" name="college" type="text" maxlength="150" required
+                                   style="width:100%;height:42px;padding:0 12px;border:1px solid #d5d9e2;border-radius:4px;">
+                        </div>
+                        <div>
+                            <label for="offerBranch" style="display:block;font-weight:600;margin-bottom:7px;">Branch</label>
+                            <input id="offerBranch" name="branch" type="text" maxlength="100" required
+                                   style="width:100%;height:42px;padding:0 12px;border:1px solid #d5d9e2;border-radius:4px;">
+                        </div>
+                        <div>
+                            <label for="offerDesignation" style="display:block;font-weight:600;margin-bottom:7px;">Designation</label>
+                            <input id="offerDesignation" name="designation" type="text" maxlength="100" required
+                                   style="width:100%;height:42px;padding:0 12px;border:1px solid #d5d9e2;border-radius:4px;">
+                        </div>
+                        <div>
+                            <label for="offerDuration" style="display:block;font-weight:600;margin-bottom:7px;">Duration</label>
+                            <input id="offerDuration" name="duration" type="text" value="4 Months" pattern="[0-9]{1,2}[ ]*[Mm]onths?" required
+                                   style="width:100%;height:42px;padding:0 12px;border:1px solid #d5d9e2;border-radius:4px;">
+                        </div>
+                        <div>
+                            <label for="internshipStartDate" style="display:block;font-weight:600;margin-bottom:7px;">Internship Start Date</label>
+                            <input id="internshipStartDate" name="internshipStartDate" type="date" required
+                                   style="width:100%;height:42px;padding:0 12px;border:1px solid #d5d9e2;border-radius:4px;">
+                        </div>
+                        <div>
+                            <label for="offerLetterDate" style="display:block;font-weight:600;margin-bottom:7px;">Offer Letter Date</label>
+                            <input id="offerLetterDate" name="offerLetterDate" type="date" required
+                                   style="width:100%;height:42px;padding:0 12px;border:1px solid #d5d9e2;border-radius:4px;">
+                        </div>
+                        <div>
+                            <label for="offerCertificate" style="display:block;font-weight:600;margin-bottom:7px;">Select Certificate</label>
+                            <select id="offerCertificate" name="certificate" required
+                                    style="width:100%;height:42px;padding:0 12px;border:1px solid #d5d9e2;border-radius:4px;background:#fff;">
+                                <option value="Kasnet Offer Letter">Kasnet Offer Letter</option>
+                            </select>
+                        </div>
+                        <div style="grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px;margin-top:8px;">
+                            <button type="submit" class="btn-export-excel" style="height:42px;background:#45b4ad;color:#fff;border:0;padding:0 22px;cursor:pointer;">Generate Offer Letter</button>
+                            <button type="reset" class="btn-export-excel" style="height:42px;background:#fff;color:#45b4ad;border:1px solid #45b4ad;padding:0 20px;cursor:pointer;">Reset</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -1453,7 +1519,7 @@
             // Restore the selected admin section from the URL.
             var urlParams = new URLSearchParams(window.location.search);
             var activeTab = urlParams.get('tab');
-            if (activeTab === 'certificates' || activeTab === 'projects') {
+            if (activeTab === 'certificates' || activeTab === 'projects' || activeTab === 'offer-letter') {
                 switchAdminTab(activeTab);
             }
 
@@ -1475,11 +1541,13 @@
             var sections = {
                 students: document.getElementById('sectionStudents'),
                 certificates: document.getElementById('sectionCertificates'),
+                'offer-letter': document.getElementById('sectionOfferLetter'),
                 projects: document.getElementById('sectionProjectReports')
             };
             var navigation = {
                 students: document.getElementById('tabNavStudents'),
                 certificates: document.getElementById('tabNavCerts'),
+                'offer-letter': document.getElementById('tabNavOfferLetter'),
                 projects: document.getElementById('tabNavProjects')
             };
             if (!sections[tabName]) tabName = 'students';
@@ -1491,6 +1559,7 @@
             var labels = {
                 students: 'Student Details',
                 certificates: 'Global Certification',
+                'offer-letter': 'Certification / Student Offer Letter',
                 projects: 'Student Project Reports'
             };
             if (breadcrumb) breadcrumb.textContent = 'Online Internship Administration / ' + labels[tabName];

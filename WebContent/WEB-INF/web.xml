@@ -276,6 +276,15 @@
         <url-pattern>/admin</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>AdminOfferLetterServlet</servlet-name>
+        <servlet-class>com.kasnet.controller.AdminOfferLetterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminOfferLetterServlet</servlet-name>
+        <url-pattern>/admin/offer-letter</url-pattern>
+    </servlet-mapping>
+
     <!-- Question Bank -->
     <servlet>
         <servlet-name>QuestionBankServlet</servlet-name>
