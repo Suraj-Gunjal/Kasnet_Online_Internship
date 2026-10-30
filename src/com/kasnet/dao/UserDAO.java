@@ -104,6 +104,17 @@ public class UserDAO {
         return null;
     }
 
+    public User getUserByEmailForLogin(String email) throws SQLException {
+        final String sql = "SELECT * FROM users WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? mapRowToUser(rs) : null;
+            }
+        }
+    }
+
     public User getUserById(int userId) {
         final String sql = "SELECT * FROM users WHERE user_id = ?";
 

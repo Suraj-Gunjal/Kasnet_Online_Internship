@@ -552,28 +552,32 @@ CREATE TABLE IF NOT EXISTS `login_activity` (
 
 -- -------------------------------------------------------------
 --  Admin user
---  NOTE: The password_hash below is a PLACEHOLDER only.
---        BCrypt hashes MUST be generated at runtime (e.g. via
---        RegisterServlet or BCrypt.hashpw()).
---        Replace '$2a$12$PLACEHOLDER_HASH' with a real BCrypt
---        hash before use, or use RegisterServlet to create
---        accounts properly.
---
---  Example plain-text password intended: Admin@1234
+--  Credentials: admin@myinternshiptech.com / Admin@12345
+--               admin@kasnet.in / Admin@12345 (legacy alias)
 -- -------------------------------------------------------------
 INSERT INTO `users`
   (`first_name`, `last_name`, `email`, `password_hash`, `mobile`, `country_code`, `role`, `is_active`)
 VALUES
   ('MIT', 'Admin', 'admin@myinternshiptech.com',
-   '$2a$12$PLACEHOLDER_REPLACE_WITH_REAL_BCRYPT_HASH_FOR_Admin1234',
+   '$2a$12$AyM4Ut1sHpQo7jmZvv19L.fE5dxq0Tb6r.Cq42nWqEpf2EaiUtKZG',
+   '9000000000', '+91', 'ADMIN', 1),
+  ('MIT', 'Admin', 'admin@kasnet.in',
+   '$2a$12$AyM4Ut1sHpQo7jmZvv19L.fE5dxq0Tb6r.Cq42nWqEpf2EaiUtKZG',
    '9000000000', '+91', 'ADMIN', 1);
 
--- NOTE: To create a proper admin, run the application and call:
---   BCrypt.hashpw("Admin@1234", BCrypt.gensalt(12))
--- then UPDATE users SET password_hash='<hash>' WHERE email='admin@myinternshiptech.com';
---
--- Or simply register through RegisterServlet and promote to ADMIN:
---   UPDATE users SET role='ADMIN' WHERE email='admin@myinternshiptech.com';
+-- -------------------------------------------------------------
+--  Test student account
+--  Credentials: test@myinternshiptech.com / Test@12345
+-- -------------------------------------------------------------
+INSERT INTO `users`
+  (`first_name`, `last_name`, `email`, `password_hash`, `mobile`, `country_code`, `role`, `stream`, `branch`, `college_name`, `city`, `is_active`)
+VALUES
+  ('Test', 'Student', 'test@myinternshiptech.com',
+   '$2a$12$wQfH0c0nSBXsVtZYJoKHzOeB80RhC6651LDqJxZZBJYudXBZSgZcO',
+   '9000000001', '+91', 'STUDENT', 'Graduation', 'Computer Science and Engineering', 'Institute of Technology', 'Pune', 1);
+
+INSERT INTO `student_profiles` (`user_id`)
+SELECT `user_id` FROM `users` WHERE `email` = 'test@myinternshiptech.com';
 
 -- -------------------------------------------------------------
 --  Sample Assignments

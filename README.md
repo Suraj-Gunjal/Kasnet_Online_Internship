@@ -131,12 +131,19 @@ handling does not depend on Tomcat's URL-parameter parsing limit.
 
 ## Pre-configured Test Credentials
 
-The application provides pre-configured credentials for quick testing:
+The fresh-install seed in `database.sql` creates these accounts. To add or reset these demo credentials in an existing database without dropping tables, run `seed_demo_accounts.sql` from the project directory. It only updates the three listed demo email addresses; other accounts are unchanged:
+
+```powershell
+mysql -u root -p < seed_demo_accounts.sql
+```
+
+The MySQL client prompts for the database password. The demo credentials are:
 
 | Role | Email | Password | Destination Dashboard |
 |---|---|---|---|
-| **Student (Test ID)** | `test@myinternshiptech.com` *(or `test@kasnet.in`)* | `Test@12345` | Student Portal (`/dashboard`) |
-| **System Administrator** | `admin@myinternshiptech.com` *(or `admin@kasnet.in`)* | `Admin@12345` | Admin Console (`/admin`) |
+| **Student (Test ID)** | `test@myinternshiptech.com` | `Test@12345` | Student Portal (`/dashboard`) |
+| **System Administrator** | `admin@myinternshiptech.com` | `Admin@12345` | Admin Console (`/admin`) |
+| **Legacy administrator alias** | `admin@kasnet.in` | `Admin@12345` | Admin Console (`/admin`) |
 
 You can also click **Register** on the landing page to register a fresh student account. New accounts are immediately persisted in your local MySQL database.
 

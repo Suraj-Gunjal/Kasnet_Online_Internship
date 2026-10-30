@@ -586,12 +586,12 @@
             <p class="form-subheading">Sign in to continue to your internship portal account.</p>
 
             <%-- ── Error alert ── --%>
-            <c:if test="${not empty requestScope.error}">
+            <c:if test="${not empty requestScope.errorMessage}">
                 <div class="alert alert-error" id="errorAlert">
                     <span class="alert-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     </span>
-                    <span>${requestScope.error}</span>
+                    <span>${requestScope.errorMessage}</span>
                 </div>
             </c:if>
 
@@ -775,6 +775,11 @@
                 successAlert.style.display = "none";
             }, 500);
         }, 3000);
+    }
+
+    var errorAlert = document.getElementById("errorAlert");
+    if (errorAlert && errorAlert.textContent) {
+        window.alert(errorAlert.textContent.trim());
     }
 
     /* ── 3. Client-side form validation ── */

@@ -6,6 +6,7 @@ import com.kasnet.model.User;
 import com.kasnet.util.PasswordUtil;
 
 import java.sql.Timestamp;
+import java.sql.SQLException;
 
 public class AuthenticationService {
 
@@ -89,9 +90,9 @@ public class AuthenticationService {
             if (role != null && !role.trim().isEmpty() && !"STUDENT".equalsIgnoreCase(role.trim())) {
                 throw new Exception("Role does not match this account.");
             }
-            User dbTestUser = userDAO.getUserByEmail(normalizedEmail);
+            User dbTestUser = findUserForLogin(normalizedEmail);
             if (dbTestUser == null && TEST_STUDENT_EMAIL_ALT.equalsIgnoreCase(normalizedEmail)) {
-                dbTestUser = userDAO.getUserByEmail(TEST_STUDENT_EMAIL);
+                dbTestUser = findUserForLogin(TEST_STUDENT_EMAIL);
             }
             if (dbTestUser != null) {
                 userDAO.updateLastLogin(dbTestUser.getUserId());
@@ -126,7 +127,7 @@ public class AuthenticationService {
             if (role != null && !role.trim().isEmpty() && !"ADMIN".equalsIgnoreCase(role.trim())) {
                 throw new Exception("Role does not match this account.");
             }
-            User adminUser = userDAO.getUserByEmail("admin@kasnet.in");
+            User adminUser = findUserForLogin("admin@kasnet.in");
             if (adminUser != null) {
                 userDAO.updateLastLogin(adminUser.getUserId());
                 return adminUser;
@@ -134,7 +135,7 @@ public class AuthenticationService {
         }
 
         // 3. Database user lookup
-        User user = userDAO.getUserByEmail(normalizedEmail);
+        User user = findUserForLogin(normalizedEmail);
 
         if (user == null) {
             throw new Exception("Invalid email or password.");
@@ -161,5 +162,13 @@ public class AuthenticationService {
         userDAO.updateLastLogin(user.getUserId());
 
         return user;
+    }
+
+    private User findUserForLogin(String email) throws Exception {
+        try {
+            return userDAO.getUserByEmailForLogin(email);
+        } catch (SQLException e) {
+            throw new Exception("The login service cannot access the database. Check DB_URL, DB_USER, and DB_PASSWORD in your local .env file, then restart the app.", e);
+        }
     }
 }
