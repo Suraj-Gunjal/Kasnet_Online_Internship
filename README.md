@@ -32,7 +32,7 @@
 | **Persistence** | JDBC with `PreparedStatement` | SQL-injection safe, clean resource closing |
 | **Security** | BCrypt (`jbcrypt:0.4`) | Salt rounds = 12, timing-attack safe |
 | **Styling** | Per-Page Inline CSS3 & Clean SVGs | **Zero external CSS framework lock-in**, 100% responsive, zero cartoon emojis |
-| **Build System** | Apache Maven 3.x | Build wrapper `mvn.bat` included in repository |
+| **Project Format** | Eclipse Dynamic Web Project | Native Java EE DWP (Dynamic Web Module 3.1, Java 8, Tomcat 8.0/8.5), no Maven required |
 | **Timezone** | Indian Standard Time (IST) | `Asia/Kolkata` (UTC+05:30) enforced end-to-end |
 
 ---
@@ -93,29 +93,16 @@ Credentials are never hardcoded in the codebase. All configuration is loaded dyn
 
 *For Docker / Container / Cloud deployments (AWS, Render, Heroku), you can also pass standard OS environment variables (`DB_URL`, `DB_USER`, `DB_PASSWORD`, `GROQ_API_KEY`) directly.*
 
-### Step 4: Run Locally (One Single Command)
-We have included a configured embedded Tomcat runner in Maven. You do **not** need to install standalone Tomcat:
-
-**On Windows (PowerShell / CMD):**
-```powershell
-.\mvn.bat tomcat7:run
-```
-
-**On macOS / Linux (if Maven is installed):**
-```bash
-mvn tomcat7:run
-```
-
-Wait until you see:
-```text
-INFO: Starting ProtocolHandler ["http-bio-8080"]
-```
+### Step 4: Run in Eclipse Oxygen / Tomcat
+1. Open **Eclipse Oxygen (or Eclipse for Java EE)**.
+2. Select **File** -> **Import...** -> **General** -> **Existing Projects into Workspace** -> **Next**.
+3. Browse to `d:\My Workspace\Kasnet_Online_Internship` and click **Finish**.
+4. In the **Servers** tab, ensure **Apache Tomcat v8.0** (or v8.5) is configured.
+5. Right-click `kasnet-internship-portal` -> **Run As** -> **Run on Server** -> Choose **Tomcat v8.0 Server** -> **Finish**.
 
 ### Step 5: Open in Your Browser
 Open your browser and navigate to:
-👉 **`http://localhost:8080/internship/`**
-
-*(To stop the server at any time, press `Ctrl + C` in the terminal).*
+👉 **`http://localhost:8080/kasnet-internship-portal/`**
 
 ### Assignment errors or student dashboard HTTP 500
 
@@ -154,7 +141,9 @@ You can also click **Register** on the landing page to register a fresh student 
 You can verify database connectivity, validations, password hashing, and profile calculations in 5 seconds without starting the web browser:
 
 ```powershell
-.\mvn.bat exec:java '-Dexec.mainClass=com.kasnet.util.SystemVerifier'
+# In PowerShell (using compiled classes in build/classes and WebContent/WEB-INF/lib):
+$cp = "build\classes;" + ((Get-ChildItem WebContent\WEB-INF\lib\*.jar | ForEach-Object { $_.FullName }) -join ";")
+java -cp $cp com.kasnet.util.SystemVerifier
 ```
 
 Output:
@@ -210,16 +199,14 @@ This project is configured out-of-the-box as an **Eclipse Dynamic Web Project** 
 
 ## Alternative: Deploying to Standalone Tomcat
 
-If you are deploying to a standalone **Apache Tomcat 8.5 / 9.0** installation:
+If you are deploying to a standalone **Apache Tomcat 8.0 / 8.5 / 9.0** installation:
 
-1. **Package the WAR file:**
-   ```powershell
-   .\mvn.bat clean package
-   ```
-2. **Locate the artifact:**
-   `target/kasnet-internship-portal.war`
-3. **Deploy:**
-   Copy `target/kasnet-internship-portal.war` into your Tomcat's `webapps/` folder.
+1. **Export the WAR file from Eclipse:**
+   - In Eclipse, right-click `kasnet-internship-portal` -> **Export** -> **WAR file**.
+   - Set the destination to your desired path and click **Finish**.
+   *(Or build via CLI: copy `build\classes` into `WebContent\WEB-INF\classes` and run `jar -cf kasnet-internship-portal.war -C WebContent .`)*
+2. **Deploy:**
+   Copy `kasnet-internship-portal.war` into your Tomcat's `webapps/` folder.
 4. **Start Tomcat:**
    - Windows: `C:\path\to\tomcat\bin\startup.bat`
    - Linux/Mac: `/path/to/tomcat/bin/startup.sh`
@@ -252,7 +239,6 @@ If you are deploying to a standalone **Apache Tomcat 8.5 / 9.0** installation:
 
 ```text
 Kasnet_Online_Internship/
-├── pom.xml                                  # Maven dependencies & build configuration
 ├── database.sql                             # Full MySQL schema & seed data
 ├── README.md                                # Local setup & developer documentation
 ├── docs/
@@ -374,14 +360,10 @@ All user-visible timestamps (e.g., Account Created Date, Previous Login Date, As
 
 ### 1. `Port 8080 already in use`
 If port 8080 is used by another application (e.g., Oracle, Jenkins, another Tomcat):
-- Change the port in `pom.xml` under `tomcat7-maven-plugin`:
-  ```xml
-  <configuration>
-      <port>8085</port>
-      <path>/internship</path>
-  </configuration>
-  ```
-- Access via `http://localhost:8085/internship/`.
+- In Eclipse, double-click your **Tomcat v8.0 Server** in the **Servers** view.
+- Under **Ports**, change the **HTTP/1.1** port from `8080` to `8085`.
+- Save (`Ctrl+S`) and restart Tomcat.
+- Access via `http://localhost:8085/kasnet-internship-portal/`.
 
 ### 2. `Access denied for user 'root'@'localhost'`
 - Check the password in `src/com/kasnet/util/DBConnection.java`.
@@ -390,13 +372,13 @@ If port 8080 is used by another application (e.g., Oracle, Jenkins, another Tomc
 ### 3. `Public Key Retrieval is not allowed`
 - This occurs on MySQL 8.0+ when using `caching_sha2_password`. It is already handled in `DBConnection.java` by the `allowPublicKeyRetrieval=true` flag.
 
-### 4. Background Java Process Locking Logs on Windows
-If `mvn clean` errors with `Failed to delete target\tomcat\logs\...`:
+### 4. Background Java Process Locking Tomcat on Windows
+If Tomcat fails to start or ports remain occupied:
 - Stop any running Java process in PowerShell:
   ```powershell
   Get-Process -Name java | Stop-Process -Force
   ```
-- Re-run `.\mvn.bat clean package`.
+- Restart the Tomcat server in Eclipse.
 
 ---
 
